@@ -31,6 +31,8 @@ agent BoardGameAgent {
 
 	on Initialize {
 
+		loggingName = 'BoardGameAgent'
+		
 		val startingPositions : List<Integer> = new ArrayList
 	
 		for (var i = 1; i < Math.pow(PROBLEM_SIZE, 2); i++)

@@ -46,8 +46,10 @@ agent FrameAgent {
 
 		targetX = idNum / dimension;
 		targetY = idNum % dimension;
-		
-		info("The FrameAgent " + idNum + "is initialized.")
+
+		loggingName = 'FrameAgent' + idNum
+
+		info("Agent is set up.")
 	}
 	
 	on GameSet {
