@@ -6,7 +6,7 @@ package fr.utbm.ia54.Event
  * @author Jordan
  * 
  */
-event Agresse {
+event Assault {
 	var posAtaquantX : int
 	var posAtaquantY : int
 	

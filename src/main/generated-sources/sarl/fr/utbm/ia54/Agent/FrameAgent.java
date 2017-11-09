@@ -1,7 +1,7 @@
 package fr.utbm.ia54.Agent;
 
-import fr.utbm.ia54.Agent.BoxAgent;
-import fr.utbm.ia54.Event.GameStart;
+import fr.utbm.ia54.Event.Assault;
+import fr.utbm.ia54.Event.GameSet;
 import io.sarl.core.AgentKilled;
 import io.sarl.core.AgentSpawned;
 import io.sarl.core.ContextJoined;
@@ -9,10 +9,12 @@ import io.sarl.core.ContextLeft;
 import io.sarl.core.DefaultContextInteractions;
 import io.sarl.core.Destroy;
 import io.sarl.core.Initialize;
+import io.sarl.core.InnerContextAccess;
 import io.sarl.core.Lifecycle;
 import io.sarl.core.Logging;
 import io.sarl.core.MemberJoined;
 import io.sarl.core.MemberLeft;
+import io.sarl.core.Schedules;
 import io.sarl.lang.annotation.ImportedCapacityFeature;
 import io.sarl.lang.annotation.PerceptGuardEvaluator;
 import io.sarl.lang.annotation.SarlElementType;
@@ -36,48 +38,65 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlSpecification("0.6")
 @SarlElementType(17)
 @SuppressWarnings("all")
-public class GameManagerAgent extends Agent {
+public class FrameAgent extends Agent {
+  private boolean ready = false;
+  
+  private int positionX = 0;
+  
+  private int positonY = 0;
+  
+  private int objectifX = 0;
+  
+  private int objectifY = 0;
+  
+  private int dimension = 0;
+  
   @SyntheticMember
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
-    for (int i = 0; (i < 9); i++) {
-      Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
-      _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(BoxAgent.class, Integer.valueOf(i));
-    }
-    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    GameStart _gameStart = new GameStart();
-    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_gameStart);
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was started.");
   }
   
   @SyntheticMember
-  private void $behaviorUnit$Destroy$1(final Destroy occurrence) {
+  private void $behaviorUnit$GameSet$1(final GameSet occurrence) {
+    this.ready = true;
+  }
+  
+  @SyntheticMember
+  private void $behaviorUnit$Assault$2(final Assault occurrence) {
+    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+    Assault _assault = new Assault(0, 0);
+    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_assault);
+  }
+  
+  @SyntheticMember
+  private void $behaviorUnit$Destroy$3(final Destroy occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was stopped.");
   }
   
   @SyntheticMember
-  private void $behaviorUnit$AgentSpawned$2(final AgentSpawned occurrence) {
+  private void $behaviorUnit$AgentSpawned$4(final AgentSpawned occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$AgentKilled$3(final AgentKilled occurrence) {
+  private void $behaviorUnit$AgentKilled$5(final AgentKilled occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$ContextJoined$4(final ContextJoined occurrence) {
+  private void $behaviorUnit$ContextJoined$6(final ContextJoined occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$ContextLeft$5(final ContextLeft occurrence) {
+  private void $behaviorUnit$ContextLeft$7(final ContextLeft occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$MemberJoined$6(final MemberJoined occurrence) {
+  private void $behaviorUnit$MemberJoined$8(final MemberJoined occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$MemberLeft$7(final MemberLeft occurrence) {
+  private void $behaviorUnit$MemberLeft$9(final MemberLeft occurrence) {
   }
   
   @Extension
@@ -111,6 +130,36 @@ public class GameManagerAgent extends Agent {
   }
   
   @Extension
+  @ImportedCapacityFeature(Schedules.class)
+  @SyntheticMember
+  private transient ClearableReference<Skill> $CAPACITY_USE$IO_SARL_CORE_SCHEDULES;
+  
+  @SyntheticMember
+  @Pure
+  @Inline(value = "$castSkill(Schedules.class, ($0$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || $0$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? ($0$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = $0$getSkill(Schedules.class)) : $0$CAPACITY_USE$IO_SARL_CORE_SCHEDULES)", imported = Schedules.class)
+  private Schedules $CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER() {
+    if (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) {
+      this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = $getSkill(Schedules.class);
+    }
+    return $castSkill(Schedules.class, this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
+  }
+  
+  @Extension
+  @ImportedCapacityFeature(InnerContextAccess.class)
+  @SyntheticMember
+  private transient ClearableReference<Skill> $CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS;
+  
+  @SyntheticMember
+  @Pure
+  @Inline(value = "$castSkill(InnerContextAccess.class, ($0$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS == null || $0$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS.get() == null) ? ($0$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS = $0$getSkill(InnerContextAccess.class)) : $0$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS)", imported = InnerContextAccess.class)
+  private InnerContextAccess $CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS$CALLER() {
+    if (this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS == null || this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS.get() == null) {
+      this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS = $getSkill(InnerContextAccess.class);
+    }
+    return $castSkill(InnerContextAccess.class, this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS);
+  }
+  
+  @Extension
   @ImportedCapacityFeature(DefaultContextInteractions.class)
   @SyntheticMember
   private transient ClearableReference<Skill> $CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS;
@@ -138,7 +187,7 @@ public class GameManagerAgent extends Agent {
   private void $guardEvaluator$ContextLeft(final ContextLeft occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextLeft$5(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextLeft$7(occurrence));
   }
   
   @SyntheticMember
@@ -146,7 +195,7 @@ public class GameManagerAgent extends Agent {
   private void $guardEvaluator$ContextJoined(final ContextJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextJoined$4(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextJoined$6(occurrence));
   }
   
   @SyntheticMember
@@ -154,7 +203,7 @@ public class GameManagerAgent extends Agent {
   private void $guardEvaluator$MemberLeft(final MemberLeft occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberLeft$7(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberLeft$9(occurrence));
   }
   
   @SyntheticMember
@@ -162,7 +211,33 @@ public class GameManagerAgent extends Agent {
   private void $guardEvaluator$AgentSpawned(final AgentSpawned occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentSpawned$2(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentSpawned$4(occurrence));
+  }
+  
+  /**
+   * on "A TOI DE JOUER !" {
+   * // si pas content
+   * // pondérer la proba
+   * if(droit de bouger) {
+   * choisi cible agress kk1
+   * 
+   * }
+   * }
+   */
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$Assault(final Assault occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Assault$2(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$GameSet(final GameSet occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$GameSet$1(occurrence));
   }
   
   @SyntheticMember
@@ -170,7 +245,7 @@ public class GameManagerAgent extends Agent {
   private void $guardEvaluator$Destroy(final Destroy occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$1(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$3(occurrence));
   }
   
   @SyntheticMember
@@ -178,7 +253,7 @@ public class GameManagerAgent extends Agent {
   private void $guardEvaluator$AgentKilled(final AgentKilled occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentKilled$3(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentKilled$5(occurrence));
   }
   
   @SyntheticMember
@@ -186,24 +261,65 @@ public class GameManagerAgent extends Agent {
   private void $guardEvaluator$MemberJoined(final MemberJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberJoined$6(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberJoined$8(occurrence));
+  }
+  
+  @Override
+  @Pure
+  @SyntheticMember
+  public boolean equals(final Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    FrameAgent other = (FrameAgent) obj;
+    if (other.ready != this.ready)
+      return false;
+    if (other.positionX != this.positionX)
+      return false;
+    if (other.positonY != this.positonY)
+      return false;
+    if (other.objectifX != this.objectifX)
+      return false;
+    if (other.objectifY != this.objectifY)
+      return false;
+    if (other.dimension != this.dimension)
+      return false;
+    return super.equals(obj);
+  }
+  
+  @Override
+  @Pure
+  @SyntheticMember
+  public int hashCode() {
+    int result = super.hashCode();
+    final int prime = 31;
+    result = prime * result + (this.ready ? 1231 : 1237);
+    result = prime * result + this.positionX;
+    result = prime * result + this.positonY;
+    result = prime * result + this.objectifX;
+    result = prime * result + this.objectifY;
+    result = prime * result + this.dimension;
+    return result;
   }
   
   @SyntheticMember
-  public GameManagerAgent(final UUID parentID, final UUID agentID) {
+  public FrameAgent(final UUID parentID, final UUID agentID) {
     super(parentID, agentID);
   }
   
   @SyntheticMember
   @Inject
   @Deprecated
-  public GameManagerAgent(final BuiltinCapacitiesProvider provider, final UUID parentID, final UUID agentID) {
+  public FrameAgent(final BuiltinCapacitiesProvider provider, final UUID parentID, final UUID agentID) {
     super(provider, parentID, agentID);
   }
   
   @SyntheticMember
   @Inject
-  public GameManagerAgent(final UUID parentID, final UUID agentID, final DynamicSkillProvider skillProvider) {
+  public FrameAgent(final UUID parentID, final UUID agentID, final DynamicSkillProvider skillProvider) {
     super(parentID, agentID, skillProvider);
   }
 }

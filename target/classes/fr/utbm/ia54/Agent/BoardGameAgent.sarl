@@ -13,27 +13,45 @@ import io.sarl.core.Logging
 import io.sarl.core.MemberJoined
 import io.sarl.core.MemberLeft
 import io.sarl.core.Lifecycle
-import fr.utbm.ia54.Event.GameStart
+import fr.utbm.ia54.Event.GameSet
+import fr.utbm.ia54.Event.FrameSatisfied
 import io.sarl.core.DefaultContextInteractions
+import java.util.ArrayList
+import java.util.List
+import java.util.Collections
 
 /** 
  * @author Jordan
  * 
  */
-agent GameManagerAgent {
+agent BoardGameAgent {
 	uses Logging, Lifecycle, DefaultContextInteractions
+	
+	val PROBLEM_SIZE = 3
 
 	on Initialize {
-		// Event trigger before the agent begin to live or to be used.
-		// You should put all the initialization statements in this block of code.
-		for(var i = 0; i< 9 ; i++) {
-			spawn(BoxAgent,i)
-		}
+
+		val startingPositions : List<Integer> = new ArrayList
+	
+		for (var i = 1; i < Math.pow(PROBLEM_SIZE, 2); i++)
+			startingPositions.add(i)
+
+		Collections.shuffle(startingPositions);
+
+		info("Starting positions " + startingPositions);
+
+		for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++)
+			spawn(FrameAgent, startingPositions.get(i))
 		
 		// a voir
-		emit(new GameStart)
+		emit(new GameSet)
 		
 		info("The agent was started.")
+	}
+	
+	on FrameSatisfied {
+		
+		
 	}
 
 	on Destroy {

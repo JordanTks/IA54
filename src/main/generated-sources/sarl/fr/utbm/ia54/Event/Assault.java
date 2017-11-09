@@ -12,12 +12,12 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlSpecification("0.6")
 @SarlElementType(14)
 @SuppressWarnings("all")
-public class Agresse extends Event {
+public class Assault extends Event {
   public int posAtaquantX;
   
   public int posAtaquantY;
   
-  public Agresse(final int a, final int b) {
+  public Assault(final int a, final int b) {
     this.posAtaquantX = a;
     this.posAtaquantY = b;
   }
@@ -32,7 +32,7 @@ public class Agresse extends Event {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Agresse other = (Agresse) obj;
+    Assault other = (Assault) obj;
     if (other.posAtaquantX != this.posAtaquantX)
       return false;
     if (other.posAtaquantY != this.posAtaquantY)
@@ -52,7 +52,7 @@ public class Agresse extends Event {
   }
   
   /**
-   * Returns a String representation of the Agresse event's attributes only.
+   * Returns a String representation of the Assault event's attributes only.
    */
   @SyntheticMember
   @Pure

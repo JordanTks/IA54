@@ -6,4 +6,4 @@ package fr.utbm.ia54.Event
  * @author Jordan
  * 
  */
-event GameStart
+event GameSet

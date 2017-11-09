@@ -31,6 +31,8 @@ agent BootAgent {
 		loggingName = 'BootAgent'
 		info("The agent was started.")
 
+		spawn(BoardGameAgent)
+
 		// EXECUTE JAVAFX -- mais action bloquant l'agent tant que window est ouverte donc je sais pas si ça doit rester tel quel ...
 		var args : String[]
 		Application.launch(Main, args)

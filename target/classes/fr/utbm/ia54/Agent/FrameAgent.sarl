@@ -13,17 +13,17 @@ import io.sarl.core.Logging
 import io.sarl.core.MemberJoined
 import io.sarl.core.MemberLeft
 import io.sarl.core.Lifecycle
-import fr.utbm.ia54.Event.GameStart
+import fr.utbm.ia54.Event.GameSet
 import io.sarl.core.Schedules
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.InnerContextAccess
-import fr.utbm.ia54.Event.Agresse
+import fr.utbm.ia54.Event.Assault
 
 /** 
  * @author Jordan
  * 
  */
-agent BoxAgent {
+agent FrameAgent {
 	uses Logging, Lifecycle, Schedules, InnerContextAccess, DefaultContextInteractions
 
 	var ready = false
@@ -40,7 +40,7 @@ agent BoxAgent {
 		info("The agent was started.")
 	}
 	
-	on GameStart {
+	on GameSet {
 		ready = true
 		//every(1000) [ wake(new "A TOI DE JOUER !") ]
 	}
@@ -54,10 +54,10 @@ agent BoxAgent {
 		}
 	}*/
 
-	on Agresse {
+	on Assault {
 		// choisir sa fuite ( 1 - 2 - 3 possibilités)
 		//
-		emit (new Agresse(0,0))
+		emit(new Assault(0, 0))
 	}
 
 	on Destroy {

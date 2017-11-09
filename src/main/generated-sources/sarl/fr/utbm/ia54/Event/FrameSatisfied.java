@@ -7,19 +7,19 @@ import io.sarl.lang.core.Address;
 import io.sarl.lang.core.Event;
 
 /**
- * @author Jordan
+ * @author Norgannon
  */
 @SarlSpecification("0.6")
 @SarlElementType(14)
 @SuppressWarnings("all")
-public class GameStart extends Event {
+public class FrameSatisfied extends Event {
   @SyntheticMember
-  public GameStart() {
+  public FrameSatisfied() {
     super();
   }
   
   @SyntheticMember
-  public GameStart(final Address source) {
+  public FrameSatisfied(final Address source) {
     super(source);
   }
   
