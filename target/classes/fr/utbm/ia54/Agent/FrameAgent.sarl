@@ -18,6 +18,7 @@ import io.sarl.core.Schedules
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.InnerContextAccess
 import fr.utbm.ia54.Event.Assault
+import fr.utbm.ia54.Event.FrameSet
 
 /** 
  * @author Jordan
@@ -49,6 +50,7 @@ agent FrameAgent {
 
 		loggingName = 'FrameAgent' + idNum
 
+		emit(new FrameSet)
 		info("Agent is set up.")
 	}
 	

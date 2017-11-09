@@ -19,6 +19,7 @@ import io.sarl.core.DefaultContextInteractions
 import java.util.ArrayList
 import java.util.List
 import java.util.Collections
+import fr.utbm.ia54.Event.FrameSet
 
 /** 
  * @author Jordan
@@ -28,6 +29,7 @@ agent BoardGameAgent {
 	uses Logging, Lifecycle, DefaultContextInteractions
 	
 	val PROBLEM_SIZE = 3
+	var nbFrameSet = 0
 
 	on Initialize {
 
@@ -45,11 +47,20 @@ agent BoardGameAgent {
 		for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++)
 			spawn(FrameAgent, #[startingPositions.get(i), i / PROBLEM_SIZE, i % PROBLEM_SIZE, PROBLEM_SIZE])
 		
-		// a voir
-		emit(new GameSet)
-		
-		info("The agent was started.")
+		info("Board game has been set.")
 	}
+
+	on FrameSet {
+		
+		nbFrameSet++
+
+		if (nbFrameSet === Math.round(Math.pow(PROBLEM_SIZE, 2)) - 1)
+		{
+			info("All FrameAgent are ready. Sending signal to start.")
+			emit(new GameSet)
+		}
+	}
+	
 	
 	on FrameSatisfied {
 		
