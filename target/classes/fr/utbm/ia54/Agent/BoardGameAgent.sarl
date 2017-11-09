@@ -41,7 +41,7 @@ agent BoardGameAgent {
 		info("Starting positions " + startingPositions);
 
 		for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++)
-			spawn(FrameAgent, startingPositions.get(i))
+			spawn(FrameAgent, #[startingPositions.get(i), i / PROBLEM_SIZE, i % PROBLEM_SIZE, PROBLEM_SIZE])
 		
 		// a voir
 		emit(new GameSet)

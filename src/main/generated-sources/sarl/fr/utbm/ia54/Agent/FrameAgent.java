@@ -41,20 +41,32 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class FrameAgent extends Agent {
   private boolean ready = false;
   
-  private int positionX = 0;
+  private int currentX = (-1);
   
-  private int positonY = 0;
+  private int currentY = (-1);
   
-  private int objectifX = 0;
+  private int targetX = (-1);
   
-  private int objectifY = 0;
+  private int targetY = (-1);
   
-  private int dimension = 0;
+  private int dimension = (-1);
+  
+  private int idNum = (-1);
   
   @SyntheticMember
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
+    Object _get = occurrence.parameters[0];
+    this.idNum = (((Integer) _get)).intValue();
+    Object _get_1 = occurrence.parameters[1];
+    this.currentX = (((Integer) _get_1)).intValue();
+    Object _get_2 = occurrence.parameters[2];
+    this.currentY = (((Integer) _get_2)).intValue();
+    Object _get_3 = occurrence.parameters[3];
+    this.dimension = (((Integer) _get_3)).intValue();
+    this.targetX = (this.idNum / this.dimension);
+    this.targetY = (this.idNum % this.dimension);
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was started.");
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info((("The FrameAgent " + Integer.valueOf(this.idNum)) + "is initialized."));
   }
   
   @SyntheticMember
@@ -277,15 +289,17 @@ public class FrameAgent extends Agent {
     FrameAgent other = (FrameAgent) obj;
     if (other.ready != this.ready)
       return false;
-    if (other.positionX != this.positionX)
+    if (other.currentX != this.currentX)
       return false;
-    if (other.positonY != this.positonY)
+    if (other.currentY != this.currentY)
       return false;
-    if (other.objectifX != this.objectifX)
+    if (other.targetX != this.targetX)
       return false;
-    if (other.objectifY != this.objectifY)
+    if (other.targetY != this.targetY)
       return false;
     if (other.dimension != this.dimension)
+      return false;
+    if (other.idNum != this.idNum)
       return false;
     return super.equals(obj);
   }
@@ -297,11 +311,12 @@ public class FrameAgent extends Agent {
     int result = super.hashCode();
     final int prime = 31;
     result = prime * result + (this.ready ? 1231 : 1237);
-    result = prime * result + this.positionX;
-    result = prime * result + this.positonY;
-    result = prime * result + this.objectifX;
-    result = prime * result + this.objectifY;
+    result = prime * result + this.currentX;
+    result = prime * result + this.currentY;
+    result = prime * result + this.targetX;
+    result = prime * result + this.targetY;
     result = prime * result + this.dimension;
+    result = prime * result + this.idNum;
     return result;
   }
   
