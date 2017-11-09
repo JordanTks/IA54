@@ -20,6 +20,7 @@ import java.util.ArrayList
 import java.util.List
 import java.util.Collections
 import fr.utbm.ia54.Event.FrameSet
+import fr.utbm.ia54.Event.GameCompleted
 
 /** 
  * @author Jordan
@@ -30,7 +31,8 @@ agent BoardGameAgent {
 	
 	val PROBLEM_SIZE = 3
 	var nbFrameSet = 0
-
+	var nbFrameSatisfied = 0
+	
 	on Initialize {
 
 		loggingName = 'BoardGameAgent'
@@ -63,8 +65,22 @@ agent BoardGameAgent {
 	
 	
 	on FrameSatisfied {
-		
-		
+
+		if (!occurrence.satisfied)
+			nbFrameSatisfied--
+		else
+			if (nbFrameSatisfied === Math.round(Math.pow(PROBLEM_SIZE, 2)) - 1)
+			{	
+				info("Checking satisfaction of every Frame.") // in case of false positive due to synchronization issues
+				// todo
+				
+				if (1 === 1)
+				{
+					info("Every Frame satisfied. Game completed.")
+					emit(new GameCompleted)
+				
+				}
+			}
 	}
 
 	on Destroy {

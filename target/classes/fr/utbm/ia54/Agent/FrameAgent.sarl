@@ -19,6 +19,7 @@ import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.InnerContextAccess
 import fr.utbm.ia54.Event.Assault
 import fr.utbm.ia54.Event.FrameSet
+import fr.utbm.ia54.Event.FrameSatisfied
 
 /** 
  * @author Jordan
@@ -34,9 +35,9 @@ agent FrameAgent {
 	var targetY = -1
 	var dimension = -1
 
-	var idNum = -1;
+	var idNum = -1
 
-	//var r = taux de stisfaction ?
+	var isSatisfied = false
 
 	on Initialize {
 		
@@ -45,10 +46,16 @@ agent FrameAgent {
 		currentY = occurrence.parameters.get(2) as Integer
 		dimension = occurrence.parameters.get(3) as Integer
 
-		targetX = idNum / dimension;
-		targetY = idNum % dimension;
+		targetX = idNum / dimension
+		targetY = idNum % dimension
 
 		loggingName = 'FrameAgent' + idNum
+
+		if (currentX === targetX && currentY === targetY)
+		{
+			isSatisfied = true
+			emit(new FrameSatisfied(true))
+		}
 
 		emit(new FrameSet)
 		info("Agent is set up.")
@@ -107,4 +114,5 @@ agent FrameAgent {
 		// Event trigger when an agent leaves one of our shared super-holons.
 		// Sent to all members of the considered super-holon.
 	}
+	
 }

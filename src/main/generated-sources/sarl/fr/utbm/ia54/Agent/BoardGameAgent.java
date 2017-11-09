@@ -3,6 +3,7 @@ package fr.utbm.ia54.Agent;
 import fr.utbm.ia54.Agent.FrameAgent;
 import fr.utbm.ia54.Event.FrameSatisfied;
 import fr.utbm.ia54.Event.FrameSet;
+import fr.utbm.ia54.Event.GameCompleted;
 import fr.utbm.ia54.Event.GameSet;
 import io.sarl.core.AgentKilled;
 import io.sarl.core.AgentSpawned;
@@ -46,6 +47,8 @@ public class BoardGameAgent extends Agent {
   
   private int nbFrameSet = 0;
   
+  private int nbFrameSatisfied = 0;
+  
   @SyntheticMember
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
@@ -83,6 +86,24 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$FrameSatisfied$2(final FrameSatisfied occurrence) {
+    if ((!(occurrence.satisfied).booleanValue())) {
+      this.nbFrameSatisfied--;
+    } else {
+      long _round = Math.round(Math.pow(this.PROBLEM_SIZE, 2));
+      long _minus = (_round - 1);
+      boolean _tripleEquals = (this.nbFrameSatisfied == _minus);
+      if (_tripleEquals) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Checking satisfaction of every Frame.");
+        if ((1 == 1)) {
+          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("Every Frame satisfied. Game completed.");
+          DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+          GameCompleted _gameCompleted = new GameCompleted();
+          _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_gameCompleted);
+        }
+      }
+    }
   }
   
   @SyntheticMember
@@ -255,6 +276,8 @@ public class BoardGameAgent extends Agent {
       return false;
     if (other.nbFrameSet != this.nbFrameSet)
       return false;
+    if (other.nbFrameSatisfied != this.nbFrameSatisfied)
+      return false;
     return super.equals(obj);
   }
   
@@ -266,6 +289,7 @@ public class BoardGameAgent extends Agent {
     final int prime = 31;
     result = prime * result + this.PROBLEM_SIZE;
     result = prime * result + this.nbFrameSet;
+    result = prime * result + this.nbFrameSatisfied;
     return result;
   }
   

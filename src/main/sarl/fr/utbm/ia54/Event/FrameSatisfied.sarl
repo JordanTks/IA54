@@ -1,12 +1,15 @@
 /** 
- * 
+ *  Event used to tell the BoardGame when satisfied to avoid active waiting.
+ *  Parameter states wether becoming satisfied or dissatisfied
  */
 package fr.utbm.ia54.Event
-/** 
- * @author Norgannon
- * 
- */
-event FrameSatisfied
 
-// Event used to tell the BoardGame when satisfied to avoid active waiting.
-// Will send a paramater to increase or decrease the number of Frames satisfied.
+event FrameSatisfied
+{
+	var satisfied : Boolean
+
+	new (sat : Boolean) {
+		satisfied = sat
+	}
+}
+

@@ -29,7 +29,7 @@ agent BootAgent {
 		// Event trigger before the agent begin to live or to be used.
 		// You should put all the initialization statements in this block of code.
 		loggingName = 'BootAgent'
-		info("The agent was started.")
+		info("Boot Agent started.")
 
 		spawn(BoardGameAgent)
 
@@ -44,7 +44,7 @@ agent BootAgent {
 	on Destroy {
 		// Event trigger when the agent is destroyed from the system.
 		// You should put all the resource releasing statements in this block of code.
-		info("The agent was stopped.")
+		info("Boot agent stopped.")
 	}
 
 	on AgentSpawned {
