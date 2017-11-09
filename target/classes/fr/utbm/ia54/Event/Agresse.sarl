@@ -1,0 +1,18 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54.Event
+/** 
+ * @author Jordan
+ * 
+ */
+event Agresse {
+	var posAtaquantX : int
+	var posAtaquantY : int
+	
+	new (a: int, b:int) {
+		this.posAtaquantX = a
+		this.posAtaquantY = b
+	}
+	
+}
