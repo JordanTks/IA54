@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 
 
 public class Main extends Application {
@@ -19,6 +18,7 @@ public class Main extends Application {
 			stage= new Stage();
 	        Parent root = FXMLLoader.load(getClass().getResource("/fr/utbm/ia54/Taquin.fxml"));
 	        Scene scene = new Scene(root);
+	        scene.getStylesheets().add(getClass().getResource("/fr/utbm/ia54/styles.css").toExternalForm());
 	        stage.setScene(scene);
 	        stage.setMaxHeight(900);
 	        stage.setMaxWidth(1080);
