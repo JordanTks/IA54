@@ -21,6 +21,8 @@ import java.util.List
 import java.util.Collections
 import fr.utbm.ia54.Event.FrameSet
 import fr.utbm.ia54.Event.GameCompleted
+import fr.utbm.ia54.Event.TileSet
+import fr.utbm.ia54.Event.TokenReceived
 
 /** 
  * @author Jordan
@@ -31,23 +33,24 @@ agent BoardGameAgent {
 	
 	val PROBLEM_SIZE = 3
 	var nbFrameSet = 0
-	var nbFrameSatisfied = 0
+	var nbTileSet = 0
+	
+	//var nbFrameSatisfied = 0 // probablement inutile
 	
 	on Initialize {
 
 		loggingName = 'BoardGameAgent'
+
+		// TODO passer à array en 2D probablement plus logique et plus simple pour les traitements futurs (idem dans on FrameSet)
+		// Il faudra set les Frame pour qu'ils connaissent leurs voisins
 		
-		val startingPositions : List<Integer> = new ArrayList
-	
-		for (var i = 1; i < Math.pow(PROBLEM_SIZE, 2); i++)
-			startingPositions.add(i)
+		val frameList : List<Integer> = new ArrayList
 
-		Collections.shuffle(startingPositions);
+		for (var i = 1; i <= Math.pow(PROBLEM_SIZE, 2); i++)
+			frameList.add(i)
 
-		info("Starting positions " + startingPositions);
-
-		for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++)
-			spawn(FrameAgent, #[startingPositions.get(i), i / PROBLEM_SIZE, i % PROBLEM_SIZE, PROBLEM_SIZE])
+		for (var i = 0; i <= Math.pow(PROBLEM_SIZE, 2) - 1; i++) // spawn FrameAgent
+			spawn(FrameAgent, #[frameList.get(i), i / PROBLEM_SIZE, i % PROBLEM_SIZE, PROBLEM_SIZE])
 		
 		info("Board game has been set.")
 	}
@@ -56,14 +59,41 @@ agent BoardGameAgent {
 		
 		nbFrameSet++
 
-		if (nbFrameSet === Math.round(Math.pow(PROBLEM_SIZE, 2)) - 1)
+		if (nbFrameSet === Math.round(Math.pow(PROBLEM_SIZE, 2)))
 		{
-			info("All FrameAgent are ready. Sending signal to start.")
-			emit(new GameSet)
+			info("Every single FrameAgent is set. Spawning every single TileAgent.")
+			
+			// On pourrait aussi wake sur un event a part et spawn les tileAgent dans un "on SettingTile" ou qqch du genre
+
+			val startingTiles : List<Integer> = new ArrayList
+			
+			for (var i = 1; i < Math.pow(PROBLEM_SIZE, 2); i++)
+				startingTiles.add(i)
+				
+			Collections.shuffle(startingTiles)
+
+			info("Starting positions " + startingTiles)
+
+			for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++) // spawn TileAgent
+				spawn(TileAgent, #[startingTiles.get(i), i / PROBLEM_SIZE, i % PROBLEM_SIZE, PROBLEM_SIZE])
+
 		}
 	}
 	
-	
+	on TileSet {
+		
+		nbTileSet++
+
+		if (nbTileSet === Math.round(Math.pow(PROBLEM_SIZE, 2)) - 1) {
+			info("Every single TileAgent is set. Sending a token.")
+			
+			emit(new TokenReceived) // Scope sur la tile n 1 a ajouter
+		}
+	}
+
+
+	/* PROBABLEMENT DEJA OBSOLETE
+
 	on FrameSatisfied {
 
 		if (!occurrence.satisfied)
@@ -81,7 +111,7 @@ agent BoardGameAgent {
 				
 				}
 			}
-	}
+	}*/
 
 	on Destroy {
 		// Event trigger when the agent is destroyed from the system.

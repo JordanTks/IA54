@@ -6,6 +6,11 @@ package fr.utbm.ia54.Event
  * @author Jordan
  * 
  */
+ 
+ // Probablement obsolete. (La Tile recherche l'état de ses voisins et en cas d'état en agression, on connaît donc l'agresseur
+ // ET on supprime le risque de boucler sur des boucles plus longues (ce qui n'est pas le cas avec cet evenement).)
+ 
+ 
 event Assault {
 	var posAtaquantX : int
 	var posAtaquantY : int

@@ -4,6 +4,9 @@
  */
 package fr.utbm.ia54.Event
 
+// Probablement inutile, l attente sera evite car l'action suivra simplement le token.
+// La fin sera detecte par le dernier possesseur du token. Pas d'attente active.
+
 event FrameSatisfied
 {
 	var satisfied : Boolean
