@@ -77,6 +77,7 @@ agent BoardGameAgent {
 			for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++) // spawn TileAgent
 				spawn(TileAgent, #[startingTiles.get(i), i / PROBLEM_SIZE, i % PROBLEM_SIZE, PROBLEM_SIZE])
 
+			spawn(EmptyTileAgent)
 		}
 	}
 	

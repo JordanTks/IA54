@@ -13,24 +13,22 @@ import io.sarl.core.Logging
 import io.sarl.core.MemberJoined
 import io.sarl.core.MemberLeft
 import fr.utbm.ia54.Event.TokenReceived
+import fr.utbm.ia54.Event.TileSet
+import io.sarl.core.DefaultContextInteractions
 
 /** 
  * @author Norgannon
  * 
  */
 agent EmptyTileAgent {
-	uses Logging
+	uses Logging, DefaultContextInteractions
 
 	on Initialize {
-		// Event trigger before the agent begin to live or to be used.
-		// You should put all the initialization statements in this block of code.
-		info("The agent was started.")
-	}
+		loggingName = 'EmptyTileAgent'
 
-	on Destroy {
-		// Event trigger when the agent is destroyed from the system.
-		// You should put all the resource releasing statements in this block of code.
-		info("The agent was stopped.")
+		emit(new TileSet)
+
+		info("Agent is set up.")
 	}
 
 	on TokenReceived {
@@ -38,6 +36,17 @@ agent EmptyTileAgent {
 		//		échange ma place avec voisin en état agression
 		
 		// rend le token 
+	}
+
+
+
+
+
+
+	on Destroy {
+		// Event trigger when the agent is destroyed from the system.
+		// You should put all the resource releasing statements in this block of code.
+		info("The agent was stopped.")
 	}
 	
 	on AgentSpawned {

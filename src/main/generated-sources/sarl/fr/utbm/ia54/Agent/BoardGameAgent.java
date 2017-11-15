@@ -1,5 +1,6 @@
 package fr.utbm.ia54.Agent;
 
+import fr.utbm.ia54.Agent.EmptyTileAgent;
 import fr.utbm.ia54.Agent.FrameAgent;
 import fr.utbm.ia54.Agent.TileAgent;
 import fr.utbm.ia54.Event.FrameSet;
@@ -86,6 +87,8 @@ public class BoardGameAgent extends Agent {
         Integer _get = startingTiles.get(i);
         _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(TileAgent.class, new Object[] { _get, Integer.valueOf((i / this.PROBLEM_SIZE)), Integer.valueOf((i % this.PROBLEM_SIZE)), Integer.valueOf(this.PROBLEM_SIZE) });
       }
+      Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+      _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(EmptyTileAgent.class);
     }
   }
   
