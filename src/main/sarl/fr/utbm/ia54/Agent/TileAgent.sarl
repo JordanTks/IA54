@@ -14,6 +14,8 @@ import io.sarl.core.MemberJoined
 import io.sarl.core.MemberLeft
 import fr.utbm.ia54.Event.TileSet
 import io.sarl.core.DefaultContextInteractions
+import fr.utbm.ia54.Event.TokenReceived
+import fr.utbm.ia54.Event.Assault
 
 /** 
  * @author Norgannon
@@ -24,27 +26,44 @@ agent TileAgent {
 
 	var pleased = false // at right place or no           (though kind of redundant with bool pleasant on frameAgent (could be useless)) 
 	var angry = false // currently assaulting someone or not
+	var numTile : int
+	var numframeHost : int
+	
 
 	on Initialize {
+
+
+		numTile = occurrence.parameters.get(0) as Integer
+		numframeHost = occurrence.parameters.get(1) as Integer
+
+		loggingName = 'TileAgent' + numTile // num to change
 		
-		loggingName = 'TileAgent' + 0 // num to change
+		if(numTile == numframeHost) pleased = true;
 
 		emit(new TileSet)
 		
 		info("Agent is set up.")
 	}
+	
+	on TokenReceived {
+		info("J'ai le token et je suis la tile num : " + numTile)
+		if (pleased) {
+		//	emit(new TokenReceived())
+		
+		}else {
+			emit(new Assault(1,2))
+		}
 
-
-
-
-
-
-
-
-
-
-
-
+			// si (mon_etat = agressé)
+		// j'agresse un voisin pour fuir
+		
+			// sinon si (mon_humeur = satisfait)
+		// je transmet le token gratuitement à quelqu'un sans l'agresser
+		
+			// sinon si (mon_humeur = non_satisfait)
+		// j'agresse un voisin pour accroitre ma satisfaction
+		
+	}
 
 
 	on Destroy {

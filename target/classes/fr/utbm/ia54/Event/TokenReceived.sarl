@@ -2,8 +2,16 @@
  * 
  */
 package fr.utbm.ia54.Event
+
+import java.util.UUID
+
 /** 
  * @author Norgannon
- * 
+ *  
  */
-event TokenReceived
+event TokenReceived {
+	var targetFrame : int 
+	new (t : int) {
+		this.targetFrame = t
+	}
+}

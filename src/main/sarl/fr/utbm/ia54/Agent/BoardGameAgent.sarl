@@ -23,6 +23,8 @@ import fr.utbm.ia54.Event.FrameSet
 import fr.utbm.ia54.Event.GameCompleted
 import fr.utbm.ia54.Event.TileSet
 import fr.utbm.ia54.Event.TokenReceived
+import java.util.UUID
+import io.sarl.util.Scopes
 
 /** 
  * @author Jordan
@@ -34,6 +36,7 @@ agent BoardGameAgent {
 	val PROBLEM_SIZE = 3
 	var nbFrameSet = 0
 	var nbTileSet = 0
+	var firstTarget : UUID
 	
 	//var nbFrameSatisfied = 0 // probablement inutile
 	
@@ -59,6 +62,7 @@ agent BoardGameAgent {
 		
 		nbFrameSet++
 
+		// ouais c'est bon on est tous là !
 		if (nbFrameSet === Math.round(Math.pow(PROBLEM_SIZE, 2)))
 		{
 			info("Every single FrameAgent is set. Spawning every single TileAgent.")
@@ -74,10 +78,17 @@ agent BoardGameAgent {
 
 			info("Starting positions " + startingTiles)
 
-			for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++) // spawn TileAgent
-				spawn(TileAgent, #[startingTiles.get(i), i / PROBLEM_SIZE, i % PROBLEM_SIZE, PROBLEM_SIZE])
-
+			// On commence par la une
+			
+			for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++){ // spawn TileAgent num tile / num frame
+				if (startingTiles.get(i) == 1) {
+					firstTarget = spawn(TileAgent, #[startingTiles.get(i), i])
+				}
+				else spawn(TileAgent, #[startingTiles.get(i), i])
+			}
+			// spawn tileblanck
 			spawn(EmptyTileAgent)
+			
 		}
 	}
 	
@@ -88,7 +99,7 @@ agent BoardGameAgent {
 		if (nbTileSet === Math.round(Math.pow(PROBLEM_SIZE, 2)) - 1) {
 			info("Every single TileAgent is set. Sending a token.")
 			
-			emit(new TokenReceived) // Scope sur la tile n 1 a ajouter
+			emit( new TokenReceived(2))//, Scopes.addresses(defaultSpace.getAddress(firstTarget)) )	// Scope sur la tile n 1 a ajouter
 		}
 	}
 

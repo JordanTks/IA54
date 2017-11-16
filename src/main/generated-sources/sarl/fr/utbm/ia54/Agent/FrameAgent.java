@@ -1,7 +1,7 @@
 package fr.utbm.ia54.Agent;
 
+import fr.utbm.ia54.Event.Assault;
 import fr.utbm.ia54.Event.FrameSet;
-import fr.utbm.ia54.Event.TokenReceived;
 import io.sarl.core.AgentKilled;
 import io.sarl.core.AgentSpawned;
 import io.sarl.core.ContextJoined;
@@ -43,15 +43,9 @@ public class FrameAgent extends Agent {
   
   private boolean blocked = false;
   
+  private int[] MesVoisines;
+  
   private boolean ready = false;
-  
-  private int currentX = (-1);
-  
-  private int currentY = (-1);
-  
-  private int targetX = (-1);
-  
-  private int targetY = (-1);
   
   private int dimension = (-1);
   
@@ -73,7 +67,7 @@ public class FrameAgent extends Agent {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$TokenReceived$1(final TokenReceived occurrence) {
+  private void $behaviorUnit$Assault$1(final Assault occurrence) {
   }
   
   @SyntheticMember
@@ -221,6 +215,14 @@ public class FrameAgent extends Agent {
     ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentSpawned$3(occurrence));
   }
   
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$Assault(final Assault occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Assault$1(occurrence));
+  }
+  
   /**
    * Obsolete ? probablement
    * on Assault {
@@ -243,14 +245,6 @@ public class FrameAgent extends Agent {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
     ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentKilled$4(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$TokenReceived(final TokenReceived occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$TokenReceived$1(occurrence));
   }
   
   @SyntheticMember
@@ -278,14 +272,6 @@ public class FrameAgent extends Agent {
       return false;
     if (other.ready != this.ready)
       return false;
-    if (other.currentX != this.currentX)
-      return false;
-    if (other.currentY != this.currentY)
-      return false;
-    if (other.targetX != this.targetX)
-      return false;
-    if (other.targetY != this.targetY)
-      return false;
     if (other.dimension != this.dimension)
       return false;
     if (other.idNum != this.idNum)
@@ -304,10 +290,6 @@ public class FrameAgent extends Agent {
     result = prime * result + (this.pleased ? 1231 : 1237);
     result = prime * result + (this.blocked ? 1231 : 1237);
     result = prime * result + (this.ready ? 1231 : 1237);
-    result = prime * result + this.currentX;
-    result = prime * result + this.currentY;
-    result = prime * result + this.targetX;
-    result = prime * result + this.targetY;
     result = prime * result + this.dimension;
     result = prime * result + this.idNum;
     result = prime * result + (this.isSatisfied ? 1231 : 1237);

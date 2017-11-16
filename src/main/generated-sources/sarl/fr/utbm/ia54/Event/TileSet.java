@@ -22,4 +22,7 @@ public class TileSet extends Event {
   public TileSet(final Address source) {
     super(source);
   }
+  
+  @SyntheticMember
+  private final static long serialVersionUID = 588368462L;
 }
