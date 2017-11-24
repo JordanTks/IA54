@@ -53,7 +53,9 @@ agent FrameAgent {
 		info("Agent is set up.")
 	}
 	
-	
+	on Assault {
+		
+	}
 	
 	/* OBSOLETE
 	/*

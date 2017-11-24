@@ -21,12 +21,13 @@ import io.sarl.core.DefaultContextInteractions
  * 
  */
 agent EmptyTileAgent {
+	
 	uses Logging, DefaultContextInteractions
 
 	on Initialize {
 		loggingName = 'EmptyTileAgent'
 
-		emit(new TileSet)
+		emit(new TileSet(null))
 
 		info("Agent is set up.")
 	}

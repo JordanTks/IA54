@@ -25,18 +25,22 @@ import fr.utbm.ia54.Event.TileSet
 import fr.utbm.ia54.Event.TokenReceived
 import java.util.UUID
 import io.sarl.util.Scopes
+import fr.utbm.ia54.Event.TokenReleased
+import java.util.HashMap
+import io.sarl.core.Behaviors
 
 /** 
  * @author Jordan
  * 
  */
 agent BoardGameAgent {
-	uses Logging, Lifecycle, DefaultContextInteractions
+	uses Logging, Lifecycle, DefaultContextInteractions, Behaviors
 	
 	val PROBLEM_SIZE = 3
 	var nbFrameSet = 0
 	var nbTileSet = 0
-	var firstTarget : UUID
+	var tileList = new ArrayList<TileAgent>()
+	var tokenPriorityList = new ArrayList<ArrayList<TileAgent>>()
 	
 	//var nbFrameSatisfied = 0 // probablement inutile
 	
@@ -44,9 +48,6 @@ agent BoardGameAgent {
 
 		loggingName = 'BoardGameAgent'
 
-		// TODO passer à array en 2D probablement plus logique et plus simple pour les traitements futurs (idem dans on FrameSet)
-		// Il faudra set les Frame pour qu'ils connaissent leurs voisins
-		
 		val frameList : List<Integer> = new ArrayList
 
 		for (var i = 1; i <= Math.pow(PROBLEM_SIZE, 2); i++)
@@ -67,41 +68,52 @@ agent BoardGameAgent {
 		{
 			info("Every single FrameAgent is set. Spawning every single TileAgent.")
 			
-			// On pourrait aussi wake sur un event a part et spawn les tileAgent dans un "on SettingTile" ou qqch du genre
-
 			val startingTiles : List<Integer> = new ArrayList
 			
 			for (var i = 1; i < Math.pow(PROBLEM_SIZE, 2); i++)
 				startingTiles.add(i)
-				
+			
 			Collections.shuffle(startingTiles)
 
 			info("Starting positions " + startingTiles)
-
-			// On commence par la une
 			
-			for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++){ // spawn TileAgent num tile / num frame
-				if (startingTiles.get(i) == 1) {
-					firstTarget = spawn(TileAgent, #[startingTiles.get(i), i])
-				}
-				else spawn(TileAgent, #[startingTiles.get(i), i])
+			for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++) { // spawn TileAgent num tile / num frame
+				spawn(TileAgent, #[startingTiles.get(i), i, PROBLEM_SIZE])
 			}
+
 			// spawn tileblanck
-			spawn(EmptyTileAgent)
-			
+			spawn(EmptyTileAgent)			
 		}
 	}
 	
 	on TileSet {
 		
 		nbTileSet++
+		
+		if (occurrence.tile !== null) // DO NOT REMOVE THIS TEST
+			tileList.add(occurrence.tile)
 
-		if (nbTileSet === Math.round(Math.pow(PROBLEM_SIZE, 2)) - 1) {
+		if (nbTileSet === Math.round(Math.pow(PROBLEM_SIZE, 2))) {
 			info("Every single TileAgent is set. Sending a token.")
 			
-			emit( new TokenReceived(2))//, Scopes.addresses(defaultSpace.getAddress(firstTarget)) )	// Scope sur la tile n 1 a ajouter
+			// Setting token priority lists
+			for (var i = 1; i < PROBLEM_SIZE; i++)
+				tokenPriorityList.add(new ArrayList())
+			
+			for (t : tileList)
+				tokenPriorityList.get(t.getTokenPriority).add(t)
+			
+			// Sending the token
+			wake(new TokenReleased)
 		}
 	}
+
+	on TokenReleased {
+		
+		// Sending the token
+		emit(new TokenReceived(2), Scopes.addresses(defaultSpace.getAddress(tokenPriorityList.get(0).get(0).ID)))		
+	}
+
 
 
 	/* PROBABLEMENT DEJA OBSOLETE

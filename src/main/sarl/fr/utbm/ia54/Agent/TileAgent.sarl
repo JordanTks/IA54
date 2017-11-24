@@ -16,6 +16,7 @@ import fr.utbm.ia54.Event.TileSet
 import io.sarl.core.DefaultContextInteractions
 import fr.utbm.ia54.Event.TokenReceived
 import fr.utbm.ia54.Event.Assault
+import fr.utbm.ia54.Event.TokenReleased
 
 /** 
  * @author Norgannon
@@ -28,27 +29,33 @@ agent TileAgent {
 	var angry = false // currently assaulting someone or not
 	var numTile : int
 	var numframeHost : int
+	var problemSize : int
+	var tokenPriority : int
 	
-
 	on Initialize {
-
 
 		numTile = occurrence.parameters.get(0) as Integer
 		numframeHost = occurrence.parameters.get(1) as Integer
+		problemSize = occurrence.parameters.get(2) as Integer
+
+		// Setting tokenPriority consulted by the scheduler
+		tokenPriority = Math.min((numTile-1) / problemSize, (numTile-1) % problemSize)
 
 		loggingName = 'TileAgent' + numTile // num to change
 		
 		if(numTile == numframeHost) pleased = true;
 
-		emit(new TileSet)
+		emit(new TileSet(this))
 		
 		info("Agent is set up.")
 	}
 	
 	on TokenReceived {
-		info("J'ai le token et je suis la tile num : " + numTile)
+		
+		info("I received the token.")
+		
 		if (pleased) {
-		//	emit(new TokenReceived())
+			emit(new TokenReleased())
 		
 		}else {
 			emit(new Assault(1,2))
@@ -65,6 +72,9 @@ agent TileAgent {
 		
 	}
 
+	def getTokenPriority : int  {
+		this.tokenPriority
+	}
 
 	on Destroy {
 		// Event trigger when the agent is destroyed from the system.

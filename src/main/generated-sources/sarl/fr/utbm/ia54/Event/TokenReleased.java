@@ -7,19 +7,19 @@ import io.sarl.lang.core.Address;
 import io.sarl.lang.core.Event;
 
 /**
- * @author Norgannon
+ * @author Aloïs
  */
 @SarlSpecification("0.6")
 @SarlElementType(14)
 @SuppressWarnings("all")
-public class FrameSet extends Event {
+public class TokenReleased extends Event {
   @SyntheticMember
-  public FrameSet() {
+  public TokenReleased() {
     super();
   }
   
   @SyntheticMember
-  public FrameSet(final Address source) {
+  public TokenReleased(final Address source) {
     super(source);
   }
   

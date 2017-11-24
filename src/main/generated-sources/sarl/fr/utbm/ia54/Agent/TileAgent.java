@@ -1,7 +1,9 @@
 package fr.utbm.ia54.Agent;
 
+import fr.utbm.ia54.Event.Assault;
 import fr.utbm.ia54.Event.TileSet;
 import fr.utbm.ia54.Event.TokenReceived;
+import fr.utbm.ia54.Event.TokenReleased;
 import io.sarl.core.AgentKilled;
 import io.sarl.core.AgentSpawned;
 import io.sarl.core.ContextJoined;
@@ -44,19 +46,26 @@ public class TileAgent extends Agent {
   
   private int numframeHost;
   
+  private int problemSize;
+  
+  private int tokenPriority;
+  
   @SyntheticMember
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     Object _get = occurrence.parameters[0];
     this.numTile = (((Integer) _get)).intValue();
     Object _get_1 = occurrence.parameters[1];
     this.numframeHost = (((Integer) _get_1)).intValue();
+    Object _get_2 = occurrence.parameters[2];
+    this.problemSize = (((Integer) _get_2)).intValue();
+    this.tokenPriority = Math.min(((this.numTile - 1) / this.problemSize), ((this.numTile - 1) % this.problemSize));
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.setLoggingName(("TileAgent" + Integer.valueOf(this.numTile)));
     if ((this.numTile == this.numframeHost)) {
       this.pleased = true;
     }
     DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    TileSet _tileSet = new TileSet();
+    TileSet _tileSet = new TileSet(this);
     _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tileSet);
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("Agent is set up.");
@@ -65,9 +74,21 @@ public class TileAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$TokenReceived$1(final TokenReceived occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(("J\'ai le token et je suis la tile num : " + Integer.valueOf(this.numTile)));
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("I received the token.");
     if (this.pleased) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      TokenReleased _tokenReleased = new TokenReleased();
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReleased);
+    } else {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      Assault _assault = new Assault(1, 2);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_assault);
     }
+  }
+  
+  @Pure
+  protected int getTokenPriority() {
+    return this.tokenPriority;
   }
   
   @SyntheticMember
@@ -221,6 +242,10 @@ public class TileAgent extends Agent {
       return false;
     if (other.numframeHost != this.numframeHost)
       return false;
+    if (other.problemSize != this.problemSize)
+      return false;
+    if (other.tokenPriority != this.tokenPriority)
+      return false;
     return super.equals(obj);
   }
   
@@ -234,6 +259,8 @@ public class TileAgent extends Agent {
     result = prime * result + (this.angry ? 1231 : 1237);
     result = prime * result + this.numTile;
     result = prime * result + this.numframeHost;
+    result = prime * result + this.problemSize;
+    result = prime * result + this.tokenPriority;
     return result;
   }
   
