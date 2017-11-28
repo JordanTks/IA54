@@ -52,6 +52,11 @@ public class TileAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
+    Class<? extends TileAgent> _class = this.getClass();
+    boolean _tripleEquals = (_class == null);
+    if (_tripleEquals) {
+      return;
+    }
     Object _get = occurrence.parameters[0];
     this.numTile = (((Integer) _get)).intValue();
     Object _get_1 = occurrence.parameters[1];
@@ -89,6 +94,11 @@ public class TileAgent extends Agent {
   @Pure
   protected int getTokenPriority() {
     return this.tokenPriority;
+  }
+  
+  @Pure
+  protected int getNumTile() {
+    return this.numTile;
   }
   
   @SyntheticMember

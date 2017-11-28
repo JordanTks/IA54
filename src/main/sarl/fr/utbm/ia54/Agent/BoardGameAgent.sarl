@@ -28,6 +28,8 @@ import io.sarl.util.Scopes
 import fr.utbm.ia54.Event.TokenReleased
 import java.util.HashMap
 import io.sarl.core.Behaviors
+import java.util.Map
+import java.util.Iterator
 
 /** 
  * @author Jordan
@@ -68,19 +70,29 @@ agent BoardGameAgent {
 		{
 			info("Every single FrameAgent is set. Spawning every single TileAgent.")
 			
-			val startingTiles : List<Integer> = new ArrayList
+			var startingTiles : List<Integer> = new ArrayList
 			
 			for (var i = 1; i < Math.pow(PROBLEM_SIZE, 2); i++)
 				startingTiles.add(i)
-			
+
 			Collections.shuffle(startingTiles)
 
 			info("Starting positions " + startingTiles)
 			
+			var order = new HashMap<Integer, UUID>()
+			
 			for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++) { // spawn TileAgent num tile / num frame
+				//var agentUUID =
 				spawn(TileAgent, #[startingTiles.get(i), i, PROBLEM_SIZE])
+				//var agentNumber = 
+				Math.min((startingTiles.get(i) - 1) / PROBLEM_SIZE, (startingTiles.get(i) - 1) % PROBLEM_SIZE)
+				//info("test 123 : " + startingTiles.get(i) + "  " + agentNumber)
+				// order.put(agentNumber, agentUUID)
 			}
 
+			//info("hh:"+order.values)
+
+			
 			// spawn tileblanck
 			spawn(EmptyTileAgent)			
 		}
@@ -89,9 +101,11 @@ agent BoardGameAgent {
 	on TileSet {
 		
 		nbTileSet++
+		info("test 1234 : ")
 		
 		if (occurrence.tile !== null) // DO NOT REMOVE THIS TEST
 			tileList.add(occurrence.tile)
+
 
 		if (nbTileSet === Math.round(Math.pow(PROBLEM_SIZE, 2))) {
 			info("Every single TileAgent is set. Sending a token.")
@@ -100,9 +114,32 @@ agent BoardGameAgent {
 			for (var i = 1; i < PROBLEM_SIZE; i++)
 				tokenPriorityList.add(new ArrayList())
 			
+			// Put the tile in the right tokenPriority list
 			for (t : tileList)
 				tokenPriorityList.get(t.getTokenPriority).add(t)
+
+			info("test 123 : ")
+
+			for (t : tokenPriorityList)		
+			{
+				var n = t.size  
+			    var temp : TileAgent  
+			    
+	         	for(var i=0; i < n; i++)
+				{  
+	                 for(var j=1; j < (n-i); j++)
+					{
+						if (t.get(j - 1).tokenPriority > t.get(j).tokenPriority) {
+							//swap elements
+			                temp = t.get(j - 1)
+							t.add((j - 1), t.get(j))
+							t.add(j, temp)
+						}
 			
+					}
+				}
+				info("test 123 : " + t)
+			}
 			// Sending the token
 			wake(new TokenReleased)
 		}
@@ -111,7 +148,9 @@ agent BoardGameAgent {
 	on TokenReleased {
 		
 		// Sending the token
-		emit(new TokenReceived(2), Scopes.addresses(defaultSpace.getAddress(tokenPriorityList.get(0).get(0).ID)))		
+		
+		
+		emit(new TokenReceived(2), Scopes.addresses(defaultSpace.getAddress(tokenPriorityList.get(0).get(0).ID)))
 	}
 
 
