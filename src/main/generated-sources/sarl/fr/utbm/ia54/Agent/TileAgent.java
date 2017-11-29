@@ -101,6 +101,11 @@ public class TileAgent extends Agent {
     return this.numTile;
   }
   
+  @Pure
+  protected boolean getIsHappy() {
+    return this.pleased;
+  }
+  
   @SyntheticMember
   private void $behaviorUnit$Destroy$2(final Destroy occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);

@@ -38,7 +38,7 @@ import java.util.Iterator
 agent BoardGameAgent {
 	uses Logging, Lifecycle, DefaultContextInteractions, Behaviors
 	
-	val PROBLEM_SIZE = 3
+	val PROBLEM_SIZE = 5
 	var nbFrameSet = 0
 	var nbTileSet = 0
 	var tileList = new ArrayList<TileAgent>()
@@ -78,20 +78,10 @@ agent BoardGameAgent {
 			Collections.shuffle(startingTiles)
 
 			info("Starting positions " + startingTiles)
-			
-			var order = new HashMap<Integer, UUID>()
-			
+						
 			for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++) { // spawn TileAgent num tile / num frame
-				//var agentUUID =
 				spawn(TileAgent, #[startingTiles.get(i), i, PROBLEM_SIZE])
-				//var agentNumber = 
-				Math.min((startingTiles.get(i) - 1) / PROBLEM_SIZE, (startingTiles.get(i) - 1) % PROBLEM_SIZE)
-				//info("test 123 : " + startingTiles.get(i) + "  " + agentNumber)
-				// order.put(agentNumber, agentUUID)
 			}
-
-			//info("hh:"+order.values)
-
 			
 			// spawn tileblanck
 			spawn(EmptyTileAgent)			
@@ -101,14 +91,39 @@ agent BoardGameAgent {
 	on TileSet {
 		
 		nbTileSet++
-		info("test 1234 : ")
 		
 		if (occurrence.tile !== null) // DO NOT REMOVE THIS TEST
 			tileList.add(occurrence.tile)
 
-
 		if (nbTileSet === Math.round(Math.pow(PROBLEM_SIZE, 2))) {
-			info("Every single TileAgent is set. Sending a token.")
+			info("Every single TileAgent is set. Setting token priority lists.")
+
+			// Ordering initial list by numTile to avoid later more complicated computation
+			
+			// Java easy version... does not compile in SARL ...
+			// Collections.sort(tileList, (a, b) -> a.numTile - b.numTile)
+					
+					// ... So lets do a much more complicated one instead
+							var tempList = new ArrayList<TileAgent>()
+							
+							while (!tileList.empty)
+							{
+								var tempTile : TileAgent
+								tempTile = tileList.get(0)
+								
+								for (t : tileList)
+									if (t.numTile < tempTile.numTile)
+										tempTile = t
+										
+								tempList.add(tempTile)
+								tileList.remove(tempTile)
+							}
+							
+							// Copying back into original list
+							for (t : tempList)
+								tileList.add(t)
+								
+							tempList.clear
 			
 			// Setting token priority lists
 			for (var i = 1; i < PROBLEM_SIZE; i++)
@@ -118,28 +133,27 @@ agent BoardGameAgent {
 			for (t : tileList)
 				tokenPriorityList.get(t.getTokenPriority).add(t)
 
-			info("test 123 : ")
-
-			for (t : tokenPriorityList)		
+			// Modify the sorting of each list
+			for (l : tokenPriorityList)		
 			{
-				var n = t.size  
-			    var temp : TileAgent  
-			    
-	         	for(var i=0; i < n; i++)
-				{  
-	                 for(var j=1; j < (n-i); j++)
-					{
-						if (t.get(j - 1).tokenPriority > t.get(j).tokenPriority) {
-							//swap elements
-			                temp = t.get(j - 1)
-							t.add((j - 1), t.get(j))
-							t.add(j, temp)
-						}
-			
-					}
+				for (var tilesToSwitch = (l.size / 2) + 1; tilesToSwitch > 0 ; tilesToSwitch--)
+				{
+					tempList.add(l.get(0))
+					l.remove(0)
 				}
-				info("test 123 : " + t)
+				
+				while (!tempList.empty)
+				{
+					l.add(0, tempList.get(0))
+					tempList.remove(0)
+				}
+				
+				//for (t : l)
+				//	info(t.numTile)
 			}
+
+			info("TokenPriorityList data set up.")
+			
 			// Sending the token
 			wake(new TokenReleased)
 		}
@@ -147,10 +161,25 @@ agent BoardGameAgent {
 
 	on TokenReleased {
 		
-		// Sending the token
-		
-		
-		emit(new TokenReceived(2), Scopes.addresses(defaultSpace.getAddress(tokenPriorityList.get(0).get(0).ID)))
+		// Looking for the first unsatisfied tile on the first priority list
+		do {
+			for (t : tokenPriorityList.get(0))
+			{
+				if (!t.isHappy)
+				{
+					emit(new TokenReceived(), Scopes.addresses(defaultSpace.getAddress(t.ID)))
+					return
+				}
+			}
+			
+			tokenPriorityList.remove(0)
+			
+			// It is over
+			if (tokenPriorityList.empty)
+				return
+			// Else ... get to the next list by looping
+			
+		} while (true)
 	}
 
 

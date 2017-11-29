@@ -10,8 +10,8 @@ import java.util.UUID
  *  
  */
 event TokenReceived {
-	var targetFrame : int 
+	/*var targetFrame : int 
 	new (t : int) {
 		this.targetFrame = t
-	}
+	}*/
 }

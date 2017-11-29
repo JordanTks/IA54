@@ -34,6 +34,9 @@ agent TileAgent {
 	
 	on Initialize {
 
+		if (this.class === null)
+			return;
+
 		numTile = occurrence.parameters.get(0) as Integer
 		numframeHost = occurrence.parameters.get(1) as Integer
 		problemSize = occurrence.parameters.get(2) as Integer
@@ -72,10 +75,18 @@ agent TileAgent {
 		
 	}
 
-	def getTokenPriority : int  {
+	def getTokenPriority : int {
 		this.tokenPriority
 	}
 
+	def getNumTile : int {
+		this.numTile
+	}
+
+	def getIsHappy : boolean {
+		this.pleased
+	}
+	
 	on Destroy {
 		// Event trigger when the agent is destroyed from the system.
 		// You should put all the resource releasing statements in this block of code.

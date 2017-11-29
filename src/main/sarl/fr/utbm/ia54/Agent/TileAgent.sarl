@@ -83,6 +83,10 @@ agent TileAgent {
 		this.numTile
 	}
 
+	def getIsHappy : boolean {
+		this.pleased
+	}
+	
 	on Destroy {
 		// Event trigger when the agent is destroyed from the system.
 		// You should put all the resource releasing statements in this block of code.

@@ -33,7 +33,6 @@ import io.sarl.util.Scopes;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -48,7 +47,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlElementType(17)
 @SuppressWarnings("all")
 public class BoardGameAgent extends Agent {
-  private final int PROBLEM_SIZE = 3;
+  private final int PROBLEM_SIZE = 5;
   
   private int nbFrameSet = 0;
   
@@ -90,20 +89,10 @@ public class BoardGameAgent extends Agent {
       Collections.shuffle(startingTiles);
       Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
       _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(("Starting positions " + startingTiles));
-      HashMap<Integer, UUID> order = new HashMap<Integer, UUID>();
       for (int i = 0; (i < (Math.pow(this.PROBLEM_SIZE, 2) - 1)); i++) {
-        {
-          Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
-          Integer _get = startingTiles.get(i);
-          _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(TileAgent.class, new Object[] { _get, Integer.valueOf(i), Integer.valueOf(this.PROBLEM_SIZE) });
-          Integer _get_1 = startingTiles.get(i);
-          int _minus = ((_get_1).intValue() - 1);
-          int _divide = (_minus / this.PROBLEM_SIZE);
-          Integer _get_2 = startingTiles.get(i);
-          int _minus_1 = ((_get_2).intValue() - 1);
-          int _modulo = (_minus_1 % this.PROBLEM_SIZE);
-          Math.min(_divide, _modulo);
-        }
+        Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+        Integer _get = startingTiles.get(i);
+        _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(TileAgent.class, new Object[] { _get, Integer.valueOf(i), Integer.valueOf(this.PROBLEM_SIZE) });
       }
       Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
       _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(EmptyTileAgent.class);
@@ -113,45 +102,60 @@ public class BoardGameAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$TileSet$2(final TileSet occurrence) {
     this.nbTileSet++;
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("test 1234 : ");
     if ((occurrence.tile != null)) {
       this.tileList.add(occurrence.tile);
     }
     long _round = Math.round(Math.pow(this.PROBLEM_SIZE, 2));
     boolean _tripleEquals = (this.nbTileSet == _round);
     if (_tripleEquals) {
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("Every single TileAgent is set. Sending a token.");
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Every single TileAgent is set. Setting token priority lists.");
+      ArrayList<TileAgent> tempList = new ArrayList<TileAgent>();
+      while ((!this.tileList.isEmpty())) {
+        {
+          TileAgent tempTile = null;
+          tempTile = this.tileList.get(0);
+          for (final TileAgent t : this.tileList) {
+            int _numTile = t.getNumTile();
+            int _numTile_1 = tempTile.getNumTile();
+            boolean _lessThan = (_numTile < _numTile_1);
+            if (_lessThan) {
+              tempTile = t;
+            }
+          }
+          tempList.add(tempTile);
+          this.tileList.remove(tempTile);
+        }
+      }
+      for (final TileAgent t : tempList) {
+        this.tileList.add(t);
+      }
+      tempList.clear();
       for (int i = 1; (i < this.PROBLEM_SIZE); i++) {
         ArrayList<TileAgent> _arrayList = new ArrayList<TileAgent>();
         this.tokenPriorityList.add(_arrayList);
       }
-      for (final TileAgent t : this.tileList) {
-        this.tokenPriorityList.get(t.getTokenPriority()).add(t);
+      for (final TileAgent t_1 : this.tileList) {
+        this.tokenPriorityList.get(t_1.getTokenPriority()).add(t_1);
       }
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info("test 123 : ");
-      for (final ArrayList<TileAgent> t_1 : this.tokenPriorityList) {
+      for (final ArrayList<TileAgent> l : this.tokenPriorityList) {
         {
-          int n = t_1.size();
-          TileAgent temp = null;
-          for (int i = 0; (i < n); i++) {
-            for (int j = 1; (j < (n - i)); j++) {
-              int _tokenPriority = t_1.get((j - 1)).getTokenPriority();
-              int _tokenPriority_1 = t_1.get(j).getTokenPriority();
-              boolean _greaterThan = (_tokenPriority > _tokenPriority_1);
-              if (_greaterThan) {
-                temp = t_1.get((j - 1));
-                t_1.add((j - 1), t_1.get(j));
-                t_1.add(j, temp);
-              }
+          for (int tilesToSwitch = ((l.size() / 2) + 1); (tilesToSwitch > 0); tilesToSwitch--) {
+            {
+              tempList.add(l.get(0));
+              l.remove(0);
             }
           }
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(("test 123 : " + t_1));
+          while ((!tempList.isEmpty())) {
+            {
+              l.add(0, tempList.get(0));
+              tempList.remove(0);
+            }
+          }
         }
       }
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("TokenPriorityList data set up.");
       Behaviors _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER = this.$castSkill(Behaviors.class, (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS == null || this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS = this.$getSkill(Behaviors.class)) : this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS);
       TokenReleased _tokenReleased = new TokenReleased();
       _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER.wake(_tokenReleased);
@@ -160,10 +164,27 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$TokenReleased$3(final TokenReleased occurrence) {
-    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    TokenReceived _tokenReceived = new TokenReceived(2);
-    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReceived, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(this.tokenPriorityList.get(0).get(0).getID())));
+    do {
+      {
+        ArrayList<TileAgent> _get = this.tokenPriorityList.get(0);
+        for (final TileAgent t : _get) {
+          boolean _isHappy = t.getIsHappy();
+          boolean _not = (!_isHappy);
+          if (_not) {
+            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+            TokenReceived _tokenReceived = new TokenReceived();
+            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+            _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReceived, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(t.getID())));
+            return;
+          }
+        }
+        this.tokenPriorityList.remove(0);
+        boolean _isEmpty = this.tokenPriorityList.isEmpty();
+        if (_isEmpty) {
+          return;
+        }
+      }
+    } while(true);
   }
   
   @SyntheticMember
