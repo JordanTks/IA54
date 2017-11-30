@@ -2,8 +2,18 @@
  * 
  */
 package fr.utbm.ia54.Event
+
+import fr.utbm.ia54.Agent.FrameAgent
+
 /** 
  * @author Norgannon
  * 
  */
 event FrameSet
+{
+	var frame : FrameAgent
+
+	new (f : FrameAgent) {
+		this.frame = f
+	}
+}

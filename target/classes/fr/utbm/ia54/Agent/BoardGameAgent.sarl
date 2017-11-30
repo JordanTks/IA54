@@ -47,9 +47,10 @@ enum position {
 agent BoardGameAgent {
 	uses Logging, Lifecycle, DefaultContextInteractions, Behaviors
 	
-	val PROBLEM_SIZE = 10
+	val PROBLEM_SIZE = 3
 	var nbFrameSet = 0
 	var nbTileSet = 0
+	var frameList = new ArrayList<FrameAgent>()
 	var tileList = new ArrayList<TileAgent>()
 	var tokenPriorityList = new ArrayList<ArrayList<TileAgent>>()
 	
@@ -75,11 +76,36 @@ agent BoardGameAgent {
 		
 		nbFrameSet++
 
+		frameList.add(occurrence.frame)
+
 		// ouais c'est bon on est tous là !
 		if (nbFrameSet === Math.round(Math.pow(PROBLEM_SIZE, 2)))
 		{
 			info("Every single FrameAgent is set. Spawning every single TileAgent.")
+
+			// Ordering initial list of frame in order to set neighbours
+			Collections.sort(frameList)[a, b|a.numFrame - b.numFrame]
 			
+			// Setting neighbours
+			var c = 0
+			for (f : frameList)
+			{
+				if (c % PROBLEM_SIZE != 0) // when true, the frame does have a west neighbour
+					f.setWestNeighbour(frameList.get(c - 1).ID)
+
+				if (c / PROBLEM_SIZE != 0) // when true, the frame does have a north neighbour
+					f.setNorthNeighbour(frameList.get(c - PROBLEM_SIZE).ID)
+
+				if (c + PROBLEM_SIZE < (PROBLEM_SIZE * PROBLEM_SIZE)) // when true, the frame does have a south neighbour
+					f.setSouthNeighbour(frameList.get(c + PROBLEM_SIZE).ID)
+
+				if (c % PROBLEM_SIZE != (PROBLEM_SIZE - 1)) // when true, the frame does have a east neighbour
+					f.setEastNeighbour(frameList.get(c + 1).ID)
+				
+				c++
+			}
+			
+			// Shuffle tile positions
 			var startingTiles : List<Integer> = new ArrayList
 			
 			for (var i = 1; i < Math.pow(PROBLEM_SIZE, 2); i++)
@@ -88,12 +114,12 @@ agent BoardGameAgent {
 			Collections.shuffle(startingTiles)
 
 			info("Starting positions " + startingTiles)
-						
-			for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++) { // spawn TileAgent num tile / num frame
-				spawn(TileAgent, #[startingTiles.get(i), i, PROBLEM_SIZE])
-			}
 			
-			// spawn tileblanck
+			// Spawn tile agents (num tile/UUID frame/num frame/ problem size)
+			for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++)
+				spawn(TileAgent, #[startingTiles.get(i), frameList.get(i).ID, i, PROBLEM_SIZE])
+			
+			// Spawn blank tile
 			spawn(EmptyTileAgent)			
 		}
 	}

@@ -45,11 +45,13 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlElementType(17)
 @SuppressWarnings("all")
 public class BoardGameAgent extends Agent {
-  private final int PROBLEM_SIZE = 10;
+  private final int PROBLEM_SIZE = 3;
   
   private int nbFrameSet = 0;
   
   private int nbTileSet = 0;
+  
+  private ArrayList<FrameAgent> frameList = new ArrayList<FrameAgent>();
   
   private ArrayList<TileAgent> tileList = new ArrayList<TileAgent>();
   
@@ -75,11 +77,36 @@ public class BoardGameAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$FrameSet$1(final FrameSet occurrence) {
     this.nbFrameSet++;
+    this.frameList.add(occurrence.frame);
     long _round = Math.round(Math.pow(this.PROBLEM_SIZE, 2));
     boolean _tripleEquals = (this.nbFrameSet == _round);
     if (_tripleEquals) {
       Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
       _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Every single FrameAgent is set. Spawning every single TileAgent.");
+      final Comparator<FrameAgent> _function = (FrameAgent a, FrameAgent b) -> {
+        int _numFrame = a.getNumFrame();
+        int _numFrame_1 = b.getNumFrame();
+        return (_numFrame - _numFrame_1);
+      };
+      Collections.<FrameAgent>sort(this.frameList, _function);
+      int c = 0;
+      for (final FrameAgent f : this.frameList) {
+        {
+          if (((c % this.PROBLEM_SIZE) != 0)) {
+            f.setWestNeighbour(this.frameList.get((c - 1)).getID());
+          }
+          if (((c / this.PROBLEM_SIZE) != 0)) {
+            f.setNorthNeighbour(this.frameList.get((c - this.PROBLEM_SIZE)).getID());
+          }
+          if (((c + this.PROBLEM_SIZE) < (this.PROBLEM_SIZE * this.PROBLEM_SIZE))) {
+            f.setSouthNeighbour(this.frameList.get((c + this.PROBLEM_SIZE)).getID());
+          }
+          if (((c % this.PROBLEM_SIZE) != (this.PROBLEM_SIZE - 1))) {
+            f.setEastNeighbour(this.frameList.get((c + 1)).getID());
+          }
+          c++;
+        }
+      }
       List<Integer> startingTiles = new ArrayList<Integer>();
       for (int i = 1; (i < Math.pow(this.PROBLEM_SIZE, 2)); i++) {
         startingTiles.add(Integer.valueOf(i));
@@ -90,7 +117,8 @@ public class BoardGameAgent extends Agent {
       for (int i = 0; (i < (Math.pow(this.PROBLEM_SIZE, 2) - 1)); i++) {
         Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
         Integer _get = startingTiles.get(i);
-        _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(TileAgent.class, new Object[] { _get, Integer.valueOf(i), Integer.valueOf(this.PROBLEM_SIZE) });
+        UUID _iD = this.frameList.get(i).getID();
+        _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(TileAgent.class, new Object[] { _get, _iD, Integer.valueOf(i), Integer.valueOf(this.PROBLEM_SIZE) });
       }
       Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
       _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(EmptyTileAgent.class);

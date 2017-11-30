@@ -1,5 +1,6 @@
 package fr.utbm.ia54.Agent;
 
+import com.google.common.base.Objects;
 import fr.utbm.ia54.Event.Assault;
 import fr.utbm.ia54.Event.FrameSet;
 import io.sarl.core.AgentKilled;
@@ -43,7 +44,15 @@ public class FrameAgent extends Agent {
   
   private boolean blocked = false;
   
-  private int[] MesVoisines;
+  private int nbNeighbours;
+  
+  private UUID northNeighbour;
+  
+  private UUID eastNeighbour;
+  
+  private UUID southNeighbour;
+  
+  private UUID westNeighbour;
   
   private boolean ready = false;
   
@@ -57,10 +66,15 @@ public class FrameAgent extends Agent {
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     Object _get = occurrence.parameters[0];
     this.idNum = (((Integer) _get)).intValue();
+    this.nbNeighbours = 0;
+    this.northNeighbour = null;
+    this.eastNeighbour = null;
+    this.southNeighbour = null;
+    this.westNeighbour = null;
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.setLoggingName(("FrameAgent" + Integer.valueOf(this.idNum)));
     DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    FrameSet _frameSet = new FrameSet();
+    FrameSet _frameSet = new FrameSet(this);
     _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_frameSet);
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("Agent is set up.");
@@ -68,6 +82,50 @@ public class FrameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$Assault$1(final Assault occurrence) {
+    boolean _equals = Objects.equal(occurrence.pos, null);
+    if (_equals) {
+    }
+  }
+  
+  @Pure
+  protected int getNumFrame() {
+    return this.idNum;
+  }
+  
+  protected int setNorthNeighbour(final UUID id) {
+    int _xblockexpression = (int) 0;
+    {
+      this.northNeighbour = id;
+      _xblockexpression = this.nbNeighbours++;
+    }
+    return _xblockexpression;
+  }
+  
+  protected int setEastNeighbour(final UUID id) {
+    int _xblockexpression = (int) 0;
+    {
+      this.eastNeighbour = id;
+      _xblockexpression = this.nbNeighbours++;
+    }
+    return _xblockexpression;
+  }
+  
+  protected int setSouthNeighbour(final UUID id) {
+    int _xblockexpression = (int) 0;
+    {
+      this.southNeighbour = id;
+      _xblockexpression = this.nbNeighbours++;
+    }
+    return _xblockexpression;
+  }
+  
+  protected int setWestNeighbour(final UUID id) {
+    int _xblockexpression = (int) 0;
+    {
+      this.westNeighbour = id;
+      _xblockexpression = this.nbNeighbours++;
+    }
+    return _xblockexpression;
   }
   
   @SyntheticMember
@@ -270,6 +328,20 @@ public class FrameAgent extends Agent {
       return false;
     if (other.blocked != this.blocked)
       return false;
+    if (other.nbNeighbours != this.nbNeighbours)
+      return false;
+    if (!java.util.Objects.equals(this.northNeighbour, other.northNeighbour)) {
+      return false;
+    }
+    if (!java.util.Objects.equals(this.eastNeighbour, other.eastNeighbour)) {
+      return false;
+    }
+    if (!java.util.Objects.equals(this.southNeighbour, other.southNeighbour)) {
+      return false;
+    }
+    if (!java.util.Objects.equals(this.westNeighbour, other.westNeighbour)) {
+      return false;
+    }
     if (other.ready != this.ready)
       return false;
     if (other.dimension != this.dimension)
@@ -289,6 +361,11 @@ public class FrameAgent extends Agent {
     final int prime = 31;
     result = prime * result + (this.pleased ? 1231 : 1237);
     result = prime * result + (this.blocked ? 1231 : 1237);
+    result = prime * result + this.nbNeighbours;
+    result = prime * result + java.util.Objects.hashCode(this.northNeighbour);
+    result = prime * result + java.util.Objects.hashCode(this.eastNeighbour);
+    result = prime * result + java.util.Objects.hashCode(this.southNeighbour);
+    result = prime * result + java.util.Objects.hashCode(this.westNeighbour);
     result = prime * result + (this.ready ? 1231 : 1237);
     result = prime * result + this.dimension;
     result = prime * result + this.idNum;

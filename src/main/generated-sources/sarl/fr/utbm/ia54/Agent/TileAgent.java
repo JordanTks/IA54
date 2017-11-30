@@ -27,6 +27,7 @@ import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
 import io.sarl.util.Scopes;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 import javax.inject.Inject;
 import org.eclipse.xtext.xbase.lib.Extension;
@@ -46,7 +47,9 @@ public class TileAgent extends Agent {
   
   private int numTile;
   
-  private int numframeHost;
+  private int numFrameHost;
+  
+  private UUID uuidFrameHost;
   
   private int problemSize;
   
@@ -62,13 +65,15 @@ public class TileAgent extends Agent {
     Object _get = occurrence.parameters[0];
     this.numTile = (((Integer) _get)).intValue();
     Object _get_1 = occurrence.parameters[1];
-    this.numframeHost = (((Integer) _get_1)).intValue();
+    this.uuidFrameHost = ((UUID) _get_1);
     Object _get_2 = occurrence.parameters[2];
-    this.problemSize = (((Integer) _get_2)).intValue();
+    this.numFrameHost = (((Integer) _get_2)).intValue();
+    Object _get_3 = occurrence.parameters[3];
+    this.problemSize = (((Integer) _get_3)).intValue();
     this.tokenPriority = Math.min(((this.numTile - 1) / this.problemSize), ((this.numTile - 1) % this.problemSize));
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.setLoggingName(("TileAgent" + Integer.valueOf(this.numTile)));
-    if ((this.numTile == this.numframeHost)) {
+    if ((this.numTile == this.numFrameHost)) {
       this.pleased = true;
     }
     DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
@@ -274,8 +279,11 @@ public class TileAgent extends Agent {
       return false;
     if (other.numTile != this.numTile)
       return false;
-    if (other.numframeHost != this.numframeHost)
+    if (other.numFrameHost != this.numFrameHost)
       return false;
+    if (!Objects.equals(this.uuidFrameHost, other.uuidFrameHost)) {
+      return false;
+    }
     if (other.problemSize != this.problemSize)
       return false;
     if (other.tokenPriority != this.tokenPriority)
@@ -292,7 +300,8 @@ public class TileAgent extends Agent {
     result = prime * result + (this.pleased ? 1231 : 1237);
     result = prime * result + (this.angry ? 1231 : 1237);
     result = prime * result + this.numTile;
-    result = prime * result + this.numframeHost;
+    result = prime * result + this.numFrameHost;
+    result = prime * result + Objects.hashCode(this.uuidFrameHost);
     result = prime * result + this.problemSize;
     result = prime * result + this.tokenPriority;
     return result;

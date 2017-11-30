@@ -21,6 +21,7 @@ import fr.utbm.ia54.Event.Assault
 import fr.utbm.ia54.Event.FrameSet
 import fr.utbm.ia54.Event.FrameSatisfied
 import fr.utbm.ia54.Event.TokenReceived
+import java.util.UUID
 
 /** 
  * @author Jordan
@@ -32,7 +33,11 @@ agent FrameAgent {
 	var pleased = false // is paired with the right tile
 	var blocked = false // the tile which with it is paired will never move
 	
-	var MesVoisines : int[]
+	var nbNeighbours : int
+	var northNeighbour : UUID
+	var eastNeighbour : UUID
+	var southNeighbour : UUID
+	var westNeighbour : UUID
 	
 	var ready = false
 	var dimension = -1
@@ -44,18 +49,49 @@ agent FrameAgent {
 	on Initialize {
 		
 		idNum = occurrence.parameters.get(0) as Integer
-		//MesVoisines
+
+		nbNeighbours = 0
+		northNeighbour = null
+		eastNeighbour = null
+		southNeighbour = null
+		westNeighbour = null
 
 		loggingName = 'FrameAgent' + idNum
 
-
-		emit(new FrameSet)
+		emit(new FrameSet(this))
 		info("Agent is set up.")
 	}
 	
 	on Assault {
-		
+		if(occurrence.pos == null) {
+			
+		}
 	}
+
+	def getNumFrame : int {
+		this.idNum
+	}
+	
+	def setNorthNeighbour(id : UUID) {
+		northNeighbour = id
+		nbNeighbours++
+	}
+
+	def setEastNeighbour(id : UUID) {
+		eastNeighbour = id
+		nbNeighbours++
+	}
+
+	def setSouthNeighbour(id : UUID) {
+		southNeighbour = id
+		nbNeighbours++
+	}
+
+	def setWestNeighbour(id : UUID) {
+		westNeighbour = id
+		nbNeighbours++
+	}
+	
 	
 	/* OBSOLETE
 	/*
