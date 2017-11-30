@@ -2,22 +2,23 @@
  * 
  */
 package fr.utbm.ia54.Event
-/** 
- * @author Jordan
- * 
- */
+
+import java.util.ArrayList
+import fr.utbm.ia54.Agent.TileAgent
+import fr.utbm.ia54.Agent.position
+
  
  // Probablement obsolete. (La Tile recherche l'état de ses voisins et en cas d'état en agression, on connaît donc l'agresseur
  // ET on supprime le risque de boucler sur des boucles plus longues (ce qui n'est pas le cas avec cet evenement).)
  
  
 event Assault {
-	var posAtaquantX : int
-	var posAtaquantY : int
+	var path = new ArrayList<TileAgent>()
+	var pos : position
 	
-	new (a: int, b:int) {
-		this.posAtaquantX = a
-		this.posAtaquantY = b
+	new (a: ArrayList, b:position) {
+		this.path = a
+		this.pos = b
 	}
 	
 }

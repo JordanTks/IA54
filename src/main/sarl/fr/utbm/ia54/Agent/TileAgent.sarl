@@ -17,6 +17,8 @@ import io.sarl.core.DefaultContextInteractions
 import fr.utbm.ia54.Event.TokenReceived
 import fr.utbm.ia54.Event.Assault
 import fr.utbm.ia54.Event.TokenReleased
+import fr.utbm.ia54.Agent.position
+import io.sarl.util.Scopes
 
 /** 
  * @author Norgannon
@@ -31,6 +33,7 @@ agent TileAgent {
 	var numframeHost : int
 	var problemSize : int
 	var tokenPriority : int
+	
 	
 	on Initialize {
 
@@ -61,7 +64,8 @@ agent TileAgent {
 			emit(new TokenReleased())
 		
 		}else {
-			emit(new Assault(1,2))
+			//TODO : REMPLACER ID PAR UUID DE MA FRAME
+			emit(new Assault(null, position.NORTH), Scopes.addresses(defaultSpace.getAddress(ID)))
 		}
 
 			// si (mon_etat = agressé)
@@ -73,6 +77,14 @@ agent TileAgent {
 			// sinon si (mon_humeur = non_satisfait)
 		// j'agresse un voisin pour accroitre ma satisfaction
 		
+	}
+	
+	on Assault {
+		
+	}
+	
+	def chooseTarget(){
+		//TODO : en fonction de ma pos (framehost) du probsize et de ma numtile je trouve un gugus à aggresser
 	}
 
 	def getTokenPriority : int {

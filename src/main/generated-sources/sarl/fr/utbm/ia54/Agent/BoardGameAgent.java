@@ -33,6 +33,7 @@ import io.sarl.util.Scopes;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -40,14 +41,11 @@ import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Pure;
 
-/**
- * @author Jordan
- */
 @SarlSpecification("0.6")
 @SarlElementType(17)
 @SuppressWarnings("all")
 public class BoardGameAgent extends Agent {
-  private final int PROBLEM_SIZE = 5;
+  private final int PROBLEM_SIZE = 10;
   
   private int nbFrameSet = 0;
   
@@ -110,33 +108,19 @@ public class BoardGameAgent extends Agent {
     if (_tripleEquals) {
       Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
       _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Every single TileAgent is set. Setting token priority lists.");
+      final Comparator<TileAgent> _function = (TileAgent a, TileAgent b) -> {
+        int _numTile = a.getNumTile();
+        int _numTile_1 = b.getNumTile();
+        return (_numTile - _numTile_1);
+      };
+      Collections.<TileAgent>sort(this.tileList, _function);
       ArrayList<TileAgent> tempList = new ArrayList<TileAgent>();
-      while ((!this.tileList.isEmpty())) {
-        {
-          TileAgent tempTile = null;
-          tempTile = this.tileList.get(0);
-          for (final TileAgent t : this.tileList) {
-            int _numTile = t.getNumTile();
-            int _numTile_1 = tempTile.getNumTile();
-            boolean _lessThan = (_numTile < _numTile_1);
-            if (_lessThan) {
-              tempTile = t;
-            }
-          }
-          tempList.add(tempTile);
-          this.tileList.remove(tempTile);
-        }
-      }
-      for (final TileAgent t : tempList) {
-        this.tileList.add(t);
-      }
-      tempList.clear();
       for (int i = 1; (i < this.PROBLEM_SIZE); i++) {
         ArrayList<TileAgent> _arrayList = new ArrayList<TileAgent>();
         this.tokenPriorityList.add(_arrayList);
       }
-      for (final TileAgent t_1 : this.tileList) {
-        this.tokenPriorityList.get(t_1.getTokenPriority()).add(t_1);
+      for (final TileAgent t : this.tileList) {
+        this.tokenPriorityList.get(t.getTokenPriority()).add(t);
       }
       for (final ArrayList<TileAgent> l : this.tokenPriorityList) {
         {
@@ -184,7 +168,7 @@ public class BoardGameAgent extends Agent {
           return;
         }
       }
-    } while(true);
+    } while((!this.tokenPriorityList.isEmpty()));
   }
   
   @SyntheticMember

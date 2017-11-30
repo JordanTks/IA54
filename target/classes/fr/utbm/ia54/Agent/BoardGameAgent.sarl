@@ -35,16 +35,26 @@ import java.util.Iterator
  * @author Jordan
  * 
  */
+ 
+enum position {
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST
+	;
+}
+ 
 agent BoardGameAgent {
 	uses Logging, Lifecycle, DefaultContextInteractions, Behaviors
 	
-	val PROBLEM_SIZE = 5
+	val PROBLEM_SIZE = 10
 	var nbFrameSet = 0
 	var nbTileSet = 0
 	var tileList = new ArrayList<TileAgent>()
 	var tokenPriorityList = new ArrayList<ArrayList<TileAgent>>()
 	
 	//var nbFrameSatisfied = 0 // probablement inutile
+	
 	
 	on Initialize {
 
@@ -99,32 +109,10 @@ agent BoardGameAgent {
 			info("Every single TileAgent is set. Setting token priority lists.")
 
 			// Ordering initial list by numTile to avoid later more complicated computation
-			
-			// Java easy version... does not compile in SARL ...
-			// Collections.sort(tileList, (a, b) -> a.numTile - b.numTile)
+			Collections.sort(tileList)[a, b|a.numTile - b.numTile]
 					
-					// ... So lets do a much more complicated one instead
-							var tempList = new ArrayList<TileAgent>()
+			var tempList = new ArrayList<TileAgent>()
 							
-							while (!tileList.empty)
-							{
-								var tempTile : TileAgent
-								tempTile = tileList.get(0)
-								
-								for (t : tileList)
-									if (t.numTile < tempTile.numTile)
-										tempTile = t
-										
-								tempList.add(tempTile)
-								tileList.remove(tempTile)
-							}
-							
-							// Copying back into original list
-							for (t : tempList)
-								tileList.add(t)
-								
-							tempList.clear
-			
 			// Setting token priority lists
 			for (var i = 1; i < PROBLEM_SIZE; i++)
 				tokenPriorityList.add(new ArrayList())
@@ -179,7 +167,7 @@ agent BoardGameAgent {
 				return
 			// Else ... get to the next list by looping
 			
-		} while (true)
+		} while (!tokenPriorityList.empty)
 	}
 
 

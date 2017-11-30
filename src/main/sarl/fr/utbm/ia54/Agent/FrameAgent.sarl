@@ -54,7 +54,9 @@ agent FrameAgent {
 	}
 	
 	on Assault {
-		
+		if(occurrence.pos == null) {
+			
+		}
 	}
 	
 	/* OBSOLETE

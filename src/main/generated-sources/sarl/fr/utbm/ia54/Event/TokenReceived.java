@@ -22,4 +22,7 @@ public class TokenReceived extends Event {
   public TokenReceived(final Address source) {
     super(source);
   }
+  
+  @SyntheticMember
+  private final static long serialVersionUID = 588368462L;
 }
