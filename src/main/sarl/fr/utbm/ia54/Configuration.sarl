@@ -1,0 +1,5 @@
+package fr.utbm.ia54
+
+final class Configuration {
+
+}

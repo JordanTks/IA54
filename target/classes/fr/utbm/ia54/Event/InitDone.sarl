@@ -1,0 +1,19 @@
+/** 
+ * 
+ */
+package fr.utbm.taquin.events
+
+import java.util.List
+
+/** 
+ * @author Moi
+ * 
+ */
+event InitDone {
+	var listPos : List<Integer>
+	
+	new (list : List<Integer>) {
+		this.listPos = list
+	}
+	
+}

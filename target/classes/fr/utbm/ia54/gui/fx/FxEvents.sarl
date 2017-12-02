@@ -1,0 +1,17 @@
+package fr.utbm.ia54.gui.fx
+
+
+event EndSimulation
+
+event AppStart {
+	val fxController : FxViewerController
+	val startFeedback : ()=>void
+
+	new (fxController : FxViewerController, feedback : ()=>void) {
+		this.fxController = fxController
+		this.startFeedback = feedback
+	}
+}
+/* Triggered when the app need to be exited.
+ */
+event AppExit

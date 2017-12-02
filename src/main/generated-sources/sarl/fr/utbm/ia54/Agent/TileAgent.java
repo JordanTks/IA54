@@ -5,6 +5,7 @@ import fr.utbm.ia54.Event.Assault;
 import fr.utbm.ia54.Event.TileSet;
 import fr.utbm.ia54.Event.TokenReceived;
 import fr.utbm.ia54.Event.TokenReleased;
+import fr.utbm.taquin.events.ActionUI;
 import io.sarl.core.AgentKilled;
 import io.sarl.core.AgentSpawned;
 import io.sarl.core.ContextJoined;
@@ -34,9 +35,6 @@ import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Pure;
 
-/**
- * @author Norgannon
- */
 @SarlSpecification("0.6")
 @SarlElementType(17)
 @SuppressWarnings("all")
@@ -55,6 +53,8 @@ public class TileAgent extends Agent {
   
   private int tokenPriority;
   
+  private UUID parentAgent;
+  
   @SyntheticMember
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     Class<? extends TileAgent> _class = this.getClass();
@@ -62,6 +62,7 @@ public class TileAgent extends Agent {
     if (_tripleEquals) {
       return;
     }
+    this.parentAgent = occurrence.spawner;
     Object _get = occurrence.parameters[0];
     this.numTile = (((Integer) _get)).intValue();
     Object _get_1 = occurrence.parameters[1];
@@ -92,10 +93,16 @@ public class TileAgent extends Agent {
       TokenReleased _tokenReleased = new TokenReleased();
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReleased);
     } else {
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("JE VAIS CHANGER COULEUR.");
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      Assault _assault = new Assault(null, position.NORTH);
+      ActionUI _actionUI = new ActionUI("rouge", this.numTile);
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_assault, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.getDefaultSpace().getAddress(this.getID())));
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_actionUI, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.getDefaultSpace().getAddress(this.parentAgent)));
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      Assault _assault = new Assault(null, position.NORTH);
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3.emit(_assault, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4.getDefaultSpace().getAddress(this.getID())));
     }
   }
   
@@ -288,6 +295,9 @@ public class TileAgent extends Agent {
       return false;
     if (other.tokenPriority != this.tokenPriority)
       return false;
+    if (!Objects.equals(this.parentAgent, other.parentAgent)) {
+      return false;
+    }
     return super.equals(obj);
   }
   
@@ -304,6 +314,7 @@ public class TileAgent extends Agent {
     result = prime * result + Objects.hashCode(this.uuidFrameHost);
     result = prime * result + this.problemSize;
     result = prime * result + this.tokenPriority;
+    result = prime * result + Objects.hashCode(this.parentAgent);
     return result;
   }
   

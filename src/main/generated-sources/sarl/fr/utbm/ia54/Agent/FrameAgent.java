@@ -281,14 +281,6 @@ public class FrameAgent extends Agent {
     ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Assault$1(occurrence));
   }
   
-  /**
-   * Obsolete ? probablement
-   * on Assault {
-   * // choisir sa fuite ( 1 - 2 - 3 possibilités)
-   * //
-   * emit(new Assault(0, 0))
-   * }
-   */
   @SyntheticMember
   @PerceptGuardEvaluator
   private void $guardEvaluator$Destroy(final Destroy occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {

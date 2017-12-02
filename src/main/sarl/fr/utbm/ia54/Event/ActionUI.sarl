@@ -1,0 +1,17 @@
+/** 
+ * 
+ */
+package fr.utbm.taquin.events
+/** 
+ * @author Moi
+ * 
+ */
+event ActionUI {
+	var prop : String
+	var target : int
+	
+	new (a : String, b : int) {
+		this.prop = a
+		this.target = b
+	}
+}

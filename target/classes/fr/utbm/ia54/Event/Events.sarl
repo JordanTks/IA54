@@ -1,0 +1,41 @@
+package fr.utbm.ia54.Event
+
+import java.util.Collection
+
+event ConfigureSimulation {
+	val probSize : int
+	
+	new(size : int) {
+		probSize = size
+	}
+}
+
+event CreateMap
+/* event pour prévenir l'environnement que le Boids est lancé
+ */
+event IsStarted
+
+event MakeTheFiestaBegin
+
+
+event StartingSimulation {
+	val nombreDePopulations : int
+	val nombreDeBoidsParPopulation : int
+	val visionBoids : int
+
+	new(nombreDePopulations : int, nombreDeBoidsParPopulation : int, visionBoids : int) {
+		this.nombreDePopulations = nombreDePopulations
+		this.nombreDeBoidsParPopulation = nombreDeBoidsParPopulation
+		this.visionBoids = visionBoids
+	}
+}
+
+event EndSimulation
+
+
+
+/* Events of the GUI only */
+
+event BtnLaunch
+
+event BtnShutdown

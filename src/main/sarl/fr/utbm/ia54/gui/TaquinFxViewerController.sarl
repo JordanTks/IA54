@@ -1,0 +1,147 @@
+package fr.utbm.ia54.gui
+
+import fr.utbm.ia54.gui.fx.FxViewerController
+import javafx.fxml.FXML
+import fr.utbm.ia54.Event.ConfigureSimulation
+import javafx.scene.control.ScrollBar
+import javafx.scene.control.Label
+import javafx.scene.layout.Pane
+import javafx.scene.shape.Rectangle
+import javafx.scene.layout.TilePane
+import javafx.scene.Group
+import javafx.scene.control.TextField
+import javafx.scene.paint.Color
+import javafx.scene.text.Text
+import java.util.List
+import javafx.application.Platform
+import javafx.scene.Node
+
+class TaquinFxViewerController extends FxViewerController {
+
+	var launched = false
+	var mapCreated = false
+	
+	var gridDisplay = new GridDisplay(0,0) 
+
+	@FXML var pane : Pane
+	@FXML var size : TextField
+
+
+	def getProbSize : int {
+		Integer.parseInt(size.text)
+	}
+	
+
+	@FXML def startSimu {
+		
+		gridDisplay.columns = this.probSize
+		gridDisplay.rows = this.probSize
+		
+		if (!pane.children.contains(gridDisplay.display)) {
+			pane.children.add(gridDisplay.display);
+		}
+
+		var ^event = new ConfigureSimulation(this.probSize)
+		if (!launched) {
+			startAgentApplication() [emitToAgents(^event)]
+			launched = true
+			mapCreated = false
+		} else {
+			emitToAgents(^event)
+		}
+	}
+
+	@FXML def monTest(a : List<Integer>) {
+		
+		Platform.runLater(new Runnable(){
+		def run {
+			gridDisplay.construct(a)
+		}
+		});
+		
+	}
+	
+	@FXML def setColor(color : String, numTile : Integer) {
+
+		Platform.runLater(new Runnable() {
+			def run {
+				var listTiles = gridDisplay.tilePane.children
+				
+				for (var i = 0; i < listTiles.size; i++) {
+					var t = listTiles.get(i) as Text
+					if(t.text.equals(Integer.toString(numTile))){
+						t.fill = Color.RED
+						return
+					}
+				}
+			}
+		});
+	}
+
+
+	// CLASS GRID MANAGER
+	static class GridDisplay {
+
+		var tilePane = new TilePane();
+		var display = new Group(tilePane);
+
+		val ELEMENT_SIZE : double = 50;
+		val GAP : double = ELEMENT_SIZE / 10;
+
+        var nRows : int;
+        var	nCols : int;
+        
+        var cpt : int = 0;
+		
+		new (nRows : int, nCols : int) {
+			tilePane.setStyle("-fx-background-color: rgba(255, 215, 0, 0.1);");
+			tilePane.setHgap(GAP);
+			tilePane.setVgap(GAP);
+			setColumns(nCols);
+			setRows(nRows);
+		}
+
+		def  setColumns(newColumns : int) {
+            nCols = newColumns;
+            tilePane.setPrefColumns(nCols);
+		}
+
+		def setRows(newRows : int) {
+            nRows = newRows;
+            tilePane.setPrefRows(nRows);
+		}
+        
+	
+		def construct(a : List<Integer>) {
+			tilePane.getChildren().clear();
+			cpt = 0;
+	
+			for (var i = 0; i < nCols; i++) {
+				for (var j = 0; j < nRows; j++) {
+					
+					if (cpt < a.size) {
+						var text = new Text(a.get(cpt).toString)
+						text.prefHeight(400)
+						tilePane.getChildren().add(text)
+
+					} else { // blank tile
+						var text = new Text(" ")
+						text.prefHeight(400)
+						tilePane.getChildren().add(text)
+					}
+					cpt++
+
+				}
+			}
+		}
+		
+		
+		
+	}
+	
+}
+
+
+
+
+

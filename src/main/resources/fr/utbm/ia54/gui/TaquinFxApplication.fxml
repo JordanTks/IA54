@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.utbm.ia54.gui.TaquinFxViewerController">
+   <children>
+      <Button fx:id="start_button" layoutX="699.0" layoutY="487.0" mnemonicParsing="false" onAction="#startSimu" text="Start" />
+      <HBox layoutX="666.0" layoutY="534.0" prefHeight="31.0" prefWidth="84.0">
+         <children>
+            <TextField fx:id="size" prefHeight="31.0" prefWidth="84.0" />
+         </children>
+      </HBox>
+   </children>
+</Pane>

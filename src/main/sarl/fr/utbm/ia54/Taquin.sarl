@@ -1,0 +1,19 @@
+package fr.utbm.ia54
+
+import fr.utbm.ia54.gui.fx.FxBootAgent
+import fr.utbm.ia54.gui.TaquinFxApplication
+import io.sarl.lang.core.Agent
+import fr.utbm.ia54.gui.fx.FxApplication
+import fr.utbm.ia54.Agent.BootAgent
+
+agent Taquin extends FxBootAgent {
+
+	def getFxApplicationType : Class<? extends FxApplication> {
+		typeof(TaquinFxApplication)
+	}
+
+	def getApplicationBootAgentType : Class<? extends Agent> {
+		typeof(BootAgent)
+	}
+	
+}

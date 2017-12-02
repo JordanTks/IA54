@@ -1,6 +1,4 @@
-/** 
- * 
- */
+
 package fr.utbm.ia54.Agent
 
 import io.sarl.core.AgentKilled
@@ -23,19 +21,12 @@ import fr.utbm.ia54.Event.FrameSet
 import fr.utbm.ia54.Event.GameCompleted
 import fr.utbm.ia54.Event.TileSet
 import fr.utbm.ia54.Event.TokenReceived
-import java.util.UUID
 import io.sarl.util.Scopes
 import fr.utbm.ia54.Event.TokenReleased
-import java.util.HashMap
 import io.sarl.core.Behaviors
-import java.util.Map
-import java.util.Iterator
+import fr.utbm.ia54.gui.TaquinFxViewerController
+import fr.utbm.taquin.events.ActionUI
 
-/** 
- * @author Jordan
- * 
- */
- 
 enum position {
 	NORTH,
 	SOUTH,
@@ -47,19 +38,22 @@ enum position {
 agent BoardGameAgent {
 	uses Logging, Lifecycle, DefaultContextInteractions, Behaviors
 	
-	val PROBLEM_SIZE = 3
+	var PROBLEM_SIZE = 3
 	var nbFrameSet = 0
 	var nbTileSet = 0
 	var frameList = new ArrayList<FrameAgent>()
 	var tileList = new ArrayList<TileAgent>()
 	var tokenPriorityList = new ArrayList<ArrayList<TileAgent>>()
-	
-	//var nbFrameSatisfied = 0 // probablement inutile
-	
+
+	var ctrl : TaquinFxViewerController
+
 	
 	on Initialize {
 
 		loggingName = 'BoardGameAgent'
+
+		PROBLEM_SIZE = occurrence.parameters.get(0) as Integer
+		ctrl = occurrence.parameters.get(1) as TaquinFxViewerController
 
 		val frameList : List<Integer> = new ArrayList
 
@@ -114,6 +108,10 @@ agent BoardGameAgent {
 			Collections.shuffle(startingTiles)
 
 			info("Starting positions " + startingTiles)
+
+			// COMMUNICATION AVEC UI
+			// emit(new InitDone(startingTiles))
+			ctrl.monTest(startingTiles);
 			
 			// Spawn tile agents (num tile/UUID frame/num frame/ problem size)
 			for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++)
@@ -196,28 +194,11 @@ agent BoardGameAgent {
 		} while (!tokenPriorityList.empty)
 	}
 
+	on ActionUI {
+		info("JE VAIS FAIRE CHANGER COULEUR.")
+		ctrl.setColor("rouge", occurrence.target)
+	}
 
-
-	/* PROBABLEMENT DEJA OBSOLETE
-
-	on FrameSatisfied {
-
-		if (!occurrence.satisfied)
-			nbFrameSatisfied--
-		else
-			if (nbFrameSatisfied === Math.round(Math.pow(PROBLEM_SIZE, 2)) - 1)
-			{	
-				info("Checking satisfaction of every Frame.") // in case of false positive due to synchronization issues
-				// todo
-				
-				if (1 === 1)
-				{
-					info("Every Frame satisfied. Game completed.")
-					emit(new GameCompleted)
-				
-				}
-			}
-	}*/
 
 	on Destroy {
 		// Event trigger when the agent is destroyed from the system.

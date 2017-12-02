@@ -92,32 +92,7 @@ agent FrameAgent {
 		nbNeighbours++
 	}
 	
-	
-	/* OBSOLETE
-	/*
-	/*
-	on GameSet {
-		ready = true
-		//every(1000) [ wake(new "A TOI DE JOUER !") ]
-	}*/
-	
-	/*on "A TOI DE JOUER !" {
-		// si pas content
-		// pondérer la proba
-		if(droit de bouger) {
-			choisi cible agress kk1
-			
-		}
-	 * }
-	 */
-	
-	/* Obsolete ? probablement
-	on Assault {
-		// choisir sa fuite ( 1 - 2 - 3 possibilités)
-		//
-		emit(new Assault(0, 0))
-	}
-	*/
+
 	
 	on Destroy {
 		// Event trigger when the agent is destroyed from the system.
