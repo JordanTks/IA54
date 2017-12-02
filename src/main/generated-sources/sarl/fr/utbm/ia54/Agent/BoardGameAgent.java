@@ -1,8 +1,11 @@
 package fr.utbm.ia54.Agent;
 
+import com.google.common.base.Objects;
 import fr.utbm.ia54.Agent.EmptyTileAgent;
 import fr.utbm.ia54.Agent.FrameAgent;
 import fr.utbm.ia54.Agent.TileAgent;
+import fr.utbm.ia54.Class.CoordPair;
+import fr.utbm.ia54.Class.InfosFrame;
 import fr.utbm.ia54.Event.FrameSet;
 import fr.utbm.ia54.Event.TileSet;
 import fr.utbm.ia54.Event.TokenReceived;
@@ -55,6 +58,14 @@ public class BoardGameAgent extends Agent {
   
   private ArrayList<FrameAgent> frameList = new ArrayList<FrameAgent>();
   
+  private ArrayList<UUID> frameUUIDList = new ArrayList<UUID>();
+  
+  private ArrayList<CoordPair> listCoordPairsOfFrames = new ArrayList<CoordPair>();
+  
+  private ArrayList<InfosFrame> openListOfFrames = new ArrayList<InfosFrame>();
+  
+  private ArrayList<InfosFrame> closedListOfFrames = new ArrayList<InfosFrame>();
+  
   private ArrayList<TileAgent> tileList = new ArrayList<TileAgent>();
   
   private ArrayList<ArrayList<TileAgent>> tokenPriorityList = new ArrayList<ArrayList<TileAgent>>();
@@ -69,14 +80,18 @@ public class BoardGameAgent extends Agent {
     this.PROBLEM_SIZE = (((Integer) _get)).intValue();
     Object _get_1 = occurrence.parameters[1];
     this.ctrl = ((TaquinFxViewerController) _get_1);
-    final List<Integer> frameList = new ArrayList<Integer>();
+    final List<Integer> numFrameList = new ArrayList<Integer>();
     for (int i = 1; (i <= Math.pow(this.PROBLEM_SIZE, 2)); i++) {
-      frameList.add(Integer.valueOf(i));
+      numFrameList.add(Integer.valueOf(i));
     }
     for (int i = 0; (i <= (Math.pow(this.PROBLEM_SIZE, 2) - 1)); i++) {
-      Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
-      Integer _get_2 = frameList.get(i);
-      _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(FrameAgent.class, new Object[] { _get_2, Integer.valueOf((i / this.PROBLEM_SIZE)), Integer.valueOf((i % this.PROBLEM_SIZE)), Integer.valueOf(this.PROBLEM_SIZE) });
+      {
+        Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+        Integer _get_2 = numFrameList.get(i);
+        this.frameUUIDList.add(_$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(FrameAgent.class, new Object[] { _get_2, Integer.valueOf((i / this.PROBLEM_SIZE)), Integer.valueOf((i % this.PROBLEM_SIZE)), Integer.valueOf(this.PROBLEM_SIZE) }));
+        CoordPair _coordPair = new CoordPair((i / this.PROBLEM_SIZE), (i % this.PROBLEM_SIZE));
+        this.listCoordPairsOfFrames.add(_coordPair);
+      }
     }
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("Board game has been set.");
@@ -213,6 +228,177 @@ public class BoardGameAgent extends Agent {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("JE VAIS FAIRE CHANGER COULEUR.");
     this.ctrl.setColor("rouge", Integer.valueOf(occurrence.target));
+  }
+  
+  /**
+   * calculate the euclidean distance between 2 frames
+   * @params a,b : 2 FrameAgent
+   * @return int: euclidean distance
+   */
+  @Pure
+  protected int distEuclidian(final FrameAgent a, final FrameAgent b) {
+    int _xRow = a.getXRow();
+    int _xRow_1 = b.getXRow();
+    int _minus = (_xRow - _xRow_1);
+    int _xRow_2 = a.getXRow();
+    int _xRow_3 = b.getXRow();
+    int _minus_1 = (_xRow_2 - _xRow_3);
+    int _multiply = (_minus * _minus_1);
+    int _yCol = a.getYCol();
+    int _yCol_1 = b.getYCol();
+    int _minus_2 = (_yCol - _yCol_1);
+    int _yCol_2 = a.getYCol();
+    int _yCol_3 = b.getYCol();
+    int _minus_3 = (_yCol_2 - _yCol_3);
+    int _multiply_1 = (_minus_2 * _minus_3);
+    return (_multiply + _multiply_1);
+  }
+  
+  /**
+   * determinate if the frame is in the list
+   * @params pair, listOfFrames : CoordPair & ArrayList<InfosFrame>
+   * @return boolean: true if the CoordPair correspond to coords of an FrameAgent in the list
+   */
+  @Pure
+  protected boolean isInFrameList(final CoordPair pair, final ArrayList<InfosFrame> listOfFrames) {
+    for (final InfosFrame fa : listOfFrames) {
+      boolean _equals = pair.equals(fa.getCoordsCurrentFrame());
+      if (_equals) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  /**
+   * add the neighbour frames of the current frame
+   * @params currentFrame: the current FrameAgent
+   */
+  protected Object addNeighbourFrames(final FrameAgent currentFrame) {
+    Object _xifexpression = null;
+    UUID _northNeighbour = currentFrame.getNorthNeighbour();
+    boolean _notEquals = (!Objects.equal(_northNeighbour, null));
+    if (_notEquals) {
+      Object _xblockexpression = null;
+      {
+        int index = this.frameUUIDList.indexOf(currentFrame.getNorthNeighbour());
+        Object _xifexpression_1 = null;
+        boolean _isSatisfied = this.frameList.get(index).getIsSatisfied();
+        boolean _not = (!_isSatisfied);
+        if (_not) {
+          Object _xblockexpression_1 = null;
+          {
+            CoordPair coordNeighbour = this.listCoordPairsOfFrames.get(index);
+            Object _xifexpression_2 = null;
+            boolean _isInFrameList = this.isInFrameList(coordNeighbour, this.closedListOfFrames);
+            if (_isInFrameList) {
+              Object _xblockexpression_2 = null;
+              {
+                UUID _northNeighbour_1 = currentFrame.getNorthNeighbour();
+                InfosFrame infosFrame = new InfosFrame(_northNeighbour_1, coordNeighbour);
+                int indexForClosedList = (-1);
+                for (final InfosFrame iterator : this.closedListOfFrames) {
+                  {
+                    indexForClosedList++;
+                    UUID _uuidCurrentFrame = iterator.getUuidCurrentFrame();
+                    UUID _iD = currentFrame.getID();
+                    boolean _equals = Objects.equal(_uuidCurrentFrame, _iD);
+                    if (_equals) {
+                      break;
+                    }
+                  }
+                }
+                int _costG = this.closedListOfFrames.get(indexForClosedList).getCostG();
+                int _distEuclidian = this.distEuclidian(this.frameList.get(index), currentFrame);
+                int _plus = (_costG + _distEuclidian);
+                infosFrame.setCostG(_plus);
+                FrameAgent arrivalFrame = this.frameList.get(0);
+                infosFrame.setCostH(this.distEuclidian(this.frameList.get(index), arrivalFrame));
+                int _costG_1 = infosFrame.getCostG();
+                int _costH = infosFrame.getCostH();
+                int _plus_1 = (_costG_1 + _costH);
+                infosFrame.setCostF(_plus_1);
+                infosFrame.setUuidPreviousFrame(currentFrame.getID());
+                infosFrame.setCoordsXYPreviousFrame(currentFrame.getCoordPair());
+                int indexForOpenList = (-1);
+                for (final InfosFrame iterator_1 : this.openListOfFrames) {
+                  {
+                    indexForOpenList++;
+                    UUID _uuidCurrentFrame = iterator_1.getUuidCurrentFrame();
+                    UUID _northNeighbour_2 = currentFrame.getNorthNeighbour();
+                    boolean _equals = Objects.equal(_uuidCurrentFrame, _northNeighbour_2);
+                    if (_equals) {
+                      break;
+                    }
+                  }
+                }
+                Object _xifexpression_3 = null;
+                boolean _isInFrameList_1 = this.isInFrameList(coordNeighbour, this.openListOfFrames);
+                if (_isInFrameList_1) {
+                  InfosFrame _xifexpression_4 = null;
+                  int _costF = infosFrame.getCostF();
+                  int _costF_1 = this.openListOfFrames.get(indexForOpenList).getCostF();
+                  boolean _lessThan = (_costF < _costF_1);
+                  if (_lessThan) {
+                    _xifexpression_4 = this.openListOfFrames.set(indexForOpenList, infosFrame);
+                  }
+                  _xifexpression_3 = _xifexpression_4;
+                } else {
+                  _xifexpression_3 = Boolean.valueOf(this.openListOfFrames.add(infosFrame));
+                }
+                _xblockexpression_2 = _xifexpression_3;
+              }
+              _xifexpression_2 = _xblockexpression_2;
+            }
+            _xblockexpression_1 = _xifexpression_2;
+          }
+          _xifexpression_1 = _xblockexpression_1;
+        }
+        _xblockexpression = _xifexpression_1;
+      }
+      _xifexpression = _xblockexpression;
+    }
+    return _xifexpression;
+  }
+  
+  /**
+   * get the best cost from the frameList
+   * @param listFrames: list of InfosFrame
+   * @return InfosFrame: the infosFrame with the best (lower) cost
+   */
+  @Pure
+  protected InfosFrame getBestFrame(final ArrayList<InfosFrame> listFrames) {
+    int costF = listFrames.get(0).getCostF();
+    InfosFrame infoFrame = null;
+    for (final InfosFrame frame : listFrames) {
+      int _costF = frame.getCostF();
+      boolean _lessThan = (_costF < costF);
+      if (_lessThan) {
+        costF = frame.getCostF();
+        infoFrame = frame;
+      }
+    }
+    return infoFrame;
+  }
+  
+  /**
+   * add the InfosFrame in the closedList and remove it from the openList
+   * @param coords: CoordPair of the frame to manipulate
+   */
+  protected void addInClosedList(final CoordPair coords) {
+    int index = (-1);
+    for (final InfosFrame ite : this.openListOfFrames) {
+      {
+        index++;
+        CoordPair _coordsCurrentFrame = ite.getCoordsCurrentFrame();
+        boolean _equals = Objects.equal(_coordsCurrentFrame, coords);
+        if (_equals) {
+          this.closedListOfFrames.add(ite);
+          this.openListOfFrames.remove(index);
+          break;
+        }
+      }
+    }
   }
   
   @SyntheticMember

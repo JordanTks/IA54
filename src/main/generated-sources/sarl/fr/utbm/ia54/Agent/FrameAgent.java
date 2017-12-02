@@ -1,6 +1,7 @@
 package fr.utbm.ia54.Agent;
 
 import com.google.common.base.Objects;
+import fr.utbm.ia54.Class.CoordPair;
 import fr.utbm.ia54.Event.Assault;
 import fr.utbm.ia54.Event.FrameSet;
 import io.sarl.core.AgentKilled;
@@ -40,9 +41,9 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlElementType(17)
 @SuppressWarnings("all")
 public class FrameAgent extends Agent {
-  private boolean pleased = false;
+  private boolean isSatisfied = false;
   
-  private boolean blocked = false;
+  private boolean isBlocked = false;
   
   private int nbNeighbours;
   
@@ -60,12 +61,32 @@ public class FrameAgent extends Agent {
   
   private int idNum = (-1);
   
-  private boolean isSatisfied = false;
+  private int xRow = (-1);
+  
+  private int yCol = (-1);
+  
+  private CoordPair coordPair;
+  
+  private int costG = (-1);
+  
+  private int costH = (-1);
+  
+  private int costF = (-1);
+  
+  private UUID uuidPreviousFrame;
+  
+  private CoordPair coordsXYPreviousFrame;
   
   @SyntheticMember
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     Object _get = occurrence.parameters[0];
     this.idNum = (((Integer) _get)).intValue();
+    Object _get_1 = occurrence.parameters[1];
+    this.xRow = (((Integer) _get_1)).intValue();
+    Object _get_2 = occurrence.parameters[2];
+    this.yCol = (((Integer) _get_2)).intValue();
+    CoordPair _coordPair = new CoordPair(this.xRow, this.yCol);
+    this.coordPair = _coordPair;
     this.nbNeighbours = 0;
     this.northNeighbour = null;
     this.eastNeighbour = null;
@@ -78,6 +99,84 @@ public class FrameAgent extends Agent {
     _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_frameSet);
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("Agent is set up.");
+  }
+  
+  @Pure
+  protected int getXRow() {
+    return this.xRow;
+  }
+  
+  @Pure
+  protected int getYCol() {
+    return this.yCol;
+  }
+  
+  @Pure
+  protected CoordPair getCoordPair() {
+    return this.coordPair;
+  }
+  
+  @Pure
+  protected boolean getIsSatisfied() {
+    return this.isSatisfied;
+  }
+  
+  protected void setIsSatisfied(final boolean b) {
+    this.isSatisfied = b;
+  }
+  
+  @Pure
+  protected boolean getIsBlocked() {
+    return this.isBlocked;
+  }
+  
+  protected void setIsBlocked(final boolean b) {
+    this.isBlocked = b;
+  }
+  
+  @Pure
+  protected int getCostG() {
+    return this.costG;
+  }
+  
+  protected void setCostG(final int costG) {
+    this.costG = costG;
+  }
+  
+  @Pure
+  protected int getCostH() {
+    return this.costH;
+  }
+  
+  protected void setCostH(final int costH) {
+    this.costH = costH;
+  }
+  
+  @Pure
+  protected int getCostF() {
+    return this.costF;
+  }
+  
+  protected void setCostF(final int costF) {
+    this.costF = costF;
+  }
+  
+  @Pure
+  protected UUID getUuidPreviousFrame() {
+    return this.uuidPreviousFrame;
+  }
+  
+  protected void setUuidPreviousFrame(final UUID uuidPreviousFrame) {
+    this.uuidPreviousFrame = uuidPreviousFrame;
+  }
+  
+  @Pure
+  protected CoordPair getCoordsXYPreviousFrame() {
+    return this.coordsXYPreviousFrame;
+  }
+  
+  protected void setCoordsXYPreviousFrame(final CoordPair coordsXYPreviousFrame) {
+    this.coordsXYPreviousFrame = coordsXYPreviousFrame;
   }
   
   @SyntheticMember
@@ -126,6 +225,31 @@ public class FrameAgent extends Agent {
       _xblockexpression = this.nbNeighbours++;
     }
     return _xblockexpression;
+  }
+  
+  @Pure
+  protected int getNbNeighbours() {
+    return this.nbNeighbours;
+  }
+  
+  @Pure
+  protected UUID getNorthNeighbour() {
+    return this.northNeighbour;
+  }
+  
+  @Pure
+  protected UUID getEastNeighbour() {
+    return this.eastNeighbour;
+  }
+  
+  @Pure
+  protected UUID getSouthNeighbour() {
+    return this.southNeighbour;
+  }
+  
+  @Pure
+  protected UUID getWestNeighbour() {
+    return this.westNeighbour;
   }
   
   @SyntheticMember
@@ -316,9 +440,9 @@ public class FrameAgent extends Agent {
     if (getClass() != obj.getClass())
       return false;
     FrameAgent other = (FrameAgent) obj;
-    if (other.pleased != this.pleased)
+    if (other.isSatisfied != this.isSatisfied)
       return false;
-    if (other.blocked != this.blocked)
+    if (other.isBlocked != this.isBlocked)
       return false;
     if (other.nbNeighbours != this.nbNeighbours)
       return false;
@@ -340,8 +464,19 @@ public class FrameAgent extends Agent {
       return false;
     if (other.idNum != this.idNum)
       return false;
-    if (other.isSatisfied != this.isSatisfied)
+    if (other.xRow != this.xRow)
       return false;
+    if (other.yCol != this.yCol)
+      return false;
+    if (other.costG != this.costG)
+      return false;
+    if (other.costH != this.costH)
+      return false;
+    if (other.costF != this.costF)
+      return false;
+    if (!java.util.Objects.equals(this.uuidPreviousFrame, other.uuidPreviousFrame)) {
+      return false;
+    }
     return super.equals(obj);
   }
   
@@ -351,8 +486,8 @@ public class FrameAgent extends Agent {
   public int hashCode() {
     int result = super.hashCode();
     final int prime = 31;
-    result = prime * result + (this.pleased ? 1231 : 1237);
-    result = prime * result + (this.blocked ? 1231 : 1237);
+    result = prime * result + (this.isSatisfied ? 1231 : 1237);
+    result = prime * result + (this.isBlocked ? 1231 : 1237);
     result = prime * result + this.nbNeighbours;
     result = prime * result + java.util.Objects.hashCode(this.northNeighbour);
     result = prime * result + java.util.Objects.hashCode(this.eastNeighbour);
@@ -361,7 +496,12 @@ public class FrameAgent extends Agent {
     result = prime * result + (this.ready ? 1231 : 1237);
     result = prime * result + this.dimension;
     result = prime * result + this.idNum;
-    result = prime * result + (this.isSatisfied ? 1231 : 1237);
+    result = prime * result + this.xRow;
+    result = prime * result + this.yCol;
+    result = prime * result + this.costG;
+    result = prime * result + this.costH;
+    result = prime * result + this.costF;
+    result = prime * result + java.util.Objects.hashCode(this.uuidPreviousFrame);
     return result;
   }
   
