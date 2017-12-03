@@ -138,7 +138,7 @@ agent FrameAgent {
 	def setUuidPreviousFrame(uuidPreviousFrame : UUID) {
 			this.uuidPreviousFrame = uuidPreviousFrame;
 	}
-
+ 
 	def getCoordsXYPreviousFrame() : CoordPair {
 			return coordsXYPreviousFrame;
 	}

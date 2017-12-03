@@ -29,6 +29,7 @@ import fr.utbm.taquin.events.ActionUI
 import java.util.UUID
 import fr.utbm.ia54.Class.CoordPair
 import fr.utbm.ia54.Class.InfosFrame
+import java.util.LinkedHashSet
 
 enum position {
 	NORTH,
@@ -80,10 +81,6 @@ agent BoardGameAgent {
 		 	// TKS
 			frameUUIDList.add(spawn(FrameAgent, #[numFrameList.get(i), i / PROBLEM_SIZE, i % PROBLEM_SIZE, PROBLEM_SIZE])) // get UUID of the frameAgent
 			listCoordPairsOfFrames.add(new CoordPair((i / PROBLEM_SIZE), (i % PROBLEM_SIZE)))
-			
-			/*listOfCostG.add(-1)
-			listOfCostH.add(-1)
-			listOfCostF.add(-1)*/
 		}
 		
 		info("Board game has been set.")		
@@ -260,18 +257,15 @@ agent BoardGameAgent {
 	{			
 		// the north's frame exists======================================================================================================================
 		if (currentFrame.northNeighbour != null) {
-			info("+++++NORTH exists")
 			var index = frameUUIDList.indexOf(currentFrame.northNeighbour)
 
 			// TODO: ne rien faire si elle est satisfaite (ou bloquée ?)
 			if (!frameList.get(index).isSatisfied) {
 
 				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var newCoords = frameList.get(index).coordPair
-				info("+++++NORTH) coordNeighbour=" + coordNeighbour.toString)
 
 				// if doesn't exist in the closed list
 				if (!isInFrameList(coordNeighbour, closedListOfFrames)) {
-					info("+++++NORTH) not in closedList")
 
 					// the treated frame (stock the infos)
 					var infosFrame = new InfosFrame(currentFrame.northNeighbour, coordNeighbour)
@@ -284,25 +278,18 @@ agent BoardGameAgent {
 							break
 					}
 
-					info("+++++NORTH) indexForClosedList=" + indexForClosedList)
-
 					infosFrame.costG = closedListOfFrames.get(indexForClosedList).costG +
 						distEuclidian(frameList.get(index), currentFrame)
-
-					info("+++++NORTH) infosFrame.costG=" + infosFrame.costG)
-					info("+++++NORTH) infosFrame.coords=" + infosFrame.coordsCurrentFrame.toString)
 
 					// TODO: ATTENTION ! DOIT ETRE LA FRAME POSSEDANT LA BLANKTILE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					var arrivalFrame = frameList.get(((PROBLEM_SIZE * PROBLEM_SIZE) - 1)) // TKS: modify with the frame which has the blankTile
 					// costH of north's neighbour: it to arrival
 					infosFrame.costH = distEuclidian(frameList.get(index), arrivalFrame)
 					infosFrame.costF = infosFrame.costG + infosFrame.costH
-					info("+++++NORTH) infosFrame.costH=" + infosFrame.costH + " /infosFrame.costF=" + infosFrame.costF)
 
 					// previousFrame = the previousFrame in the chain of aggression (to build the path in the opposite direction)
 					infosFrame.uuidPreviousFrame = currentFrame.ID
 					infosFrame.coordsPreviousFrame = currentFrame.coordPair
-					info("+++++NORTH) infosFrame.coordsPreviousFrame.coords=" + infosFrame.coordsPreviousFrame.toString)
 
 					var indexForOpenList = -1
 					for (iterator : openListOfFrames) {
@@ -311,22 +298,15 @@ agent BoardGameAgent {
 							break
 					}
 
-					info("+++++NORTH) indexForOpenList=" + indexForOpenList)
-
 					// if already exists: compare the cost
 					if (isInFrameList(coordNeighbour, openListOfFrames)) {
-
-						info("+++++NORTH) already exists in openList")
-
 						// only if the new path is shorter: update it ELSE do nothing
-						if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF) {
-							info("+++++NORTH) newPath is shorter: UPDATE it")
+						if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF)
 							openListOfFrames.set(indexForOpenList, infosFrame)
-						}
+						
 					} // the treated frame (north's frame) is not in the openList yet: add it
 					else {
 						openListOfFrames.add(infosFrame)
-						info("+++++NORTH) doesn't exists yet in openList: ADD it /openListOfFrames.size=" + openListOfFrames.size)
 					}
 				}
 			}
@@ -334,18 +314,15 @@ agent BoardGameAgent {
 
 		// the south's frame exists======================================================================================================================
 		if (currentFrame.southNeighbour != null) {
-			info("+++++SOUTH exists")
 			var index = frameUUIDList.indexOf(currentFrame.southNeighbour)
 
 			// TODO: ne rien faire si elle est satisfaite (ou bloquée ?)
 			if (!frameList.get(index).isSatisfied) {
 
 				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var newCoords = frameList.get(index).coordPair
-				info("+++++SOUTH) coordNeighbour=" + coordNeighbour.toString)
 
 				// if doesn't exist in the closed list
 				if (!isInFrameList(coordNeighbour, closedListOfFrames)) {
-					info("+++++SOUTH) not in closedList")
 
 					// the treated frame (stock the infos)
 					var infosFrame = new InfosFrame(currentFrame.southNeighbour, coordNeighbour)
@@ -358,25 +335,18 @@ agent BoardGameAgent {
 							break
 					}
 
-					info("+++++SOUTH) indexForClosedList=" + indexForClosedList)
-
 					infosFrame.costG = closedListOfFrames.get(indexForClosedList).costG +
 						distEuclidian(frameList.get(index), currentFrame)
-
-					info("+++++SOUTH) infosFrame.costG=" + infosFrame.costG)
-					info("+++++SOUTH) infosFrame.coords=" + infosFrame.coordsCurrentFrame.toString)
 
 					// TODO: ATTENTION ! DOIT ETRE LA FRAME POSSEDANT LA BLANKTILE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					var arrivalFrame = frameList.get(((PROBLEM_SIZE * PROBLEM_SIZE) - 1)) // TKS: modify with the frame which has the blankTile
 					// costH of south's neighbour: it to arrival
 					infosFrame.costH = distEuclidian(frameList.get(index), arrivalFrame)
 					infosFrame.costF = infosFrame.costG + infosFrame.costH
-					info("+++++SOUTH) infosFrame.costH=" + infosFrame.costH + " /infosFrame.costF=" + infosFrame.costF)
 
 					// previousFrame = the previousFrame in the chain of aggression (to build the path in the opposite direction)
 					infosFrame.uuidPreviousFrame = currentFrame.ID
 					infosFrame.coordsPreviousFrame = currentFrame.coordPair
-					info("+++++SOUTH) infosFrame.coordsPreviousFrame.coords=" + infosFrame.coordsPreviousFrame.toString)
 
 					var indexForOpenList = -1
 					for (iterator : openListOfFrames) {
@@ -385,22 +355,15 @@ agent BoardGameAgent {
 							break
 					}
 
-					info("+++++SOUTH) indexForOpenList=" + indexForOpenList)
-
 					// if already exists: compare the cost
 					if (isInFrameList(coordNeighbour, openListOfFrames)) {
-
-						info("+++++SOUTH) already exists in openList")
-
 						// only if the new path is shorter: update it ELSE do nothing
-						if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF) {
-							info("+++++SOUTH) newPath is shorter: UPDATE it")
+						if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF) 
 							openListOfFrames.set(indexForOpenList, infosFrame)
-						}
+						
 					} // the treated frame (south's frame) is not in the openList yet: add it
 					else {
 						openListOfFrames.add(infosFrame)
-						info("+++++SOUTH) doesn't exists yet in openList: ADD it /openListOfFrames.size=" + openListOfFrames.size)
 					}
 				}
 			}
@@ -408,18 +371,15 @@ agent BoardGameAgent {
 
 		// the east's frame exists======================================================================================================================
 		if (currentFrame.eastNeighbour != null) {
-			info("+++++EAST exists")
 			var index = frameUUIDList.indexOf(currentFrame.eastNeighbour)
 
 			// TODO: ne rien faire si elle est satisfaite (ou bloquée ?)
 			if (!frameList.get(index).isSatisfied) {
 
 				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var newCoords = frameList.get(index).coordPair
-				info("+++++EAST) coordNeighbour=" + coordNeighbour.toString)
 												
 				// if doesn't exist in the closed list
 				if (!isInFrameList(coordNeighbour, closedListOfFrames)) {
-					info("+++++EAST) not in closedList")
 
 					// the treated frame (stock the infos)
 					var infosFrame = new InfosFrame(currentFrame.eastNeighbour, coordNeighbour)
@@ -432,25 +392,18 @@ agent BoardGameAgent {
 							break
 					}
 
-					info("+++++EAST) indexForClosedList=" + indexForClosedList)
-
 					infosFrame.costG = closedListOfFrames.get(indexForClosedList).costG +
 						distEuclidian(frameList.get(index), currentFrame)
-
-					info("+++++EAST) infosFrame.costG=" + infosFrame.costG)
-					info("+++++EAST) infosFrame.coords=" + infosFrame.coordsCurrentFrame.toString)
 
 					// TODO: ATTENTION ! DOIT ETRE LA FRAME POSSEDANT LA BLANKTILE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					var arrivalFrame = frameList.get(((PROBLEM_SIZE * PROBLEM_SIZE) - 1)) // TKS: modify with the frame which has the blankTile
 					// costH of east's neighbour: it to arrival
 					infosFrame.costH = distEuclidian(frameList.get(index), arrivalFrame)
 					infosFrame.costF = infosFrame.costG + infosFrame.costH
-					info("+++++EAST) infosFrame.costH=" + infosFrame.costH + " /infosFrame.costF=" + infosFrame.costF)
 
 					// previousFrame = the previousFrame in the chain of aggression (to build the path in the opposite direction)
 					infosFrame.uuidPreviousFrame = currentFrame.ID
 					infosFrame.coordsPreviousFrame = currentFrame.coordPair
-					info("+++++EAST) infosFrame.coordsPreviousFrame.coords=" + infosFrame.coordsPreviousFrame.toString)
 
 					var indexForOpenList = -1
 					for (iterator : openListOfFrames) {
@@ -459,22 +412,15 @@ agent BoardGameAgent {
 							break
 					}
 
-					info("+++++EAST) indexForOpenList=" + indexForOpenList)
-
 					// if already exists: compare the cost
 					if (isInFrameList(coordNeighbour, openListOfFrames)) {
-
-						info("+++++EAST) already exists in openList")
-
 						// only if the new path is shorter: update it ELSE do nothing
-						if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF) {
-							info("+++++EAST) newPath is shorter: UPDATE it")
+						if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF) 
 							openListOfFrames.set(indexForOpenList, infosFrame)
-						}
+						
 					} // the treated frame (east's frame) is not in the openList yet: add it
 					else {
 						openListOfFrames.add(infosFrame)
-						info("+++++EAST) doesn't exists yet in openList: ADD it /openListOfFrames.size=" + openListOfFrames.size)
 					}
 				}
 			}
@@ -482,18 +428,15 @@ agent BoardGameAgent {
 
 		// the west's frame exists======================================================================================================================
 		if (currentFrame.westNeighbour != null) {
-			info("+++++WEST exists")
 			var index = frameUUIDList.indexOf(currentFrame.westNeighbour)
 
 			//TODO: ne rien faire si elle est satisfaite (ou bloquée ?)
 			if (!frameList.get(index).isSatisfied) {
 
 				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var newCoords = frameList.get(index).coordPair
-				info("+++++WEST) coordNeighbour=" + coordNeighbour.toString)
 												
 				// if doesn't exist in the closed list
 				if (!isInFrameList(coordNeighbour, closedListOfFrames)) {
-					info("+++++WEST) not in closedList")
 
 					// the treated frame (stock the infos)
 					var infosFrame = new InfosFrame(currentFrame.westNeighbour, coordNeighbour)
@@ -505,26 +448,19 @@ agent BoardGameAgent {
 						if (iterator.uuidCurrentFrame == currentFrame.ID)
 							break
 					}
-
-					info("+++++WEST) indexForClosedList=" + indexForClosedList)
 					
 					infosFrame.costG = closedListOfFrames.get(indexForClosedList).costG +
 						distEuclidian(frameList.get(index), currentFrame)
-
-					info("+++++WEST) infosFrame.costG=" + infosFrame.costG)
-					info("+++++WEST) infosFrame.coords=" + infosFrame.coordsCurrentFrame.toString)
 
 					// TODO: ATTENTION ! DOIT ETRE LA FRAME POSSEDANT LA BLANKTILE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					var arrivalFrame = frameList.get(((PROBLEM_SIZE * PROBLEM_SIZE) - 1)) // TKS: modify with the frame which has the blankTile
 					// costH of west's neighbour: it to arrival
 					infosFrame.costH = distEuclidian(frameList.get(index), arrivalFrame)
 					infosFrame.costF = infosFrame.costG + infosFrame.costH
-					info("+++++WEST) infosFrame.costH=" + infosFrame.costH+" /infosFrame.costF="+infosFrame.costF)
 
 					// previousFrame = the previousFrame in the chain of aggression (to build the path in the opposite direction)
 					infosFrame.uuidPreviousFrame = currentFrame.ID
 					infosFrame.coordsPreviousFrame = currentFrame.coordPair
-					info("+++++WEST) infosFrame.coordsPreviousFrame.coords=" + infosFrame.coordsPreviousFrame.toString)
 
 					var indexForOpenList = -1
 					for (iterator : openListOfFrames) {
@@ -532,23 +468,16 @@ agent BoardGameAgent {
 						if (iterator.uuidCurrentFrame == currentFrame.westNeighbour)
 							break
 					}
-					
-					info("+++++WEST) indexForOpenList=" + indexForOpenList)
 
 					// if already exists: compare the cost
 					if (isInFrameList(coordNeighbour, openListOfFrames)) {
-					
-						info("+++++WEST) already exists in openList")
-
 						// only if the new path is shorter: update it ELSE do nothing
-						if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF) {
-							info("+++++WEST) newPath is shorter: UPDATE it")
+						if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF)
 							openListOfFrames.set(indexForOpenList, infosFrame)
-						}
+						
 					} // the treated frame (west's frame) is not in the openList yet: add it
 					else {
 						openListOfFrames.add(infosFrame)
-						info("+++++WEST) doesn't exists yet in openList: ADD it /openListOfFrames.size=" + openListOfFrames.size)
 					}
 				}
 			}
@@ -563,26 +492,19 @@ agent BoardGameAgent {
 	 */
 	 // TKS
 def getBestFrame(listFrames : ArrayList<InfosFrame>) : InfosFrame {
-	info("////////////////////////getBestFrames(): listFrames.size"+listFrames.size)
 		if(!listFrames.empty){ // the list is not empty
 			var costF = listFrames.get(0).costF
 			var infoFrame = listFrames.get(0)
 			
 			for(frame : listFrames){
-				info("////////////////////////getBestFrames(): frame.coords=" + frame.coordsCurrentFrame.toString)
-				info("////////////////////////getBestFrames(): frame.costGHF=" + frame.toStringGHF)
 				if(frame.costF < costF){ // get the lower cost in the list
-					info("////////////////////////getBestFrames(): get a better one (lower)")
 					costF = frame.costF
 					infoFrame = frame
 				}
 			}
-				
-			info("////////////////////////getBestFrames(): return " + infoFrame.coordsCurrentFrame.toString)
 			return infoFrame
 		}
 		
-		info("////////////////////////getBestFrames(): return NULL")
 		return null		
 	}
 	
@@ -603,29 +525,68 @@ def getBestFrame(listFrames : ArrayList<InfosFrame>) : InfosFrame {
 		openListOfFrames.remove(index) // remove it from the openList
 	}
 	
-	// TKS
+	/** 
+	 * get the chain of aggression in a list of InfosFrame
+	 * return ArrayList<InfosFrame>: the list of InfosFrame for the aggression in the right order
+	 */
+	 // TKS
+	def buildChainAggression(beginningFrame : InfosFrame) : ArrayList<InfosFrame> {
+		var chain = new ArrayList<InfosFrame>
+		var index = closedListOfFrames.size-1
+		var tmpFrame : InfosFrame
+		var prevFrame : InfosFrame
+		var flagEnd = false
+		
+		// the last one is the arrivalFrame
+		tmpFrame = closedListOfFrames.get(index)
+		chain.add(tmpFrame)
+		
+		// get the previousFrame of the first one
+		prevFrame = new InfosFrame(tmpFrame.uuidPreviousFrame,tmpFrame.coordsPreviousFrame)
+				
+		// loop with each previousFrame of the currentFrame treated
+		while(!prevFrame.equals(beginningFrame)){		
+			chain.add(prevFrame)
+			
+			var i = -1
+			for(ite : closedListOfFrames){
+				
+				// the end
+				if(tmpFrame.coordsPreviousFrame==null){ 
+					flagEnd = true
+					break	
+				}
+					
+				i++
+				if(ite.coordsCurrentFrame.equals(tmpFrame.coordsPreviousFrame))
+					break
+			}
+			
+			// looping on the closedList
+			if(!flagEnd){
+				tmpFrame = closedListOfFrames.get(i)
+				prevFrame = new InfosFrame(closedListOfFrames.get(i).uuidCurrentFrame, closedListOfFrames.get(i).coordsCurrentFrame)
+			}
+			
+			// the end of the loop
+			else break
+		}
+		
+		return chain
+	}
+	
+	/** 
+	 * execute the A-star algorithm
+	 */
+	 // TKS
 	def findPath{
 		
-		// the arrival frame (on wich there is the blankTile) is the last one in the closedList
-		//var tmpFrame = closedListOfFrames.get(closedListOfFrames.size-1) // take the last one
-		
-		// TKS: TEST ===================================
-		
-		info("--------------BEGIN function findPath--------------")
-
-		info("######## 0)nbFrameSet=" + nbFrameSet)
-		info("######## 0)lastNumber=" + ((PROBLEM_SIZE * PROBLEM_SIZE) - 1))
-		val beginningFrame = new InfosFrame(frameUUIDList.get(1), listCoordPairsOfFrames.get(8)) // TODO: CHANGE WITH THE FRAME ON WHICH THE FILE HAS THE TOKEN
+		val beginningFrame = new InfosFrame(frameUUIDList.get(0), listCoordPairsOfFrames.get(0)) // TODO: CHANGE WITH THE FRAME ON WHICH THE FILE HAS THE TOKEN
 		val arrivalFrame = new InfosFrame(frameUUIDList.get((PROBLEM_SIZE * PROBLEM_SIZE) - 1),listCoordPairsOfFrames.get((PROBLEM_SIZE * PROBLEM_SIZE) - 1))
 		var currentFrame = beginningFrame
 		
 		openListOfFrames.add(beginningFrame)
-		info("######## 1)openListOfFrames.size=" + openListOfFrames.size)
-		info("######## 1)arrivalFrame.coords=" + arrivalFrame.coordsCurrentFrame.toString)
-		
 		addInClosedList(beginningFrame.coordsCurrentFrame)
-		info("######## 2)openListOfFrames.size=" + openListOfFrames.size)
-		info("######## 2)closedListOfFrames.size=" + closedListOfFrames.size)
 		
 		// get the frame with the index of FrameList
 		var indexOfFrameList = -1
@@ -635,38 +596,48 @@ def getBestFrame(listFrames : ArrayList<InfosFrame>) : InfosFrame {
 				break
 		}
 		
-		info("######## 3)frameList=" + frameList.size)
-		info("######## 3)indexOfFrameList=" + indexOfFrameList)
-		
 		// add the neighbours in the openList
 		addNeighbourFrames(frameList.get(indexOfFrameList))
 		
 		// until the destination has been reached && openList is empty
 		while(!currentFrame.coordsCurrentFrame.equals(arrivalFrame.coordsCurrentFrame) && !openListOfFrames.empty){
-			info("######## 4)while++")
 			currentFrame = getBestFrame(openListOfFrames)
-			info("######## 4)bestFrame="+currentFrame.coordsCurrentFrame.toString+" /openListOfFrames.size="+openListOfFrames.size)
 			addInClosedList(currentFrame.coordsCurrentFrame)
-			info("######## 4)addInClosedList-->closedListOfFrames.size=" + closedListOfFrames.size)		
+			
+			var indexOfFrameList2 = -1
+			for(ite : frameList){
+				indexOfFrameList2++
+				if (ite.coordPair.equals(currentFrame.coordsCurrentFrame))
+					break
+			}	
+			addNeighbourFrames(frameList.get(indexOfFrameList2))
 		}
 		
 		// if destination is reached : build the path in the opposite direction of the chain of aggression
-		// TODO: retrouver_chemin()
-		
-		// test: afficher la closedList
-		var i = -1;
-		for (ite : closedListOfFrames) {
-			i++
-			info("closed["+i+"]=" + ite.coordsCurrentFrame.toString)
+		if(currentFrame.coordsCurrentFrame.equals(arrivalFrame.coordsCurrentFrame)){
+			info("######## A-star : destination IS reached !")
+		} else {
+			info("######## A-star : destination IS NOT reached !")
 		}
-
-		info("--------------END function findPath--------------")
-		//==============================================
+		
+		
+		// sort in the opposite order AND remove duplicate frames
+		var tmpChainAggression = buildChainAggression(beginningFrame)
+		var chainAggression = new ArrayList<InfosFrame>()
+		var tmpFrame = tmpChainAggression.get(tmpChainAggression.size - 1)
+		chainAggression.add(tmpFrame)
+		for (var i=tmpChainAggression.size-2; i>=0; i--) {
+			if (!(tmpFrame.uuidCurrentFrame === tmpChainAggression.get(i).uuidCurrentFrame)) {
+				tmpFrame = tmpChainAggression.get(i)
+				chainAggression.add(tmpFrame)
+			}				
+		}
+		
+		for(ite : chainAggression)
+			info("path="+ite.coordsCurrentFrame.toString+" /ID="+ite.uuidCurrentFrame)
 	}
 
 	// TODO: determinate the frame (BeginningFrame) on wich the currentTile wants to go (FIRST aggression of the chain)
-	// THEN 
-	// TODO: implement the scheduling of the algorithm A*, for using it with the BeginningFrame (tileX who wants to move) and the ArrivalFrame(blankTile)
 
 	on Destroy {
 		// Event trigger when the agent is destroyed from the system.

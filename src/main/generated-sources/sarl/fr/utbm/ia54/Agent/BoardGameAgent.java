@@ -279,28 +279,20 @@ public class BoardGameAgent extends Agent {
    * add the neighbour's frames of the current frame
    * @params currentFrame: the current FrameAgent
    */
-  protected InfosFrame addNeighbourFrames(final FrameAgent currentFrame) {
-    InfosFrame _xblockexpression = null;
+  protected Object addNeighbourFrames(final FrameAgent currentFrame) {
+    Object _xblockexpression = null;
     {
       UUID _northNeighbour = currentFrame.getNorthNeighbour();
       boolean _notEquals = (!Objects.equal(_northNeighbour, null));
       if (_notEquals) {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("+++++NORTH exists");
         int index = this.frameUUIDList.indexOf(currentFrame.getNorthNeighbour());
         boolean _isSatisfied = this.frameList.get(index).getIsSatisfied();
         boolean _not = (!_isSatisfied);
         if (_not) {
           CoordPair coordNeighbour = this.listCoordPairsOfFrames.get(index);
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          String _string = coordNeighbour.toString();
-          String _plus = ("+++++NORTH) coordNeighbour=" + _string);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(_plus);
           boolean _isInFrameList = this.isInFrameList(coordNeighbour, this.closedListOfFrames);
           boolean _not_1 = (!_isInFrameList);
           if (_not_1) {
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info("+++++NORTH) not in closedList");
             UUID _northNeighbour_1 = currentFrame.getNorthNeighbour();
             InfosFrame infosFrame = new InfosFrame(_northNeighbour_1, coordNeighbour);
             int indexForClosedList = (-1);
@@ -315,39 +307,18 @@ public class BoardGameAgent extends Agent {
                 }
               }
             }
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(("+++++NORTH) indexForClosedList=" + Integer.valueOf(indexForClosedList)));
             int _costG = this.closedListOfFrames.get(indexForClosedList).getCostG();
             int _distEuclidian = this.distEuclidian(this.frameList.get(index), currentFrame);
-            int _plus_1 = (_costG + _distEuclidian);
-            infosFrame.setCostG(_plus_1);
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            int _costG_1 = infosFrame.getCostG();
-            String _plus_2 = ("+++++NORTH) infosFrame.costG=" + Integer.valueOf(_costG_1));
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4.info(_plus_2);
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            String _string_1 = infosFrame.getCoordsCurrentFrame().toString();
-            String _plus_3 = ("+++++NORTH) infosFrame.coords=" + _string_1);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5.info(_plus_3);
+            int _plus = (_costG + _distEuclidian);
+            infosFrame.setCostG(_plus);
             FrameAgent arrivalFrame = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1));
             infosFrame.setCostH(this.distEuclidian(this.frameList.get(index), arrivalFrame));
-            int _costG_2 = infosFrame.getCostG();
+            int _costG_1 = infosFrame.getCostG();
             int _costH = infosFrame.getCostH();
-            int _plus_4 = (_costG_2 + _costH);
-            infosFrame.setCostF(_plus_4);
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_6 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            int _costH_1 = infosFrame.getCostH();
-            String _plus_5 = ("+++++NORTH) infosFrame.costH=" + Integer.valueOf(_costH_1));
-            String _plus_6 = (_plus_5 + " /infosFrame.costF=");
-            int _costF = infosFrame.getCostF();
-            String _plus_7 = (_plus_6 + Integer.valueOf(_costF));
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_6.info(_plus_7);
+            int _plus_1 = (_costG_1 + _costH);
+            infosFrame.setCostF(_plus_1);
             infosFrame.setUuidPreviousFrame(currentFrame.getID());
             infosFrame.setCoordsPreviousFrame(currentFrame.getCoordPair());
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            String _string_2 = infosFrame.getCoordsPreviousFrame().toString();
-            String _plus_8 = ("+++++NORTH) infosFrame.coordsPreviousFrame.coords=" + _string_2);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7.info(_plus_8);
             int indexForOpenList = (-1);
             for (final InfosFrame iterator_1 : this.openListOfFrames) {
               {
@@ -360,26 +331,16 @@ public class BoardGameAgent extends Agent {
                 }
               }
             }
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_8 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_8.info(("+++++NORTH) indexForOpenList=" + Integer.valueOf(indexForOpenList)));
             boolean _isInFrameList_1 = this.isInFrameList(coordNeighbour, this.openListOfFrames);
             if (_isInFrameList_1) {
-              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_9 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_9.info("+++++NORTH) already exists in openList");
-              int _costF_1 = infosFrame.getCostF();
-              int _costF_2 = this.openListOfFrames.get(indexForOpenList).getCostF();
-              boolean _lessThan = (_costF_1 < _costF_2);
+              int _costF = infosFrame.getCostF();
+              int _costF_1 = this.openListOfFrames.get(indexForOpenList).getCostF();
+              boolean _lessThan = (_costF < _costF_1);
               if (_lessThan) {
-                Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_10 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_10.info("+++++NORTH) newPath is shorter: UPDATE it");
                 this.openListOfFrames.set(indexForOpenList, infosFrame);
               }
             } else {
               this.openListOfFrames.add(infosFrame);
-              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_11 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-              int _size = this.openListOfFrames.size();
-              String _plus_9 = ("+++++NORTH) doesn\'t exists yet in openList: ADD it /openListOfFrames.size=" + Integer.valueOf(_size));
-              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_11.info(_plus_9);
             }
           }
         }
@@ -387,22 +348,14 @@ public class BoardGameAgent extends Agent {
       UUID _southNeighbour = currentFrame.getSouthNeighbour();
       boolean _notEquals_1 = (!Objects.equal(_southNeighbour, null));
       if (_notEquals_1) {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_12 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_12.info("+++++SOUTH exists");
         int index_1 = this.frameUUIDList.indexOf(currentFrame.getSouthNeighbour());
         boolean _isSatisfied_1 = this.frameList.get(index_1).getIsSatisfied();
         boolean _not_2 = (!_isSatisfied_1);
         if (_not_2) {
           CoordPair coordNeighbour_1 = this.listCoordPairsOfFrames.get(index_1);
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_13 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          String _string_3 = coordNeighbour_1.toString();
-          String _plus_10 = ("+++++SOUTH) coordNeighbour=" + _string_3);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_13.info(_plus_10);
           boolean _isInFrameList_2 = this.isInFrameList(coordNeighbour_1, this.closedListOfFrames);
           boolean _not_3 = (!_isInFrameList_2);
           if (_not_3) {
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_14 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_14.info("+++++SOUTH) not in closedList");
             UUID _southNeighbour_1 = currentFrame.getSouthNeighbour();
             InfosFrame infosFrame_1 = new InfosFrame(_southNeighbour_1, coordNeighbour_1);
             int indexForClosedList_1 = (-1);
@@ -417,39 +370,18 @@ public class BoardGameAgent extends Agent {
                 }
               }
             }
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_15 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_15.info(("+++++SOUTH) indexForClosedList=" + Integer.valueOf(indexForClosedList_1)));
-            int _costG_3 = this.closedListOfFrames.get(indexForClosedList_1).getCostG();
+            int _costG_2 = this.closedListOfFrames.get(indexForClosedList_1).getCostG();
             int _distEuclidian_1 = this.distEuclidian(this.frameList.get(index_1), currentFrame);
-            int _plus_11 = (_costG_3 + _distEuclidian_1);
-            infosFrame_1.setCostG(_plus_11);
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_16 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            int _costG_4 = infosFrame_1.getCostG();
-            String _plus_12 = ("+++++SOUTH) infosFrame.costG=" + Integer.valueOf(_costG_4));
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_16.info(_plus_12);
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_17 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            String _string_4 = infosFrame_1.getCoordsCurrentFrame().toString();
-            String _plus_13 = ("+++++SOUTH) infosFrame.coords=" + _string_4);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_17.info(_plus_13);
+            int _plus_2 = (_costG_2 + _distEuclidian_1);
+            infosFrame_1.setCostG(_plus_2);
             FrameAgent arrivalFrame_1 = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1));
             infosFrame_1.setCostH(this.distEuclidian(this.frameList.get(index_1), arrivalFrame_1));
-            int _costG_5 = infosFrame_1.getCostG();
-            int _costH_2 = infosFrame_1.getCostH();
-            int _plus_14 = (_costG_5 + _costH_2);
-            infosFrame_1.setCostF(_plus_14);
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_18 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            int _costH_3 = infosFrame_1.getCostH();
-            String _plus_15 = ("+++++SOUTH) infosFrame.costH=" + Integer.valueOf(_costH_3));
-            String _plus_16 = (_plus_15 + " /infosFrame.costF=");
-            int _costF_3 = infosFrame_1.getCostF();
-            String _plus_17 = (_plus_16 + Integer.valueOf(_costF_3));
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_18.info(_plus_17);
+            int _costG_3 = infosFrame_1.getCostG();
+            int _costH_1 = infosFrame_1.getCostH();
+            int _plus_3 = (_costG_3 + _costH_1);
+            infosFrame_1.setCostF(_plus_3);
             infosFrame_1.setUuidPreviousFrame(currentFrame.getID());
             infosFrame_1.setCoordsPreviousFrame(currentFrame.getCoordPair());
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_19 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            String _string_5 = infosFrame_1.getCoordsPreviousFrame().toString();
-            String _plus_18 = ("+++++SOUTH) infosFrame.coordsPreviousFrame.coords=" + _string_5);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_19.info(_plus_18);
             int indexForOpenList_1 = (-1);
             for (final InfosFrame iterator_3 : this.openListOfFrames) {
               {
@@ -462,26 +394,16 @@ public class BoardGameAgent extends Agent {
                 }
               }
             }
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_20 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_20.info(("+++++SOUTH) indexForOpenList=" + Integer.valueOf(indexForOpenList_1)));
             boolean _isInFrameList_3 = this.isInFrameList(coordNeighbour_1, this.openListOfFrames);
             if (_isInFrameList_3) {
-              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_21 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_21.info("+++++SOUTH) already exists in openList");
-              int _costF_4 = infosFrame_1.getCostF();
-              int _costF_5 = this.openListOfFrames.get(indexForOpenList_1).getCostF();
-              boolean _lessThan_1 = (_costF_4 < _costF_5);
+              int _costF_2 = infosFrame_1.getCostF();
+              int _costF_3 = this.openListOfFrames.get(indexForOpenList_1).getCostF();
+              boolean _lessThan_1 = (_costF_2 < _costF_3);
               if (_lessThan_1) {
-                Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_22 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_22.info("+++++SOUTH) newPath is shorter: UPDATE it");
                 this.openListOfFrames.set(indexForOpenList_1, infosFrame_1);
               }
             } else {
               this.openListOfFrames.add(infosFrame_1);
-              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_23 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-              int _size_1 = this.openListOfFrames.size();
-              String _plus_19 = ("+++++SOUTH) doesn\'t exists yet in openList: ADD it /openListOfFrames.size=" + Integer.valueOf(_size_1));
-              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_23.info(_plus_19);
             }
           }
         }
@@ -489,22 +411,14 @@ public class BoardGameAgent extends Agent {
       UUID _eastNeighbour = currentFrame.getEastNeighbour();
       boolean _notEquals_2 = (!Objects.equal(_eastNeighbour, null));
       if (_notEquals_2) {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_24 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_24.info("+++++EAST exists");
         int index_2 = this.frameUUIDList.indexOf(currentFrame.getEastNeighbour());
         boolean _isSatisfied_2 = this.frameList.get(index_2).getIsSatisfied();
         boolean _not_4 = (!_isSatisfied_2);
         if (_not_4) {
           CoordPair coordNeighbour_2 = this.listCoordPairsOfFrames.get(index_2);
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_25 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          String _string_6 = coordNeighbour_2.toString();
-          String _plus_20 = ("+++++EAST) coordNeighbour=" + _string_6);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_25.info(_plus_20);
           boolean _isInFrameList_4 = this.isInFrameList(coordNeighbour_2, this.closedListOfFrames);
           boolean _not_5 = (!_isInFrameList_4);
           if (_not_5) {
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_26 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_26.info("+++++EAST) not in closedList");
             UUID _eastNeighbour_1 = currentFrame.getEastNeighbour();
             InfosFrame infosFrame_2 = new InfosFrame(_eastNeighbour_1, coordNeighbour_2);
             int indexForClosedList_2 = (-1);
@@ -519,39 +433,18 @@ public class BoardGameAgent extends Agent {
                 }
               }
             }
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_27 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_27.info(("+++++EAST) indexForClosedList=" + Integer.valueOf(indexForClosedList_2)));
-            int _costG_6 = this.closedListOfFrames.get(indexForClosedList_2).getCostG();
+            int _costG_4 = this.closedListOfFrames.get(indexForClosedList_2).getCostG();
             int _distEuclidian_2 = this.distEuclidian(this.frameList.get(index_2), currentFrame);
-            int _plus_21 = (_costG_6 + _distEuclidian_2);
-            infosFrame_2.setCostG(_plus_21);
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_28 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            int _costG_7 = infosFrame_2.getCostG();
-            String _plus_22 = ("+++++EAST) infosFrame.costG=" + Integer.valueOf(_costG_7));
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_28.info(_plus_22);
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_29 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            String _string_7 = infosFrame_2.getCoordsCurrentFrame().toString();
-            String _plus_23 = ("+++++EAST) infosFrame.coords=" + _string_7);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_29.info(_plus_23);
+            int _plus_4 = (_costG_4 + _distEuclidian_2);
+            infosFrame_2.setCostG(_plus_4);
             FrameAgent arrivalFrame_2 = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1));
             infosFrame_2.setCostH(this.distEuclidian(this.frameList.get(index_2), arrivalFrame_2));
-            int _costG_8 = infosFrame_2.getCostG();
-            int _costH_4 = infosFrame_2.getCostH();
-            int _plus_24 = (_costG_8 + _costH_4);
-            infosFrame_2.setCostF(_plus_24);
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_30 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            int _costH_5 = infosFrame_2.getCostH();
-            String _plus_25 = ("+++++EAST) infosFrame.costH=" + Integer.valueOf(_costH_5));
-            String _plus_26 = (_plus_25 + " /infosFrame.costF=");
-            int _costF_6 = infosFrame_2.getCostF();
-            String _plus_27 = (_plus_26 + Integer.valueOf(_costF_6));
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_30.info(_plus_27);
+            int _costG_5 = infosFrame_2.getCostG();
+            int _costH_2 = infosFrame_2.getCostH();
+            int _plus_5 = (_costG_5 + _costH_2);
+            infosFrame_2.setCostF(_plus_5);
             infosFrame_2.setUuidPreviousFrame(currentFrame.getID());
             infosFrame_2.setCoordsPreviousFrame(currentFrame.getCoordPair());
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_31 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            String _string_8 = infosFrame_2.getCoordsPreviousFrame().toString();
-            String _plus_28 = ("+++++EAST) infosFrame.coordsPreviousFrame.coords=" + _string_8);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_31.info(_plus_28);
             int indexForOpenList_2 = (-1);
             for (final InfosFrame iterator_5 : this.openListOfFrames) {
               {
@@ -564,58 +457,40 @@ public class BoardGameAgent extends Agent {
                 }
               }
             }
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_32 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_32.info(("+++++EAST) indexForOpenList=" + Integer.valueOf(indexForOpenList_2)));
             boolean _isInFrameList_5 = this.isInFrameList(coordNeighbour_2, this.openListOfFrames);
             if (_isInFrameList_5) {
-              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_33 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_33.info("+++++EAST) already exists in openList");
-              int _costF_7 = infosFrame_2.getCostF();
-              int _costF_8 = this.openListOfFrames.get(indexForOpenList_2).getCostF();
-              boolean _lessThan_2 = (_costF_7 < _costF_8);
+              int _costF_4 = infosFrame_2.getCostF();
+              int _costF_5 = this.openListOfFrames.get(indexForOpenList_2).getCostF();
+              boolean _lessThan_2 = (_costF_4 < _costF_5);
               if (_lessThan_2) {
-                Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_34 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_34.info("+++++EAST) newPath is shorter: UPDATE it");
                 this.openListOfFrames.set(indexForOpenList_2, infosFrame_2);
               }
             } else {
               this.openListOfFrames.add(infosFrame_2);
-              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_35 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-              int _size_2 = this.openListOfFrames.size();
-              String _plus_29 = ("+++++EAST) doesn\'t exists yet in openList: ADD it /openListOfFrames.size=" + Integer.valueOf(_size_2));
-              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_35.info(_plus_29);
             }
           }
         }
       }
-      InfosFrame _xifexpression = null;
+      Object _xifexpression = null;
       UUID _westNeighbour = currentFrame.getWestNeighbour();
       boolean _notEquals_3 = (!Objects.equal(_westNeighbour, null));
       if (_notEquals_3) {
-        InfosFrame _xblockexpression_1 = null;
+        Object _xblockexpression_1 = null;
         {
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_36 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_36.info("+++++WEST exists");
           int index_3 = this.frameUUIDList.indexOf(currentFrame.getWestNeighbour());
-          InfosFrame _xifexpression_1 = null;
+          Object _xifexpression_1 = null;
           boolean _isSatisfied_3 = this.frameList.get(index_3).getIsSatisfied();
           boolean _not_6 = (!_isSatisfied_3);
           if (_not_6) {
-            InfosFrame _xblockexpression_2 = null;
+            Object _xblockexpression_2 = null;
             {
               CoordPair coordNeighbour_3 = this.listCoordPairsOfFrames.get(index_3);
-              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_37 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-              String _string_9 = coordNeighbour_3.toString();
-              String _plus_30 = ("+++++WEST) coordNeighbour=" + _string_9);
-              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_37.info(_plus_30);
-              InfosFrame _xifexpression_2 = null;
+              Object _xifexpression_2 = null;
               boolean _isInFrameList_6 = this.isInFrameList(coordNeighbour_3, this.closedListOfFrames);
               boolean _not_7 = (!_isInFrameList_6);
               if (_not_7) {
-                InfosFrame _xblockexpression_3 = null;
+                Object _xblockexpression_3 = null;
                 {
-                  Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_38 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                  _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_38.info("+++++WEST) not in closedList");
                   UUID _westNeighbour_1 = currentFrame.getWestNeighbour();
                   InfosFrame infosFrame_3 = new InfosFrame(_westNeighbour_1, coordNeighbour_3);
                   int indexForClosedList_3 = (-1);
@@ -630,39 +505,18 @@ public class BoardGameAgent extends Agent {
                       }
                     }
                   }
-                  Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_39 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                  _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_39.info(("+++++WEST) indexForClosedList=" + Integer.valueOf(indexForClosedList_3)));
-                  int _costG_9 = this.closedListOfFrames.get(indexForClosedList_3).getCostG();
+                  int _costG_6 = this.closedListOfFrames.get(indexForClosedList_3).getCostG();
                   int _distEuclidian_3 = this.distEuclidian(this.frameList.get(index_3), currentFrame);
-                  int _plus_31 = (_costG_9 + _distEuclidian_3);
-                  infosFrame_3.setCostG(_plus_31);
-                  Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_40 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                  int _costG_10 = infosFrame_3.getCostG();
-                  String _plus_32 = ("+++++WEST) infosFrame.costG=" + Integer.valueOf(_costG_10));
-                  _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_40.info(_plus_32);
-                  Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_41 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                  String _string_10 = infosFrame_3.getCoordsCurrentFrame().toString();
-                  String _plus_33 = ("+++++WEST) infosFrame.coords=" + _string_10);
-                  _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_41.info(_plus_33);
+                  int _plus_6 = (_costG_6 + _distEuclidian_3);
+                  infosFrame_3.setCostG(_plus_6);
                   FrameAgent arrivalFrame_3 = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1));
                   infosFrame_3.setCostH(this.distEuclidian(this.frameList.get(index_3), arrivalFrame_3));
-                  int _costG_11 = infosFrame_3.getCostG();
-                  int _costH_6 = infosFrame_3.getCostH();
-                  int _plus_34 = (_costG_11 + _costH_6);
-                  infosFrame_3.setCostF(_plus_34);
-                  Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_42 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                  int _costH_7 = infosFrame_3.getCostH();
-                  String _plus_35 = ("+++++WEST) infosFrame.costH=" + Integer.valueOf(_costH_7));
-                  String _plus_36 = (_plus_35 + " /infosFrame.costF=");
-                  int _costF_9 = infosFrame_3.getCostF();
-                  String _plus_37 = (_plus_36 + Integer.valueOf(_costF_9));
-                  _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_42.info(_plus_37);
+                  int _costG_7 = infosFrame_3.getCostG();
+                  int _costH_3 = infosFrame_3.getCostH();
+                  int _plus_7 = (_costG_7 + _costH_3);
+                  infosFrame_3.setCostF(_plus_7);
                   infosFrame_3.setUuidPreviousFrame(currentFrame.getID());
                   infosFrame_3.setCoordsPreviousFrame(currentFrame.getCoordPair());
-                  Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_43 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                  String _string_11 = infosFrame_3.getCoordsPreviousFrame().toString();
-                  String _plus_38 = ("+++++WEST) infosFrame.coordsPreviousFrame.coords=" + _string_11);
-                  _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_43.info(_plus_38);
                   int indexForOpenList_3 = (-1);
                   for (final InfosFrame iterator_7 : this.openListOfFrames) {
                     {
@@ -675,37 +529,19 @@ public class BoardGameAgent extends Agent {
                       }
                     }
                   }
-                  Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_44 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                  _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_44.info(("+++++WEST) indexForOpenList=" + Integer.valueOf(indexForOpenList_3)));
-                  InfosFrame _xifexpression_3 = null;
+                  Object _xifexpression_3 = null;
                   boolean _isInFrameList_7 = this.isInFrameList(coordNeighbour_3, this.openListOfFrames);
                   if (_isInFrameList_7) {
-                    InfosFrame _xblockexpression_4 = null;
-                    {
-                      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_45 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_45.info("+++++WEST) already exists in openList");
-                      InfosFrame _xifexpression_4 = null;
-                      int _costF_10 = infosFrame_3.getCostF();
-                      int _costF_11 = this.openListOfFrames.get(indexForOpenList_3).getCostF();
-                      boolean _lessThan_3 = (_costF_10 < _costF_11);
-                      if (_lessThan_3) {
-                        InfosFrame _xblockexpression_5 = null;
-                        {
-                          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_46 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_46.info("+++++WEST) newPath is shorter: UPDATE it");
-                          _xblockexpression_5 = this.openListOfFrames.set(indexForOpenList_3, infosFrame_3);
-                        }
-                        _xifexpression_4 = _xblockexpression_5;
-                      }
-                      _xblockexpression_4 = _xifexpression_4;
+                    InfosFrame _xifexpression_4 = null;
+                    int _costF_6 = infosFrame_3.getCostF();
+                    int _costF_7 = this.openListOfFrames.get(indexForOpenList_3).getCostF();
+                    boolean _lessThan_3 = (_costF_6 < _costF_7);
+                    if (_lessThan_3) {
+                      _xifexpression_4 = this.openListOfFrames.set(indexForOpenList_3, infosFrame_3);
                     }
-                    _xifexpression_3 = _xblockexpression_4;
+                    _xifexpression_3 = _xifexpression_4;
                   } else {
-                    this.openListOfFrames.add(infosFrame_3);
-                    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_45 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                    int _size_3 = this.openListOfFrames.size();
-                    String _plus_39 = ("+++++WEST) doesn\'t exists yet in openList: ADD it /openListOfFrames.size=" + Integer.valueOf(_size_3));
-                    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_45.info(_plus_39);
+                    _xifexpression_3 = Boolean.valueOf(this.openListOfFrames.add(infosFrame_3));
                   }
                   _xblockexpression_3 = _xifexpression_3;
                 }
@@ -731,43 +567,21 @@ public class BoardGameAgent extends Agent {
    */
   @Pure
   protected InfosFrame getBestFrame(final ArrayList<InfosFrame> listFrames) {
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    int _size = listFrames.size();
-    String _plus = ("////////////////////////getBestFrames(): listFrames.size" + Integer.valueOf(_size));
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
     boolean _isEmpty = listFrames.isEmpty();
     boolean _not = (!_isEmpty);
     if (_not) {
       int costF = listFrames.get(0).getCostF();
       InfosFrame infoFrame = listFrames.get(0);
       for (final InfosFrame frame : listFrames) {
-        {
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          String _string = frame.getCoordsCurrentFrame().toString();
-          String _plus_1 = ("////////////////////////getBestFrames(): frame.coords=" + _string);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(_plus_1);
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          String _stringGHF = frame.toStringGHF();
-          String _plus_2 = ("////////////////////////getBestFrames(): frame.costGHF=" + _stringGHF);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(_plus_2);
-          int _costF = frame.getCostF();
-          boolean _lessThan = (_costF < costF);
-          if (_lessThan) {
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info("////////////////////////getBestFrames(): get a better one (lower)");
-            costF = frame.getCostF();
-            infoFrame = frame;
-          }
+        int _costF = frame.getCostF();
+        boolean _lessThan = (_costF < costF);
+        if (_lessThan) {
+          costF = frame.getCostF();
+          infoFrame = frame;
         }
       }
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      String _string = infoFrame.getCoordsCurrentFrame().toString();
-      String _plus_1 = ("////////////////////////getBestFrames(): return " + _string);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(_plus_1);
       return infoFrame;
     }
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info("////////////////////////getBestFrames(): return NULL");
     return null;
   }
   
@@ -794,38 +608,69 @@ public class BoardGameAgent extends Agent {
     return _xblockexpression;
   }
   
+  /**
+   * get the chain of aggression in a list of InfosFrame
+   * return ArrayList<InfosFrame>: the list of InfosFrame for the aggression in the right order
+   */
+  protected ArrayList<InfosFrame> buildChainAggression(final InfosFrame beginningFrame) {
+    ArrayList<InfosFrame> chain = new ArrayList<InfosFrame>();
+    int _size = this.closedListOfFrames.size();
+    int index = (_size - 1);
+    InfosFrame tmpFrame = null;
+    InfosFrame prevFrame = null;
+    boolean flagEnd = false;
+    tmpFrame = this.closedListOfFrames.get(index);
+    chain.add(tmpFrame);
+    UUID _uuidPreviousFrame = tmpFrame.getUuidPreviousFrame();
+    CoordPair _coordsPreviousFrame = tmpFrame.getCoordsPreviousFrame();
+    InfosFrame _infosFrame = new InfosFrame(_uuidPreviousFrame, _coordsPreviousFrame);
+    prevFrame = _infosFrame;
+    while ((!prevFrame.equals(beginningFrame))) {
+      {
+        chain.add(prevFrame);
+        int i = (-1);
+        for (final InfosFrame ite : this.closedListOfFrames) {
+          {
+            CoordPair _coordsPreviousFrame_1 = tmpFrame.getCoordsPreviousFrame();
+            boolean _equals = Objects.equal(_coordsPreviousFrame_1, null);
+            if (_equals) {
+              flagEnd = true;
+              break;
+            }
+            i++;
+            boolean _equals_1 = ite.getCoordsCurrentFrame().equals(tmpFrame.getCoordsPreviousFrame());
+            if (_equals_1) {
+              break;
+            }
+          }
+        }
+        if ((!flagEnd)) {
+          tmpFrame = this.closedListOfFrames.get(i);
+          UUID _uuidCurrentFrame = this.closedListOfFrames.get(i).getUuidCurrentFrame();
+          CoordPair _coordsCurrentFrame = this.closedListOfFrames.get(i).getCoordsCurrentFrame();
+          InfosFrame _infosFrame_1 = new InfosFrame(_uuidCurrentFrame, _coordsCurrentFrame);
+          prevFrame = _infosFrame_1;
+        } else {
+          break;
+        }
+      }
+    }
+    return chain;
+  }
+  
+  /**
+   * execute the A-star algorithm
+   */
   protected void findPath() {
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("--------------BEGIN function findPath--------------");
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(("######## 0)nbFrameSet=" + Integer.valueOf(this.nbFrameSet)));
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(("######## 0)lastNumber=" + Integer.valueOf(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1))));
-    UUID _get = this.frameUUIDList.get(1);
-    CoordPair _get_1 = this.listCoordPairsOfFrames.get(8);
+    UUID _get = this.frameUUIDList.get(0);
+    CoordPair _get_1 = this.listCoordPairsOfFrames.get(0);
     final InfosFrame beginningFrame = new InfosFrame(_get, _get_1);
     UUID _get_2 = this.frameUUIDList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1));
     CoordPair _get_3 = this.listCoordPairsOfFrames.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1));
     final InfosFrame arrivalFrame = new InfosFrame(_get_2, _get_3);
     InfosFrame currentFrame = beginningFrame;
     this.openListOfFrames.add(beginningFrame);
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    int _size = this.openListOfFrames.size();
-    String _plus = ("######## 1)openListOfFrames.size=" + Integer.valueOf(_size));
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus);
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    String _string = arrivalFrame.getCoordsCurrentFrame().toString();
-    String _plus_1 = ("######## 1)arrivalFrame.coords=" + _string);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4.info(_plus_1);
     this.addInClosedList(beginningFrame.getCoordsCurrentFrame());
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    int _size_1 = this.openListOfFrames.size();
-    String _plus_2 = ("######## 2)openListOfFrames.size=" + Integer.valueOf(_size_1));
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5.info(_plus_2);
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_6 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    int _size_2 = this.closedListOfFrames.size();
-    String _plus_3 = ("######## 2)closedListOfFrames.size=" + Integer.valueOf(_size_2));
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_6.info(_plus_3);
     int indexOfFrameList = (-1);
     for (final FrameAgent ite : this.frameList) {
       {
@@ -836,44 +681,57 @@ public class BoardGameAgent extends Agent {
         }
       }
     }
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    int _size_3 = this.frameList.size();
-    String _plus_4 = ("######## 3)frameList=" + Integer.valueOf(_size_3));
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7.info(_plus_4);
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_8 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_8.info(("######## 3)indexOfFrameList=" + Integer.valueOf(indexOfFrameList)));
     this.addNeighbourFrames(this.frameList.get(indexOfFrameList));
     while (((!currentFrame.getCoordsCurrentFrame().equals(arrivalFrame.getCoordsCurrentFrame())) && (!this.openListOfFrames.isEmpty()))) {
       {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_9 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_9.info("######## 4)while++");
         currentFrame = this.getBestFrame(this.openListOfFrames);
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_10 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        String _string_1 = currentFrame.getCoordsCurrentFrame().toString();
-        String _plus_5 = ("######## 4)bestFrame=" + _string_1);
-        String _plus_6 = (_plus_5 + " /openListOfFrames.size=");
-        int _size_4 = this.openListOfFrames.size();
-        String _plus_7 = (_plus_6 + Integer.valueOf(_size_4));
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_10.info(_plus_7);
         this.addInClosedList(currentFrame.getCoordsCurrentFrame());
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_11 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        int _size_5 = this.closedListOfFrames.size();
-        String _plus_8 = ("######## 4)addInClosedList-->closedListOfFrames.size=" + Integer.valueOf(_size_5));
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_11.info(_plus_8);
+        int indexOfFrameList2 = (-1);
+        for (final FrameAgent ite_1 : this.frameList) {
+          {
+            indexOfFrameList2++;
+            boolean _equals = ite_1.getCoordPair().equals(currentFrame.getCoordsCurrentFrame());
+            if (_equals) {
+              break;
+            }
+          }
+        }
+        this.addNeighbourFrames(this.frameList.get(indexOfFrameList2));
       }
     }
-    int i = (-1);
-    for (final InfosFrame ite_1 : this.closedListOfFrames) {
-      {
-        i++;
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_9 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        String _string_1 = ite_1.getCoordsCurrentFrame().toString();
-        String _plus_5 = ((("closed[" + Integer.valueOf(i)) + "]=") + _string_1);
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_9.info(_plus_5);
+    boolean _equals = currentFrame.getCoordsCurrentFrame().equals(arrivalFrame.getCoordsCurrentFrame());
+    if (_equals) {
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("######## A-star : destination IS reached !");
+    } else {
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("######## A-star : destination IS NOT reached !");
+    }
+    ArrayList<InfosFrame> tmpChainAggression = this.buildChainAggression(beginningFrame);
+    ArrayList<InfosFrame> chainAggression = new ArrayList<InfosFrame>();
+    int _size = tmpChainAggression.size();
+    int _minus = (_size - 1);
+    InfosFrame tmpFrame = tmpChainAggression.get(_minus);
+    chainAggression.add(tmpFrame);
+    for (int i = (tmpChainAggression.size() - 2); (i >= 0); i--) {
+      UUID _uuidCurrentFrame = tmpFrame.getUuidCurrentFrame();
+      UUID _uuidCurrentFrame_1 = tmpChainAggression.get(i).getUuidCurrentFrame();
+      boolean _tripleEquals = (_uuidCurrentFrame == _uuidCurrentFrame_1);
+      boolean _not = (!_tripleEquals);
+      if (_not) {
+        tmpFrame = tmpChainAggression.get(i);
+        chainAggression.add(tmpFrame);
       }
     }
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_9 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_9.info("--------------END function findPath--------------");
+    for (final InfosFrame ite_1 : chainAggression) {
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      String _string = ite_1.getCoordsCurrentFrame().toString();
+      String _plus = ("path=" + _string);
+      String _plus_1 = (_plus + " /ID=");
+      UUID _uuidCurrentFrame = ite_1.getUuidCurrentFrame();
+      String _plus_2 = (_plus_1 + _uuidCurrentFrame);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(_plus_2);
+    }
   }
   
   @SyntheticMember

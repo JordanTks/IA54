@@ -11,6 +11,7 @@ public class InfosFrame {
 	private int costF; // sum of the previous (memorize)
 	private UUID uuidPreviousFrame;
 	private CoordPair coordsPreviousFrame;
+	private int numFrame=-1;
 	
 	public InfosFrame(UUID uuidCurrentFrame, CoordPair coordsCurrentFrame) {
 		super();
@@ -69,6 +70,15 @@ public class InfosFrame {
 	public String toStringGHF() {
 		return "costG=" + costG + ", costH=" + costH + ", costF=" + costF;
 	}
-		
+
+	public int getNumFrame() {
+		return numFrame;
+	}
+
+	public void setNumFrame(int numFrame) {
+		this.numFrame = numFrame;
+	}
+	
+	
 	
 }

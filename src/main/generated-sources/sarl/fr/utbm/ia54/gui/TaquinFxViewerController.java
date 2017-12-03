@@ -201,7 +201,15 @@ public class TaquinFxViewerController extends FxViewerController {
             Text t = ((Text) _get);
             boolean _equals = t.getText().equals(Integer.toString((numTile).intValue()));
             if (_equals) {
-              t.setFill(Color.RED);
+              boolean _equals_1 = color.equals("rouge");
+              if (_equals_1) {
+                t.setFill(Color.RED);
+              } else {
+                boolean _equals_2 = color.equals("vert");
+                if (_equals_2) {
+                  t.setFill(Color.GREEN);
+                }
+              }
               return;
             }
           }
