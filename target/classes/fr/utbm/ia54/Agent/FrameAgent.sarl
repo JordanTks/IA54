@@ -45,18 +45,18 @@ agent FrameAgent {
 	var dimension = -1
 
 	var idNum = -1
- 
+  
 	// TKS
 	var xRow = -1
 	var yCol = -1
 	var coordPair : CoordPair // coords (Xrow,Ycol) of the frame
-	var costG = -1 // from beginning to current
-	var costH = -1 // from current to arrival
-	var costF = -1 // sum of the previous (memorize)
+	var costG = 0 // from beginning to current
+	var costH = 0 // from current to arrival
+	var costF = 0 // sum of the previous (memorize)
 	var uuidPreviousFrame : UUID
 	var coordsXYPreviousFrame : CoordPair
 
-	on Initialize {
+	on Initialize { 
 		
 		idNum = occurrence.parameters.get(0) as Integer
 
@@ -145,6 +145,10 @@ agent FrameAgent {
 
 	def setCoordsXYPreviousFrame(coordsXYPreviousFrame : CoordPair) {
 			this.coordsXYPreviousFrame = coordsXYPreviousFrame;
+	}
+	
+	def getCostsGHF : String{
+		return "costG="+this.costG+" /costH="+this.costH+" /costF="+this.costF
 	}
 	
 	

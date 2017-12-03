@@ -18,4 +18,11 @@ public class CoordPair {
 	public boolean equals(CoordPair pair){
 		return ((this.x==pair.getX()) && (this.y==pair.getY()));
 	}
+
+	@Override
+	public String toString() {
+		return "CoordPair [x=" + x + ", y=" + y + "]";
+	}
+	
+	
 }

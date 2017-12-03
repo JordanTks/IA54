@@ -67,11 +67,11 @@ public class FrameAgent extends Agent {
   
   private CoordPair coordPair;
   
-  private int costG = (-1);
+  private int costG = 0;
   
-  private int costH = (-1);
+  private int costH = 0;
   
-  private int costF = (-1);
+  private int costF = 0;
   
   private UUID uuidPreviousFrame;
   
@@ -177,6 +177,11 @@ public class FrameAgent extends Agent {
   
   protected void setCoordsXYPreviousFrame(final CoordPair coordsXYPreviousFrame) {
     this.coordsXYPreviousFrame = coordsXYPreviousFrame;
+  }
+  
+  @Pure
+  protected String getCostsGHF() {
+    return ((((("costG=" + Integer.valueOf(this.costG)) + " /costH=") + Integer.valueOf(this.costH)) + " /costF=") + Integer.valueOf(this.costF));
   }
   
   @SyntheticMember

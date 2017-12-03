@@ -10,7 +10,7 @@ public class InfosFrame {
 	private int costH; // from current to arrival
 	private int costF; // sum of the previous (memorize)
 	private UUID uuidPreviousFrame;
-	private CoordPair coordsXYPreviousFrame;
+	private CoordPair coordsPreviousFrame;
 	
 	public InfosFrame(UUID uuidCurrentFrame, CoordPair coordsCurrentFrame) {
 		super();
@@ -50,12 +50,12 @@ public class InfosFrame {
 		this.uuidPreviousFrame = uuidPreviousFrame;
 	}
 
-	public CoordPair getCoordsXYPreviousFrame() {
-		return coordsXYPreviousFrame;
+	public CoordPair getCoordsPreviousFrame() {
+		return coordsPreviousFrame;
 	}
 
-	public void setCoordsXYPreviousFrame(CoordPair coordsXYPreviousFrame) {
-		this.coordsXYPreviousFrame = coordsXYPreviousFrame;
+	public void setCoordsPreviousFrame(CoordPair coordsXYPreviousFrame) {
+		this.coordsPreviousFrame = coordsXYPreviousFrame;
 	}
 
 	public UUID getUuidCurrentFrame() {
@@ -64,6 +64,10 @@ public class InfosFrame {
 
 	public CoordPair getCoordsCurrentFrame() {
 		return coordsCurrentFrame;
+	}
+
+	public String toStringGHF() {
+		return "costG=" + costG + ", costH=" + costH + ", costF=" + costF;
 	}
 		
 	
