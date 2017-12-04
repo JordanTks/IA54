@@ -55,6 +55,8 @@ public class FrameAgent extends Agent {
   
   private UUID westNeighbour;
   
+  private UUID hostedTile;
+  
   private boolean ready = false;
   
   private int dimension = (-1);
@@ -255,6 +257,10 @@ public class FrameAgent extends Agent {
   @Pure
   protected UUID getWestNeighbour() {
     return this.westNeighbour;
+  }
+  
+  protected void setHostedTile(final UUID id) {
+    this.hostedTile = id;
   }
   
   @SyntheticMember
@@ -463,6 +469,9 @@ public class FrameAgent extends Agent {
     if (!java.util.Objects.equals(this.westNeighbour, other.westNeighbour)) {
       return false;
     }
+    if (!java.util.Objects.equals(this.hostedTile, other.hostedTile)) {
+      return false;
+    }
     if (other.ready != this.ready)
       return false;
     if (other.dimension != this.dimension)
@@ -498,6 +507,7 @@ public class FrameAgent extends Agent {
     result = prime * result + java.util.Objects.hashCode(this.eastNeighbour);
     result = prime * result + java.util.Objects.hashCode(this.southNeighbour);
     result = prime * result + java.util.Objects.hashCode(this.westNeighbour);
+    result = prime * result + java.util.Objects.hashCode(this.hostedTile);
     result = prime * result + (this.ready ? 1231 : 1237);
     result = prime * result + this.dimension;
     result = prime * result + this.idNum;

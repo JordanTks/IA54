@@ -40,6 +40,8 @@ agent FrameAgent {
 	var eastNeighbour : UUID
 	var southNeighbour : UUID
 	var westNeighbour : UUID
+
+	var hostedTile : UUID
 	
 	var ready = false
 	var dimension = -1
@@ -201,7 +203,11 @@ agent FrameAgent {
 	def getWestNeighbour : UUID {
 			return this.westNeighbour
 	}
-		
+
+	def setHostedTile(id : UUID) {
+		hostedTile = id
+	}
+	
 	on Destroy {
 		// Event trigger when the agent is destroyed from the system.
 		// You should put all the resource releasing statements in this block of code.

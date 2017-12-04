@@ -135,7 +135,10 @@ agent BoardGameAgent {
 			
 			// Spawn tile agents (num tile/UUID frame/num frame/ problem size)
 			for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++)
-				spawn(TileAgent, #[startingTiles.get(i), frameList.get(i).ID, i, PROBLEM_SIZE])
+			{
+				var id = spawn(TileAgent, #[startingTiles.get(i), frameList.get(i).ID, i, PROBLEM_SIZE])
+				frameList.get(i).hostedTile = id
+			}
 			
 			// Spawn blank tile
 			spawn(EmptyTileAgent)			
