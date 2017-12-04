@@ -141,7 +141,8 @@ agent BoardGameAgent {
 			}
 			
 			// Spawn blank tile
-			spawn(EmptyTileAgent)			
+			var id = spawn(EmptyTileAgent)
+			frameList.get(PROBLEM_SIZE*PROBLEM_SIZE - 1).hostedTile = id
 		}
 	}
 	
