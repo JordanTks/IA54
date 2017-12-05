@@ -13,7 +13,7 @@ import io.sarl.core.Logging
 import io.sarl.core.MemberJoined
 import io.sarl.core.MemberLeft
 import io.sarl.core.Lifecycle
-import fr.utbm.ia54.Event.GameSet
+import fr.utbm.ia54.Event.GameSet 
 import io.sarl.core.Schedules
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.InnerContextAccess
@@ -42,6 +42,7 @@ agent FrameAgent {
 	var westNeighbour : UUID
 
 	var hostedTile : UUID
+	var hostedNumTile : int
 	
 	var ready = false
 	var dimension = -1
@@ -204,8 +205,20 @@ agent FrameAgent {
 			return this.westNeighbour
 	}
 
-	def setHostedTile(id : UUID) {
+	def setHostedTile(id : UUID) { 
 		hostedTile = id
+	}
+	
+	def getHostedTile : UUID {
+		return this.hostedTile
+	}
+
+	def setHostedNumTile(num : int) {
+		hostedNumTile = num
+	}
+
+	def getHostedNumTile : int {
+		return this.hostedNumTile
 	}
 	
 	on Destroy {

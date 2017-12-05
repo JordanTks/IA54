@@ -64,15 +64,15 @@ agent TileAgent {
 		if (pleased) {
 			emit(new TokenReleased())
 		
-		} else {
-
-			info("JE VAIS CHANGER COULEUR.")
-			emit(new ActionUI("rouge", numTile), Scopes.addresses(defaultSpace.getAddress(parentAgent)))
-			
+		} else { 
+  
+//			info("JE VAIS CHANGER COULEUR : je suis "+ID)
+			emit(new ActionUI("red", numTile), Scopes.addresses(defaultSpace.getAddress(parentAgent)))
+		
 			//TODO : REMPLACER ID PAR UUID DE MA FRAME
-			emit(new Assault(null, position.NORTH), Scopes.addresses(defaultSpace.getAddress(ID)))
-		}
-
+			emit(new Assault(null, position.NORTH), Scopes.addresses(defaultSpace.getAddress(ID))) 
+		} 
+   
 			// si (mon_etat = agressé)
 		// j'agresse un voisin pour fuir
 		

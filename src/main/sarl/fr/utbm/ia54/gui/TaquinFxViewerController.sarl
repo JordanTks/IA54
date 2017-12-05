@@ -70,10 +70,10 @@ class TaquinFxViewerController extends FxViewerController {
 				for (var i = 0; i < listTiles.size; i++) {
 					var t = listTiles.get(i) as Text
 					if(t.text.equals(Integer.toString(numTile))){
-						if(color.equals("rouge"))
+						if(color.equals("red"))
 							t.fill = Color.RED
-						else if (color.equals("vert"))
-							t.fill = Color.GREEN
+						else if (color.equals("green"))
+							t.fill = Color.BLUE
 						return
 					}
 				}
