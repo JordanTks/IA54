@@ -4,6 +4,8 @@ import com.google.common.base.Objects;
 import fr.utbm.ia54.Class.CoordPair;
 import fr.utbm.ia54.Event.Assault;
 import fr.utbm.ia54.Event.FrameSet;
+import fr.utbm.ia54.Event.PathCalculation;
+import fr.utbm.ia54.Event.PathFound;
 import io.sarl.core.AgentKilled;
 import io.sarl.core.AgentSpawned;
 import io.sarl.core.ContextJoined;
@@ -27,6 +29,7 @@ import io.sarl.lang.core.BuiltinCapacitiesProvider;
 import io.sarl.lang.core.DynamicSkillProvider;
 import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
+import io.sarl.util.Scopes;
 import java.util.Collection;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -41,6 +44,12 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlElementType(17)
 @SuppressWarnings("all")
 public class FrameAgent extends Agent {
+  private final int TIMEOUT = 50;
+  
+  private long previousPathCalculationId;
+  
+  private int previousPathCalculationJumpValue;
+  
   private boolean isSatisfied = false;
   
   private boolean isBlocked = false;
@@ -103,6 +112,56 @@ public class FrameAgent extends Agent {
     _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_frameSet);
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("Agent is set up.");
+  }
+  
+  @SyntheticMember
+  private void $behaviorUnit$PathCalculation$1(final PathCalculation occurrence) {
+    long _currentTimeMillis = System.currentTimeMillis();
+    long _minus = (_currentTimeMillis - this.TIMEOUT);
+    boolean _greaterThan = (_minus > occurrence.timeStamp);
+    if (_greaterThan) {
+      return;
+    }
+    if ((this.previousPathCalculationId == occurrence.requestId)) {
+      if ((this.previousPathCalculationJumpValue <= occurrence.jumpCount)) {
+        return;
+      }
+    }
+    this.previousPathCalculationId = occurrence.requestId;
+    this.previousPathCalculationJumpValue = occurrence.jumpCount;
+    occurrence.path.add(this);
+    if ((this.hostedNumTile == (-1))) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      PathFound _pathFound = new PathFound(occurrence.requestId, occurrence.jumpCount, occurrence.path);
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_pathFound, 
+        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(occurrence.requestOrigin)));
+      return;
+    }
+    if (((this.northNeighbour != null) && (occurrence.provenanceDirection != 2))) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      PathCalculation _pathCalculation = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 0, 
+        occurrence.timeStamp, (occurrence.jumpCount + 1), occurrence.path);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_pathCalculation);
+    }
+    if (((this.eastNeighbour != null) && (occurrence.provenanceDirection != 3))) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      PathCalculation _pathCalculation_1 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 1, 
+        occurrence.timeStamp, (occurrence.jumpCount + 1), occurrence.path);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3.emit(_pathCalculation_1);
+    }
+    if (((this.southNeighbour != null) && (occurrence.provenanceDirection != 0))) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      PathCalculation _pathCalculation_2 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 2, 
+        occurrence.timeStamp, (occurrence.jumpCount + 1), occurrence.path);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4.emit(_pathCalculation_2);
+    }
+    if (((this.westNeighbour != null) && (occurrence.provenanceDirection != 1))) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_5 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      PathCalculation _pathCalculation_3 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 3, 
+        occurrence.timeStamp, (occurrence.jumpCount + 1), occurrence.path);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_5.emit(_pathCalculation_3);
+    }
   }
   
   @Pure
@@ -189,7 +248,7 @@ public class FrameAgent extends Agent {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$Assault$1(final Assault occurrence) {
+  private void $behaviorUnit$Assault$2(final Assault occurrence) {
     boolean _equals = Objects.equal(occurrence.pos, null);
     if (_equals) {
     }
@@ -280,33 +339,33 @@ public class FrameAgent extends Agent {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$Destroy$2(final Destroy occurrence) {
+  private void $behaviorUnit$Destroy$3(final Destroy occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was stopped.");
   }
   
   @SyntheticMember
-  private void $behaviorUnit$AgentSpawned$3(final AgentSpawned occurrence) {
+  private void $behaviorUnit$AgentSpawned$4(final AgentSpawned occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$AgentKilled$4(final AgentKilled occurrence) {
+  private void $behaviorUnit$AgentKilled$5(final AgentKilled occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$ContextJoined$5(final ContextJoined occurrence) {
+  private void $behaviorUnit$ContextJoined$6(final ContextJoined occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$ContextLeft$6(final ContextLeft occurrence) {
+  private void $behaviorUnit$ContextLeft$7(final ContextLeft occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$MemberJoined$7(final MemberJoined occurrence) {
+  private void $behaviorUnit$MemberJoined$8(final MemberJoined occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$MemberLeft$8(final MemberLeft occurrence) {
+  private void $behaviorUnit$MemberLeft$9(final MemberLeft occurrence) {
   }
   
   @Extension
@@ -397,7 +456,7 @@ public class FrameAgent extends Agent {
   private void $guardEvaluator$ContextLeft(final ContextLeft occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextLeft$6(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextLeft$7(occurrence));
   }
   
   @SyntheticMember
@@ -405,7 +464,7 @@ public class FrameAgent extends Agent {
   private void $guardEvaluator$ContextJoined(final ContextJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextJoined$5(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextJoined$6(occurrence));
   }
   
   @SyntheticMember
@@ -413,7 +472,7 @@ public class FrameAgent extends Agent {
   private void $guardEvaluator$MemberLeft(final MemberLeft occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberLeft$8(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberLeft$9(occurrence));
   }
   
   @SyntheticMember
@@ -421,7 +480,15 @@ public class FrameAgent extends Agent {
   private void $guardEvaluator$AgentSpawned(final AgentSpawned occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentSpawned$3(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentSpawned$4(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$PathCalculation(final PathCalculation occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$PathCalculation$1(occurrence));
   }
   
   @SyntheticMember
@@ -429,7 +496,7 @@ public class FrameAgent extends Agent {
   private void $guardEvaluator$Assault(final Assault occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Assault$1(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Assault$2(occurrence));
   }
   
   @SyntheticMember
@@ -437,7 +504,7 @@ public class FrameAgent extends Agent {
   private void $guardEvaluator$Destroy(final Destroy occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$2(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$3(occurrence));
   }
   
   @SyntheticMember
@@ -445,7 +512,7 @@ public class FrameAgent extends Agent {
   private void $guardEvaluator$AgentKilled(final AgentKilled occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentKilled$4(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentKilled$5(occurrence));
   }
   
   @SyntheticMember
@@ -453,7 +520,7 @@ public class FrameAgent extends Agent {
   private void $guardEvaluator$MemberJoined(final MemberJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberJoined$7(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberJoined$8(occurrence));
   }
   
   @Override
@@ -467,6 +534,12 @@ public class FrameAgent extends Agent {
     if (getClass() != obj.getClass())
       return false;
     FrameAgent other = (FrameAgent) obj;
+    if (other.TIMEOUT != this.TIMEOUT)
+      return false;
+    if (other.previousPathCalculationId != this.previousPathCalculationId)
+      return false;
+    if (other.previousPathCalculationJumpValue != this.previousPathCalculationJumpValue)
+      return false;
     if (other.isSatisfied != this.isSatisfied)
       return false;
     if (other.isBlocked != this.isBlocked)
@@ -518,6 +591,9 @@ public class FrameAgent extends Agent {
   public int hashCode() {
     int result = super.hashCode();
     final int prime = 31;
+    result = prime * result + this.TIMEOUT;
+    result = prime * result + (int) (this.previousPathCalculationId ^ (this.previousPathCalculationId >>> 32));
+    result = prime * result + this.previousPathCalculationJumpValue;
     result = prime * result + (this.isSatisfied ? 1231 : 1237);
     result = prime * result + (this.isBlocked ? 1231 : 1237);
     result = prime * result + this.nbNeighbours;

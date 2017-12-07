@@ -1,0 +1,26 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54.Event
+
+import fr.utbm.ia54.Agent.FrameAgent
+import java.util.ArrayList
+import java.util.UUID
+
+/** 
+ * Path found to the blank tile.
+ * Sent directly to the agent that asked for the path calculation.
+ * 
+ */
+event PathFound
+{
+	var requestId : long
+	var jumpCount : int
+	var path = new ArrayList<FrameAgent>()
+
+	new (reqId : long, jump : int, p : ArrayList<FrameAgent>) {
+		this.requestId = reqId
+		this.jumpCount = jump
+		this.path = p
+	}
+}

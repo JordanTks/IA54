@@ -23,6 +23,9 @@ import fr.utbm.ia54.Event.FrameSatisfied
 import fr.utbm.ia54.Event.TokenReceived
 import java.util.UUID
 import fr.utbm.ia54.Class.CoordPair
+import fr.utbm.ia54.Event.PathCalculation
+import fr.utbm.ia54.Event.PathFound
+import io.sarl.util.Scopes
 
 /** 
  * @author Jordan
@@ -31,10 +34,16 @@ import fr.utbm.ia54.Class.CoordPair
 agent FrameAgent {
 	uses Logging, Lifecycle, Schedules, InnerContextAccess, DefaultContextInteractions
 
-	//var pleased = false // is paired with the right tile
+	// PathCalculation
+	val TIMEOUT = 50
+	var previousPathCalculationId : long
+	var previousPathCalculationJumpValue : int
+
+	// FrameAgent state
 	var isSatisfied = false // TODO: same as pleased !?
 	var isBlocked = false // the tile which with it is paired will never move
 	
+	// FrameAgent knowledge
 	var nbNeighbours : int
 	var northNeighbour : UUID
 	var eastNeighbour : UUID
@@ -79,6 +88,63 @@ agent FrameAgent {
 
 		emit(new FrameSet(this))
 		info("Agent is set up.")
+	}
+	
+	// AK : PathCalculation by spreading message
+	on PathCalculation {
+		
+		// Discard message if timeout
+		if (System.currentTimeMillis - TIMEOUT > occurrence.timeStamp)
+			return;
+		
+		// Check already forwarded path calculations to avoid spreading useless events
+		// This implementation does NOT work if there are multiple different path calculations at once
+		// -> The following would have to be modified
+		
+		// If the previous request was for the same path calculation ...
+		if (previousPathCalculationId === occurrence.requestId)
+			// ... and the previous request had the same or lower jump value ...
+			if (previousPathCalculationJumpValue <= occurrence.jumpCount)
+				// ... it is useless to spread the message
+				return;
+
+		// Setting the values for the next PathCalculation received
+		previousPathCalculationId = occurrence.requestId
+		previousPathCalculationJumpValue = occurrence.jumpCount
+		
+		// TODO : add boolean forcePath and if forcePath = false, drop event if (isSatisfied)
+		
+		// Adding itself to the path
+		occurrence.path.add(this)
+		
+		// If we host the blank tile ...
+		if (hostedNumTile == -1) // TODO : MAYBE THIS IS NOT SET THIS WAY RIGHT NOW
+		{
+			// ... we send the path that was found
+			emit(new PathFound(occurrence.requestId, occurrence.jumpCount, occurrence.path),
+				Scopes.addresses(defaultSpace.getAddress(occurrence.requestOrigin)))
+			// We avoid spreading more useless PathCalculation
+			return
+		}
+
+		// If we do not host the blank tile, we send the event PathCalculation to our neighbours ...
+		// ... north one
+		if (northNeighbour !== null && occurrence.provenanceDirection !== 2)
+			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 0,
+					occurrence.timeStamp, occurrence.jumpCount + 1, occurrence.path))
+		// ... east one
+		if (eastNeighbour !== null && occurrence.provenanceDirection !== 3)
+			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 1,
+				occurrence.timeStamp, occurrence.jumpCount + 1, occurrence.path))
+		// ... south one
+		if (southNeighbour !== null && occurrence.provenanceDirection !== 0)
+			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 2,
+				occurrence.timeStamp, occurrence.jumpCount + 1, occurrence.path))
+		// ... west one
+		if (westNeighbour !== null && occurrence.provenanceDirection !== 1)
+			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 3,
+				occurrence.timeStamp, occurrence.jumpCount + 1, occurrence.path))
+		
 	}
 	
 	// TKS-------------------------------
