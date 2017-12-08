@@ -32,7 +32,7 @@ import fr.utbm.ia54.Class.InfosFrame
 import java.util.LinkedHashSet
 import io.sarl.core.Schedules
 
-enum position {
+enum Position {
 	NORTH,
 	SOUTH,
 	EAST,

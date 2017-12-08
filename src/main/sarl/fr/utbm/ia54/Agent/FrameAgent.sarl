@@ -26,6 +26,10 @@ import fr.utbm.ia54.Class.CoordPair
 import fr.utbm.ia54.Event.PathCalculation
 import fr.utbm.ia54.Event.PathFound
 import io.sarl.util.Scopes
+import fr.utbm.ia54.Event.AskNeighbourSatisfaction
+import java.util.HashMap
+import java.util.LinkedHashMap
+import fr.utbm.ia54.Event.ResponseNeighbourSatisfaction
 
 /** 
  * @author Jordan
@@ -52,6 +56,9 @@ agent FrameAgent {
 
 	var hostedTile : UUID
 	var hostedNumTile : int
+	
+	// Temporary knowledge
+	var neighbourSatisfaction = new LinkedHashMap<UUID, Boolean>()
 	
 	var ready = false
 	var dimension = -1
@@ -147,6 +154,42 @@ agent FrameAgent {
 		
 	}
 	
+	// Forwards the question to the neighbours
+	on AskNeighbourSatisfaction [!isAsking] {
+
+		// Clearing answers map
+		neighbourSatisfaction.clear
+
+		// Asking satisfaction of the two neighbour frames
+		if (occurrence.north)
+			emit(new AskNeighbourSatisfaction(true), Scopes.identifiers(northNeighbour))
+		else
+			emit(new AskNeighbourSatisfaction(true), Scopes.identifiers(southNeighbour))
+
+		if (occurrence.west)
+			emit(new AskNeighbourSatisfaction(true), Scopes.identifiers(westNeighbour))
+		else
+			emit(new AskNeighbourSatisfaction(true), Scopes.identifiers(eastNeighbour))
+	}
+
+	// Get asked and have to answer back
+	on AskNeighbourSatisfaction [isAsking] {
+		// Answers back to the event transmitter
+		emit(new ResponseNeighbourSatisfaction(isSatisfied), Scopes.identifiers(occurrence.source.UUID))
+	}
+	
+	// Receive a response from a neighbour
+	on ResponseNeighbourSatisfaction {
+
+		// Store answer in map
+		neighbourSatisfaction.put(occurrence.source.UUID, occurrence.isSatisfied)
+
+		// We check how much data we collected
+		if (neighbourSatisfaction.size >= 2)
+			// We have two answers, therefore we can send back the results to the tile
+			emit(new ResponseNeighbourSatisfaction(neighbourSatisfaction), Scopes.identifiers(hostedTile))
+	}
+	
 	// TKS-------------------------------
 	def getXRow : int{
 		return this.xRow
@@ -222,9 +265,11 @@ agent FrameAgent {
 	
 	
 	on Assault {
-		if(occurrence.pos == null) {
+		
+		info("DEBUGG : I GOT ATTACKED !")
+		/*if(occurrence.pos == null) {
 			
-		}
+		}*/
 	}
 
 	def getNumFrame : int {

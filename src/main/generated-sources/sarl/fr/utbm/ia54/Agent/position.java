@@ -6,7 +6,7 @@ import io.sarl.lang.annotation.SarlSpecification;
 @SarlSpecification("0.6")
 @SarlElementType(11)
 @SuppressWarnings("all")
-public enum position {
+public enum Position {
   NORTH,
   
   SOUTH,

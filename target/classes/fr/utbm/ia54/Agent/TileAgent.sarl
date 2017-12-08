@@ -15,10 +15,12 @@ import io.sarl.core.DefaultContextInteractions
 import fr.utbm.ia54.Event.TokenReceived
 import fr.utbm.ia54.Event.Assault
 import fr.utbm.ia54.Event.TokenReleased
-import fr.utbm.ia54.Agent.position
 import io.sarl.util.Scopes
 import java.util.UUID
 import fr.utbm.taquin.events.ActionUI
+import fr.utbm.ia54.Event.AskNeighbourSatisfaction
+import fr.utbm.ia54.Event.ResponseNeighbourSatisfaction
+import java.util.Map
 
 agent TileAgent {
 	uses Logging, DefaultContextInteractions
@@ -68,30 +70,79 @@ agent TileAgent {
   
 //			info("JE VAIS CHANGER COULEUR : je suis "+ID)
 			emit(new ActionUI("red", numTile), Scopes.addresses(defaultSpace.getAddress(parentAgent)))
+
+			// We have to choose a target
+			// FOLLOWING LINE DOES NOT COMPILE
+			// chooseTarget
+		}
 		
-			//TODO : REMPLACER ID PAR UUID DE MA FRAME
-			emit(new Assault(null, position.NORTH), Scopes.addresses(defaultSpace.getAddress(ID))) 
-		} 
    
-			// si (mon_etat = agressé)
+   		// old comments : [
+   
+		// si (mon_etat = agressé)
 		// j'agresse un voisin pour fuir
 		
 			// sinon si (mon_humeur = satisfait)
 		// je transmet le token gratuitement à quelqu'un sans l'agresser
 		
 			// sinon si (mon_humeur = non_satisfait)
-		// j'agresse un voisin pour accroitre ma satisfaction
+		// j'agresse un voisin pour accroitre ma satisfaction]
 		
+	}
+	
+	def chooseTarget() {
+
+		// If I am on the same line or column as my desired spot, I just go in the spot direction
+
+		// I am at the right longitude, therefore I will assault north or south
+		if (numFrameHost % problemSize === numTile % problemSize)
+			if (numTile < numFrameHost)
+				emit(new Assault(Position.NORTH), Scopes.identifiers(uuidFrameHost))
+			else
+				emit(new Assault(Position.SOUTH), Scopes.identifiers(uuidFrameHost))
+		
+		// I am at the right latitude, therefore I will assault east or west
+		if (numFrameHost / problemSize === numTile / problemSize)
+			if (numTile < numFrameHost)
+				emit(new Assault(Position.WEST), Scopes.identifiers(uuidFrameHost))
+			else
+				emit(new Assault(Position.EAST), Scopes.identifiers(uuidFrameHost))
+		
+		// If I am not on the same line or column as my desired spot, I can choose between the two directions that will bring me closer
+		
+		// Finding out these two possible directions :
+		
+		// Looking up if I am to the north or to the south of my target frame
+		var north = (numFrameHost / problemSize <= numTile / problemSize)
+
+		// Looking up if I am to the west or to the east of my target frame
+		var west = (numFrameHost % problemSize <= numTile % problemSize)
+		
+	 	// I have to choose between two targets, I ask my frame to get more informations
+		emit(new AskNeighbourSatisfaction(north, west), Scopes.identifiers(uuidFrameHost))
+	}
+	
+	// We had to ask for more informations to choose who to target
+	on ResponseNeighbourSatisfaction {
+		
+		// The map has only two entries
+		// We get first entry of the map
+		var iter = occurrence.neighbourSatisfaction.entrySet().iterator()
+		var entry = iter.next()
+
+		// If this neighbour is unhappy, therefore we can target him
+		if (entry.value != false)
+			emit(new Assault(), Scopes.identifiers(entry.key))
+		// Wether or not the second neighbour is happy, we have to target someone anyway
+		else {
+			entry = iter.next()
+			emit(new Assault(), Scopes.identifiers(entry.key))
+		}
 	}
 	
 	on Assault {
-		
 	}
 	
-	def chooseTarget(){
-		//TODO : en fonction de ma pos (framehost) du probsize et de ma numtile je trouve un gugus à aggresser
-	}
-
 	def getTokenPriority : int {
 		this.tokenPriority
 	}

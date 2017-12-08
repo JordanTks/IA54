@@ -1,7 +1,7 @@
 package fr.utbm.ia54.Event;
 
+import fr.utbm.ia54.Agent.Position;
 import fr.utbm.ia54.Agent.TileAgent;
-import fr.utbm.ia54.Agent.position;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
@@ -15,11 +15,18 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class Assault extends Event {
   public ArrayList<TileAgent> path = new ArrayList<TileAgent>();
   
-  public position pos;
+  public Position pos;
   
-  public Assault(final ArrayList a, final position b) {
+  public Assault(final ArrayList a, final Position b) {
     this.path = a;
     this.pos = b;
+  }
+  
+  public Assault(final Position position) {
+    this.pos = position;
+  }
+  
+  public Assault() {
   }
   
   @Override
@@ -50,5 +57,5 @@ public class Assault extends Event {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 2749488563L;
+  private final static long serialVersionUID = 1487433272L;
 }

@@ -1,7 +1,9 @@
 package fr.utbm.ia54.Agent;
 
-import fr.utbm.ia54.Agent.position;
+import fr.utbm.ia54.Agent.Position;
+import fr.utbm.ia54.Event.AskNeighbourSatisfaction;
 import fr.utbm.ia54.Event.Assault;
+import fr.utbm.ia54.Event.ResponseNeighbourSatisfaction;
 import fr.utbm.ia54.Event.TileSet;
 import fr.utbm.ia54.Event.TokenReceived;
 import fr.utbm.ia54.Event.TokenReleased;
@@ -28,6 +30,8 @@ import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
 import io.sarl.util.Scopes;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -97,19 +101,60 @@ public class TileAgent extends Agent {
       ActionUI _actionUI = new ActionUI("red", this.numTile);
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_actionUI, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.getDefaultSpace().getAddress(this.parentAgent)));
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      Assault _assault = new Assault(null, position.NORTH);
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3.emit(_assault, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4.getDefaultSpace().getAddress(this.getID())));
     }
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$Assault$2(final Assault occurrence) {
   }
   
   @Pure
   protected void chooseTarget() {
+    if (((this.numFrameHost % this.problemSize) == (this.numTile % this.problemSize))) {
+      if ((this.numTile < this.numFrameHost)) {
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        Assault _assault = new Assault(Position.NORTH);
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_assault, Scopes.identifiers(this.uuidFrameHost));
+      } else {
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        Assault _assault_1 = new Assault(Position.SOUTH);
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_assault_1, Scopes.identifiers(this.uuidFrameHost));
+      }
+    }
+    if (((this.numFrameHost / this.problemSize) == (this.numTile / this.problemSize))) {
+      if ((this.numTile < this.numFrameHost)) {
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        Assault _assault_2 = new Assault(Position.WEST);
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_assault_2, Scopes.identifiers(this.uuidFrameHost));
+      } else {
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        Assault _assault_3 = new Assault(Position.EAST);
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3.emit(_assault_3, Scopes.identifiers(this.uuidFrameHost));
+      }
+    }
+    boolean north = ((this.numFrameHost / this.problemSize) <= (this.numTile / this.problemSize));
+    boolean west = ((this.numFrameHost % this.problemSize) <= (this.numTile % this.problemSize));
+    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+    AskNeighbourSatisfaction _askNeighbourSatisfaction = new AskNeighbourSatisfaction(north, west);
+    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4.emit(_askNeighbourSatisfaction, Scopes.identifiers(this.uuidFrameHost));
+  }
+  
+  @SyntheticMember
+  private void $behaviorUnit$ResponseNeighbourSatisfaction$2(final ResponseNeighbourSatisfaction occurrence) {
+    Iterator<Map.Entry<UUID, Boolean>> iter = occurrence.neighbourSatisfaction.entrySet().iterator();
+    Map.Entry<UUID, Boolean> entry = iter.next();
+    Boolean _value = entry.getValue();
+    boolean _notEquals = ((_value).booleanValue() != false);
+    if (_notEquals) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      Assault _assault = new Assault();
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_assault, Scopes.identifiers(entry.getKey()));
+    } else {
+      entry = iter.next();
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      Assault _assault_1 = new Assault();
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_assault_1, Scopes.identifiers(entry.getKey()));
+    }
+  }
+  
+  @SyntheticMember
+  private void $behaviorUnit$Assault$3(final Assault occurrence) {
   }
   
   @Pure
@@ -128,33 +173,33 @@ public class TileAgent extends Agent {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$Destroy$3(final Destroy occurrence) {
+  private void $behaviorUnit$Destroy$4(final Destroy occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was stopped.");
   }
   
   @SyntheticMember
-  private void $behaviorUnit$AgentSpawned$4(final AgentSpawned occurrence) {
+  private void $behaviorUnit$AgentSpawned$5(final AgentSpawned occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$AgentKilled$5(final AgentKilled occurrence) {
+  private void $behaviorUnit$AgentKilled$6(final AgentKilled occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$ContextJoined$6(final ContextJoined occurrence) {
+  private void $behaviorUnit$ContextJoined$7(final ContextJoined occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$ContextLeft$7(final ContextLeft occurrence) {
+  private void $behaviorUnit$ContextLeft$8(final ContextLeft occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$MemberJoined$8(final MemberJoined occurrence) {
+  private void $behaviorUnit$MemberJoined$9(final MemberJoined occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$MemberLeft$9(final MemberLeft occurrence) {
+  private void $behaviorUnit$MemberLeft$10(final MemberLeft occurrence) {
   }
   
   @Extension
@@ -200,7 +245,7 @@ public class TileAgent extends Agent {
   private void $guardEvaluator$ContextLeft(final ContextLeft occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextLeft$7(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextLeft$8(occurrence));
   }
   
   @SyntheticMember
@@ -208,7 +253,7 @@ public class TileAgent extends Agent {
   private void $guardEvaluator$ContextJoined(final ContextJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextJoined$6(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextJoined$7(occurrence));
   }
   
   @SyntheticMember
@@ -216,7 +261,7 @@ public class TileAgent extends Agent {
   private void $guardEvaluator$MemberLeft(final MemberLeft occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberLeft$9(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberLeft$10(occurrence));
   }
   
   @SyntheticMember
@@ -224,7 +269,15 @@ public class TileAgent extends Agent {
   private void $guardEvaluator$AgentSpawned(final AgentSpawned occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentSpawned$4(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentSpawned$5(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$ResponseNeighbourSatisfaction(final ResponseNeighbourSatisfaction occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ResponseNeighbourSatisfaction$2(occurrence));
   }
   
   @SyntheticMember
@@ -232,7 +285,7 @@ public class TileAgent extends Agent {
   private void $guardEvaluator$Assault(final Assault occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Assault$2(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Assault$3(occurrence));
   }
   
   @SyntheticMember
@@ -240,7 +293,7 @@ public class TileAgent extends Agent {
   private void $guardEvaluator$Destroy(final Destroy occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$3(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$4(occurrence));
   }
   
   @SyntheticMember
@@ -248,7 +301,7 @@ public class TileAgent extends Agent {
   private void $guardEvaluator$AgentKilled(final AgentKilled occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentKilled$5(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentKilled$6(occurrence));
   }
   
   @SyntheticMember
@@ -264,7 +317,7 @@ public class TileAgent extends Agent {
   private void $guardEvaluator$MemberJoined(final MemberJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberJoined$8(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberJoined$9(occurrence));
   }
   
   @Override

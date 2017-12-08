@@ -1,0 +1,32 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54.Event
+
+
+/** 
+ * 
+ * 
+ */
+event AskNeighbourSatisfaction {
+
+	var west : boolean
+	var north : boolean
+	var isAsking : boolean
+
+	// The tile asks the frame to get satisfaction of two neighbours
+	// If north, gets northern neighbour, if not, gets southern one
+	// If west, gets western neighbour, if not, gets eastern one
+	new (n : boolean, w : boolean) {
+		this.north = n
+		this.west = w
+		this.isAsking = false // (therefore isForwarding)
+	}
+
+	// The frame receives this one when asked by another frame (the sender)
+	// Therefore, the frame answering does not need to be provided with any data (apart from sender uuid)
+	new (a : boolean) {
+		isAsking = true // (is not forwarding)
+	}
+	
+}

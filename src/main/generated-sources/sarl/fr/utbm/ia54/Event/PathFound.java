@@ -69,4 +69,7 @@ public class PathFound extends Event {
     result.append("path  = ").append(this.path);
     return result.toString();
   }
+  
+  @SyntheticMember
+  private final static long serialVersionUID = 3241585702L;
 }

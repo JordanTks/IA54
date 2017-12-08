@@ -1,0 +1,30 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54.Event
+
+import java.util.LinkedHashMap
+import java.util.UUID
+
+/** 
+ * @author Norgannon
+ * 
+ */
+event ResponseNeighbourSatisfaction {
+
+	// Data to return from asked frame to the frame who asked
+	var isSatisfied : boolean
+
+	// Data to return from frame to tile
+	var neighbourSatisfaction : LinkedHashMap<UUID, Boolean>
+	
+	// Constructor for event to send to frame
+	new (b : boolean) {
+		this.isSatisfied = b
+	}
+
+	// Constructor for event to send to tile
+	new (map : LinkedHashMap<UUID, Boolean>) {
+		this.neighbourSatisfaction = map
+	}
+}
