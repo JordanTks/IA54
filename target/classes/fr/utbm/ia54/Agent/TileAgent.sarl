@@ -64,7 +64,7 @@ agent TileAgent {
 		
 		emit(new TileSet(this))
 		
-		info("Agent is set up.")
+		// info("DEBUGG : Agent is set up.")
 	}
 	
 	on TokenReceived {
@@ -101,7 +101,7 @@ agent TileAgent {
 	
 	def chooseTarget : boolean {
 
-		info("DEBUGG : choose target : numframehost " + numFrameHost + "    numTile " + numTile)
+		//info("DEBUGG : choose target")
 
 		// If I am on the same line or column as my desired spot, I just go in the spot direction
 		
@@ -122,15 +122,15 @@ agent TileAgent {
 		// If I am not on the same line or column as my desired spot, I can choose between the two directions that will bring me closer
 		else {
 
-			info("DEBUGG : choose target between two targets")
+			//info("DEBUGG : choose target between two targets")
 			
 			// Finding out these two possible directions :
 			
 			// Looking up if I am to the north or to the south of my target frame
-			var north = (numFrameHost / problemSize <= numTileFromZero / problemSize)
+			var north = (numFrameHost / problemSize >= numTileFromZero / problemSize)
 	
 			// Looking up if I am to the west or to the east of my target frame
-			var west = (numFrameHost % problemSize <= numTileFromZero % problemSize)
+			var west = (numFrameHost % problemSize >= numTileFromZero % problemSize)
 			
 		 	// I have to choose between two targets, I ask my frame to get more informations
 			emit(new AskNeighbourSatisfaction(north, west), Scopes.identifiers(uuidFrameHost))

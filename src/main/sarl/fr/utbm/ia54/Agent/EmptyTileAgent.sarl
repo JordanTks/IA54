@@ -29,7 +29,7 @@ agent EmptyTileAgent {
 
 		emit(new TileSet(null))
 
-		info("Agent is set up.")
+		// info("DEBUGG : Agent is set up.")
 	}
 
 	on TokenReceived {
