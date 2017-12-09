@@ -21,13 +21,16 @@ import fr.utbm.taquin.events.ActionUI
 import fr.utbm.ia54.Event.AskNeighbourSatisfaction
 import fr.utbm.ia54.Event.ResponseNeighbourSatisfaction
 import java.util.Map
+import io.sarl.core.Behaviors
+import io.sarl.core.Schedules
 
 agent TileAgent {
-	uses Logging, DefaultContextInteractions
+	uses Logging, DefaultContextInteractions, Behaviors, Schedules
 
 	var pleased = false // at right place or no (though kind of redundant with bool pleasant on frameAgent (could be useless)) 
 	var angry = false // currently assaulting someone or not
 	var numTile : int
+	var numTileFromZero : int
 	var numFrameHost : int
 	var uuidFrameHost : UUID
 	var problemSize : int
@@ -43,6 +46,8 @@ agent TileAgent {
 		parentAgent = occurrence.spawner
 
 		numTile = occurrence.parameters.get(0) as Integer
+		numTileFromZero = numTile - 1
+
 		uuidFrameHost = occurrence.parameters.get(1) as UUID
 		numFrameHost = occurrence.parameters.get(2) as Integer
 		problemSize = occurrence.parameters.get(3) as Integer
@@ -52,8 +57,11 @@ agent TileAgent {
 
 		loggingName = 'TileAgent' + numTile // num to change
 		
-		if(numTile == numFrameHost) pleased = true;
-
+		if(numTileFromZero === numFrameHost)
+		{
+			pleased = true
+		}
+		
 		emit(new TileSet(this))
 		
 		info("Agent is set up.")
@@ -72,8 +80,9 @@ agent TileAgent {
 			emit(new ActionUI("red", numTile), Scopes.addresses(defaultSpace.getAddress(parentAgent)))
 
 			// We have to choose a target
-			// FOLLOWING LINE DOES NOT COMPILE
-			// chooseTarget
+			// Boolean useless (only here for compilation purpose)
+			var b = chooseTarget
+			
 		}
 		
    
@@ -90,36 +99,46 @@ agent TileAgent {
 		
 	}
 	
-	def chooseTarget() {
+	def chooseTarget : boolean {
+
+		info("DEBUGG : choose target : numframehost " + numFrameHost + "    numTile " + numTile)
 
 		// If I am on the same line or column as my desired spot, I just go in the spot direction
-
+		
 		// I am at the right longitude, therefore I will assault north or south
-		if (numFrameHost % problemSize === numTile % problemSize)
-			if (numTile < numFrameHost)
-				emit(new Assault(Position.NORTH), Scopes.identifiers(uuidFrameHost))
+		if (numFrameHost % problemSize === numTileFromZero % problemSize)
+			if (numTileFromZero < numFrameHost)
+				emit(new Assault(Position.NORTH, false), Scopes.identifiers(uuidFrameHost))
 			else
-				emit(new Assault(Position.SOUTH), Scopes.identifiers(uuidFrameHost))
+				emit(new Assault(Position.SOUTH, false), Scopes.identifiers(uuidFrameHost))
 		
 		// I am at the right latitude, therefore I will assault east or west
-		if (numFrameHost / problemSize === numTile / problemSize)
-			if (numTile < numFrameHost)
-				emit(new Assault(Position.WEST), Scopes.identifiers(uuidFrameHost))
+		else if (numFrameHost / problemSize === numTileFromZero / problemSize)
+			if (numTileFromZero < numFrameHost)
+				emit(new Assault(Position.WEST, false), Scopes.identifiers(uuidFrameHost))
 			else
-				emit(new Assault(Position.EAST), Scopes.identifiers(uuidFrameHost))
+				emit(new Assault(Position.EAST, false), Scopes.identifiers(uuidFrameHost))
 		
 		// If I am not on the same line or column as my desired spot, I can choose between the two directions that will bring me closer
-		
-		// Finding out these two possible directions :
-		
-		// Looking up if I am to the north or to the south of my target frame
-		var north = (numFrameHost / problemSize <= numTile / problemSize)
+		else {
 
-		// Looking up if I am to the west or to the east of my target frame
-		var west = (numFrameHost % problemSize <= numTile % problemSize)
-		
-	 	// I have to choose between two targets, I ask my frame to get more informations
-		emit(new AskNeighbourSatisfaction(north, west), Scopes.identifiers(uuidFrameHost))
+			info("DEBUGG : choose target between two targets")
+			
+			// Finding out these two possible directions :
+			
+			// Looking up if I am to the north or to the south of my target frame
+			var north = (numFrameHost / problemSize <= numTileFromZero / problemSize)
+	
+			// Looking up if I am to the west or to the east of my target frame
+			var west = (numFrameHost % problemSize <= numTileFromZero % problemSize)
+			
+		 	// I have to choose between two targets, I ask my frame to get more informations
+			emit(new AskNeighbourSatisfaction(north, west), Scopes.identifiers(uuidFrameHost))
+			
+		}
+
+		// If void function, code does not compile...
+		return true
 	}
 	
 	// We had to ask for more informations to choose who to target
@@ -132,11 +151,11 @@ agent TileAgent {
 
 		// If this neighbour is unhappy, therefore we can target him
 		if (entry.value != false)
-			emit(new Assault(), Scopes.identifiers(entry.key))
+			emit(new Assault(entry.key, false), Scopes.identifiers(uuidFrameHost))
 		// Wether or not the second neighbour is happy, we have to target someone anyway
 		else {
 			entry = iter.next()
-			emit(new Assault(), Scopes.identifiers(entry.key))
+			emit(new Assault(entry.key, false), Scopes.identifiers(uuidFrameHost))
 		}
 	}
 	

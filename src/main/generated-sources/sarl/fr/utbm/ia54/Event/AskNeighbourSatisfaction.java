@@ -1,5 +1,6 @@
 package fr.utbm.ia54.Event;
 
+import fr.utbm.ia54.Agent.Position;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
@@ -14,16 +15,19 @@ public class AskNeighbourSatisfaction extends Event {
   
   public boolean north;
   
-  public boolean isAsking;
+  public boolean isAsked;
+  
+  public Position direction;
   
   public AskNeighbourSatisfaction(final boolean n, final boolean w) {
     this.north = n;
     this.west = w;
-    this.isAsking = false;
+    this.isAsked = false;
   }
   
-  public AskNeighbourSatisfaction(final boolean a) {
-    this.isAsking = true;
+  public AskNeighbourSatisfaction(final boolean a, final Position dir) {
+    this.isAsked = true;
+    this.direction = dir;
   }
   
   @Override
@@ -41,7 +45,7 @@ public class AskNeighbourSatisfaction extends Event {
       return false;
     if (other.north != this.north)
       return false;
-    if (other.isAsking != this.isAsking)
+    if (other.isAsked != this.isAsked)
       return false;
     return super.equals(obj);
   }
@@ -54,7 +58,7 @@ public class AskNeighbourSatisfaction extends Event {
     final int prime = 31;
     result = prime * result + (this.west ? 1231 : 1237);
     result = prime * result + (this.north ? 1231 : 1237);
-    result = prime * result + (this.isAsking ? 1231 : 1237);
+    result = prime * result + (this.isAsked ? 1231 : 1237);
     return result;
   }
   
@@ -67,7 +71,8 @@ public class AskNeighbourSatisfaction extends Event {
     StringBuilder result = new StringBuilder(super.attributesToString());
     result.append("west  = ").append(this.west);
     result.append("north  = ").append(this.north);
-    result.append("isAsking  = ").append(this.isAsking);
+    result.append("isAsked  = ").append(this.isAsked);
+    result.append("direction  = ").append(this.direction);
     return result.toString();
   }
 }

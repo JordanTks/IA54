@@ -164,6 +164,11 @@ public class BoardGameAgent extends Agent {
           _get_1.setHostedTile(id);
           FrameAgent _get_2 = this.frameList.get(i);
           _get_2.setHostedNumTile((startingTiles.get(i)).intValue());
+          FrameAgent _get_3 = this.frameList.get(i);
+          Integer _get_4 = startingTiles.get(i);
+          int _numFrame = this.frameList.get(i).getNumFrame();
+          boolean _tripleEquals_1 = ((_get_4).intValue() == _numFrame);
+          _get_3.setIsSatisfied(_tripleEquals_1);
         }
       }
       Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);

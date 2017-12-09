@@ -15,24 +15,33 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class Assault extends Event {
   public ArrayList<TileAgent> path = new ArrayList<TileAgent>();
   
-  public Position pos;
+  public Position direction;
+  
+  public boolean isAttacked;
   
   public Assault(final ArrayList a, final Position b) {
     this.path = a;
-    this.pos = b;
+    this.direction = b;
   }
   
-  public Assault(final Position position) {
-    this.pos = position;
-  }
-  
-  public Assault() {
+  public Assault(final Position pos, final boolean attacked) {
+    this.direction = pos;
+    this.isAttacked = attacked;
   }
   
   @Override
   @Pure
   @SyntheticMember
   public boolean equals(final Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Assault other = (Assault) obj;
+    if (other.isAttacked != this.isAttacked)
+      return false;
     return super.equals(obj);
   }
   
@@ -41,6 +50,8 @@ public class Assault extends Event {
   @SyntheticMember
   public int hashCode() {
     int result = super.hashCode();
+    final int prime = 31;
+    result = prime * result + (this.isAttacked ? 1231 : 1237);
     return result;
   }
   
@@ -52,10 +63,11 @@ public class Assault extends Event {
   protected String attributesToString() {
     StringBuilder result = new StringBuilder(super.attributesToString());
     result.append("path  = ").append(this.path);
-    result.append("pos  = ").append(this.pos);
+    result.append("direction  = ").append(this.direction);
+    result.append("isAttacked  = ").append(this.isAttacked);
     return result.toString();
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 1487433272L;
+  private final static long serialVersionUID = 1205067947L;
 }

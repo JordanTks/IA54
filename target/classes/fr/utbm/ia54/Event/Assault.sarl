@@ -15,18 +15,20 @@ import fr.utbm.ia54.Agent.Position
  
 event Assault {
 	var path = new ArrayList<TileAgent>()
-	var pos : Position
+	var direction : Position
+	var isAttacked : boolean
 	
 	new (a: ArrayList, b:Position) {
 		this.path = a
-		this.pos = b
+		this.direction = b
 	}
 	
-	new (position : Position) {
-		this.pos = position
+	new (pos : Position, attacked : boolean) {
+		this.direction = pos
+		this.isAttacked = attacked
 	}
 	
-	new () {
-		
-	}
+	/*new () {
+		this.direction = null
+	}*/
 }

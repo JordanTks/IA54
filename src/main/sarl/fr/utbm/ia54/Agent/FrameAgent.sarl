@@ -58,12 +58,13 @@ agent FrameAgent {
 	var hostedNumTile : int
 	
 	// Temporary knowledge
-	var neighbourSatisfaction = new LinkedHashMap<UUID, Boolean>()
+	var neighbourSatisfaction = new LinkedHashMap<Position, Boolean>()
 	
 	var ready = false
 	var dimension = -1
 
 	var idNum = -1
+  	var idNumFromZero : int
   
 	// TKS
 	var xRow = -1
@@ -78,6 +79,7 @@ agent FrameAgent {
 	on Initialize { 
 		
 		idNum = occurrence.parameters.get(0) as Integer
+		//idNumFromZero = idNum - 1
 
 		// TKS
 		xRow = occurrence.parameters.get(1) as Integer
@@ -155,34 +157,39 @@ agent FrameAgent {
 	}
 	
 	// Forwards the question to the neighbours
-	on AskNeighbourSatisfaction [!isAsking] {
+	on AskNeighbourSatisfaction [!isAsked] {
+
+		info("DEBUGG : AskNeighbourSatisfaction !isAsked")
 
 		// Clearing answers map
 		neighbourSatisfaction.clear
 
 		// Asking satisfaction of the two neighbour frames
 		if (occurrence.north)
-			emit(new AskNeighbourSatisfaction(true), Scopes.identifiers(northNeighbour))
+			emit(new AskNeighbourSatisfaction(true, Position.NORTH), Scopes.identifiers(northNeighbour))
 		else
-			emit(new AskNeighbourSatisfaction(true), Scopes.identifiers(southNeighbour))
+			emit(new AskNeighbourSatisfaction(true, Position.SOUTH), Scopes.identifiers(southNeighbour))
 
 		if (occurrence.west)
-			emit(new AskNeighbourSatisfaction(true), Scopes.identifiers(westNeighbour))
+			emit(new AskNeighbourSatisfaction(true, Position.WEST), Scopes.identifiers(westNeighbour))
 		else
-			emit(new AskNeighbourSatisfaction(true), Scopes.identifiers(eastNeighbour))
+			emit(new AskNeighbourSatisfaction(true, Position.EAST), Scopes.identifiers(eastNeighbour))
 	}
 
 	// Get asked and have to answer back
-	on AskNeighbourSatisfaction [isAsking] {
+	on AskNeighbourSatisfaction [isAsked] {
+
+		info("DEBUGG : AskNeighbourSatisfaction isAsked")
+		
 		// Answers back to the event transmitter
-		emit(new ResponseNeighbourSatisfaction(isSatisfied), Scopes.identifiers(occurrence.source.UUID))
+		emit(new ResponseNeighbourSatisfaction(isSatisfied, occurrence.direction), Scopes.identifiers(occurrence.source.UUID))
 	}
 	
 	// Receive a response from a neighbour
 	on ResponseNeighbourSatisfaction {
 
 		// Store answer in map
-		neighbourSatisfaction.put(occurrence.source.UUID, occurrence.isSatisfied)
+		neighbourSatisfaction.put(occurrence.direction, occurrence.isSatisfied)
 
 		// We check how much data we collected
 		if (neighbourSatisfaction.size >= 2)
@@ -263,15 +270,28 @@ agent FrameAgent {
 		return "costG="+this.costG+" /costH="+this.costH+" /costF="+this.costF
 	}
 	
-	
-	on Assault {
+	// The assault must be forwarded to the right frame
+	on Assault [!isAttacked] {
 		
-		info("DEBUGG : I GOT ATTACKED !")
-		/*if(occurrence.pos == null) {
-			
-		}*/
+		info("DEBUGG : I FORWARD ASSAULT !")
+		
+		if (occurrence.direction === Position.NORTH)
+			emit(new Assault(Position.SOUTH, true), Scopes.identifiers(northNeighbour))
+		else if (occurrence.direction === Position.SOUTH)
+			emit(new Assault(Position.NORTH, true), Scopes.identifiers(southNeighbour))
+		else if (occurrence.direction === Position.WEST)
+			emit(new Assault(Position.EAST, true), Scopes.identifiers(westNeighbour))
+		else if (occurrence.direction === Position.EAST)
+			emit(new Assault(Position.WEST, true), Scopes.identifiers(eastNeighbour))
 	}
 
+	// The frame is being assaulted
+	on Assault [isAttacked] {
+
+		info("DEBUGG : I GOT ATTACKED !")
+		
+	}
+	
 	def getNumFrame : int {
 		this.idNum
 	}

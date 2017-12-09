@@ -1,11 +1,11 @@
 package fr.utbm.ia54.Event;
 
+import fr.utbm.ia54.Agent.Position;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import io.sarl.lang.core.Event;
 import java.util.LinkedHashMap;
-import java.util.UUID;
 import org.eclipse.xtext.xbase.lib.Pure;
 
 /**
@@ -17,13 +17,16 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class ResponseNeighbourSatisfaction extends Event {
   public boolean isSatisfied;
   
-  public LinkedHashMap<UUID, Boolean> neighbourSatisfaction;
+  public Position direction;
   
-  public ResponseNeighbourSatisfaction(final boolean b) {
+  public LinkedHashMap<Position, Boolean> neighbourSatisfaction;
+  
+  public ResponseNeighbourSatisfaction(final boolean b, final Position dir) {
     this.isSatisfied = b;
+    this.direction = dir;
   }
   
-  public ResponseNeighbourSatisfaction(final LinkedHashMap<UUID, Boolean> map) {
+  public ResponseNeighbourSatisfaction(final LinkedHashMap<Position, Boolean> map) {
     this.neighbourSatisfaction = map;
   }
   
@@ -61,10 +64,8 @@ public class ResponseNeighbourSatisfaction extends Event {
   protected String attributesToString() {
     StringBuilder result = new StringBuilder(super.attributesToString());
     result.append("isSatisfied  = ").append(this.isSatisfied);
+    result.append("direction  = ").append(this.direction);
     result.append("neighbourSatisfaction  = ").append(this.neighbourSatisfaction);
     return result.toString();
   }
-  
-  @SyntheticMember
-  private final static long serialVersionUID = 1839289197L;
 }

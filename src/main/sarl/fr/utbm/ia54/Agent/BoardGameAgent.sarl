@@ -146,6 +146,7 @@ agent BoardGameAgent {
 				var id = spawn(TileAgent, #[startingTiles.get(i), frameList.get(i).ID, i, PROBLEM_SIZE])
 				frameList.get(i).hostedTile = id
 				frameList.get(i).hostedNumTile = startingTiles.get(i)
+				frameList.get(i).isSatisfied = (startingTiles.get(i) === frameList.get(i).numFrame)
 			}
 			
 			// Spawn blank tile

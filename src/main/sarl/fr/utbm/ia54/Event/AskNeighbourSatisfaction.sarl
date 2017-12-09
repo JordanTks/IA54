@@ -3,6 +3,7 @@
  */
 package fr.utbm.ia54.Event
 
+import fr.utbm.ia54.Agent.Position
 
 /** 
  * 
@@ -12,7 +13,8 @@ event AskNeighbourSatisfaction {
 
 	var west : boolean
 	var north : boolean
-	var isAsking : boolean
+	var isAsked : boolean
+	var direction : Position
 
 	// The tile asks the frame to get satisfaction of two neighbours
 	// If north, gets northern neighbour, if not, gets southern one
@@ -20,13 +22,14 @@ event AskNeighbourSatisfaction {
 	new (n : boolean, w : boolean) {
 		this.north = n
 		this.west = w
-		this.isAsking = false // (therefore isForwarding)
+		this.isAsked = false 		// (therefore isForwarding)
 	}
 
 	// The frame receives this one when asked by another frame (the sender)
 	// Therefore, the frame answering does not need to be provided with any data (apart from sender uuid)
-	new (a : boolean) {
-		isAsking = true // (is not forwarding)
+	new (a : boolean, dir : Position) {
+		isAsked = true // (is not forwarding)
+		direction = dir
 	}
 	
 }
