@@ -143,6 +143,8 @@ agent TileAgent {
 	
 	// We had to ask for more informations to choose who to target
 	on ResponseNeighbourSatisfaction {
+
+		//info("DEBUGG : Assault one of the neighbour that responded")
 		
 		// The map has only two entries
 		// We get first entry of the map
@@ -150,10 +152,14 @@ agent TileAgent {
 		var entry = iter.next()
 
 		// If this neighbour is unhappy, therefore we can target him
-		if (entry.value != false)
+		if (entry.value === false)
+		{
+			//info ("DEBUGG : Assault first neighbour which responded")
 			emit(new Assault(entry.key, false), Scopes.identifiers(uuidFrameHost))
+		}
 		// Wether or not the second neighbour is happy, we have to target someone anyway
 		else {
+			//info("DEBUGG : Assault second neighbour which responded")
 			entry = iter.next()
 			emit(new Assault(entry.key, false), Scopes.identifiers(uuidFrameHost))
 		}

@@ -161,7 +161,7 @@ agent FrameAgent {
 	// Forwards the question to the neighbours
 	on AskNeighbourSatisfaction [!isAsked] {
 
-		// info("DEBUGG : AskNeighbourSatisfaction !isAsked")
+		//info("DEBUGG : AskNeighbourSatisfaction !isAsked")
  
 		// Clearing answers map
 		neighbourSatisfaction.clear
@@ -181,7 +181,7 @@ agent FrameAgent {
 	// Get asked and have to answer back
 	on AskNeighbourSatisfaction [isAsked] {
 
-		// info("DEBUGG : AskNeighbourSatisfaction isAsked")
+		//info("DEBUGG : AskNeighbourSatisfaction isAsked")
 		
 		// Answers back to the event transmitter
 		emit(new ResponseNeighbourSatisfaction(isSatisfied, occurrence.direction), Scopes.identifiers(occurrence.source.UUID))
@@ -190,7 +190,7 @@ agent FrameAgent {
 	// Receive a response from a neighbour
 	on ResponseNeighbourSatisfaction {
 
-		// info("DEBUGG : ResponseNeighbourSatisfaction [frame] : direction " + occurrence.direction + "    isSatisfied" + occurrence.isSatisfied)
+		//info("DEBUGG : ResponseNeighbourSatisfaction [frame] : direction " + occurrence.direction + "    isSatisfied" + occurrence.isSatisfied)
 
 		// Store answer in map
 		neighbourSatisfaction.put(occurrence.direction, occurrence.isSatisfied)

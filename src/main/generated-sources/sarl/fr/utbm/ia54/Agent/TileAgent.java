@@ -147,8 +147,8 @@ public class TileAgent extends Agent {
     Iterator<Map.Entry<Position, Boolean>> iter = occurrence.neighbourSatisfaction.entrySet().iterator();
     Map.Entry<Position, Boolean> entry = iter.next();
     Boolean _value = entry.getValue();
-    boolean _notEquals = ((_value).booleanValue() != false);
-    if (_notEquals) {
+    boolean _tripleEquals = (_value == Boolean.valueOf(false));
+    if (_tripleEquals) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       Position _key = entry.getKey();
       Assault _assault = new Assault(_key, false);
