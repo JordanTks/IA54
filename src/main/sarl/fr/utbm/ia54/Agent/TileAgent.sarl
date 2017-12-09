@@ -61,7 +61,7 @@ agent TileAgent {
 		{
 			pleased = true
 		}
-		
+		 
 		emit(new TileSet(this))
 		
 		// info("DEBUGG : Agent is set up.")
@@ -98,7 +98,7 @@ agent TileAgent {
 		// j'agresse un voisin pour accroitre ma satisfaction]
 		
 	}
-	
+	  
 	def chooseTarget : boolean {
 
 		//info("DEBUGG : choose target")
@@ -118,7 +118,7 @@ agent TileAgent {
 				emit(new Assault(Position.WEST, false), Scopes.identifiers(uuidFrameHost))
 			else
 				emit(new Assault(Position.EAST, false), Scopes.identifiers(uuidFrameHost))
-		
+		 
 		// If I am not on the same line or column as my desired spot, I can choose between the two directions that will bring me closer
 		else {
 
@@ -135,7 +135,7 @@ agent TileAgent {
 		 	// I have to choose between two targets, I ask my frame to get more informations
 			emit(new AskNeighbourSatisfaction(north, west), Scopes.identifiers(uuidFrameHost))
 			
-		}
+		} 
 
 		// If void function, code does not compile...
 		return true

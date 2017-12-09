@@ -205,9 +205,14 @@ public class TaquinFxViewerController extends FxViewerController {
               if (_equals_1) {
                 t.setFill(Color.RED);
               } else {
-                boolean _equals_2 = color.equals("green");
+                boolean _equals_2 = color.equals("blue");
                 if (_equals_2) {
                   t.setFill(Color.BLUE);
+                } else {
+                  boolean _equals_3 = color.equals("green");
+                  if (_equals_3) {
+                    t.setFill(Color.GREEN);
+                  }
                 }
               }
               return;
@@ -217,6 +222,50 @@ public class TaquinFxViewerController extends FxViewerController {
       }
     };
     Platform.runLater(___TaquinFxViewerController_1);
+  }
+  
+  @FXML
+  @Pure
+  public void swap(final List<Integer> list) {
+    abstract class __TaquinFxViewerController_2 implements Runnable {
+      public abstract void run();
+    }
+    
+    __TaquinFxViewerController_2 ___TaquinFxViewerController_2 = new __TaquinFxViewerController_2() {
+      public void run() {
+        ObservableList<Node> listTiles = TaquinFxViewerController.this.gridDisplay.tilePane.getChildren();
+        Text tile1 = null;
+        Text tile2 = null;
+        do {
+          {
+            for (int i = 0; (i < listTiles.size()); i++) {
+              {
+                Node _get = listTiles.get(i);
+                Text t = ((Text) _get);
+                boolean _equals = t.getText().equals("");
+                if (_equals) {
+                  tile1 = t;
+                }
+                int _size = list.size();
+                int _minus = (_size - 2);
+                boolean _equals_1 = t.getText().equals(Integer.toString((list.get(_minus)).intValue()));
+                if (_equals_1) {
+                  tile2 = t;
+                }
+              }
+            }
+            String c = "";
+            c = tile1.getText();
+            tile1.setText(tile2.getText());
+            tile2.setText(c);
+            int _size = list.size();
+            int _minus = (_size - 2);
+            list.remove(_minus);
+          }
+        } while((list.size() > 1));
+      }
+    };
+    Platform.runLater(___TaquinFxViewerController_2);
   }
   
   @Override

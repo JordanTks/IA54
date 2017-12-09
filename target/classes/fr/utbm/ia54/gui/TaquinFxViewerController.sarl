@@ -72,15 +72,55 @@ class TaquinFxViewerController extends FxViewerController {
 					if(t.text.equals(Integer.toString(numTile))){
 						if(color.equals("red"))
 							t.fill = Color.RED
-						else if (color.equals("green"))
+						else if (color.equals("blue"))
 							t.fill = Color.BLUE
+						else if (color.equals("green"))
+							t.fill = Color.GREEN
 						return
 					}
 				}
 			}
 		});
 	}
+	
+	// SWAP numTile
+	@FXML def swap(list : List<Integer>) {
+		Platform.runLater(
+			new Runnable() {
+				def run {
 
+					var listTiles = gridDisplay.tilePane.children
+					var tile1 : Text
+					var tile2 : Text
+
+					do {
+
+						for (var i = 0; i < listTiles.size; i++) {
+							var t = listTiles.get(i) as Text
+
+							if (t.text.equals("")) {
+								tile1 = t
+							}
+
+							if (t.text.equals(Integer.toString(list.get(list.size - 2)))) {
+								tile2 = t
+							}
+
+						}
+
+						var c = ""
+						c = tile1.text
+						tile1.text = tile2.text
+						tile2.text = c
+
+						list.remove(list.size() - 2);
+
+					} while (list.size > 1)
+
+				}
+			}
+		)
+	}
 
 	// CLASS GRID MANAGER
 	static class GridDisplay {

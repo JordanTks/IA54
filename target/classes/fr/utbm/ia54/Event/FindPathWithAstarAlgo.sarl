@@ -1,0 +1,18 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54.Event
+
+import java.util.UUID
+
+/** 
+ * @author Jordan
+ * 
+ */
+event FindPathWithAstarAlgo {
+	var beginningFrame : UUID
+	
+	new (firstFrame : UUID){
+		this.beginningFrame = firstFrame
+	}
+}

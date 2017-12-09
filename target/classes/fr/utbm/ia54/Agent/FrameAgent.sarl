@@ -30,6 +30,7 @@ import fr.utbm.ia54.Event.AskNeighbourSatisfaction
 import java.util.HashMap
 import java.util.LinkedHashMap
 import fr.utbm.ia54.Event.ResponseNeighbourSatisfaction
+import fr.utbm.ia54.Event.FindPathWithAstarAlgo
 
 /** 
  * @author Jordan
@@ -161,7 +162,7 @@ agent FrameAgent {
 	on AskNeighbourSatisfaction [!isAsked] {
 
 		// info("DEBUGG : AskNeighbourSatisfaction !isAsked")
-
+ 
 		// Clearing answers map
 		neighbourSatisfaction.clear
 
@@ -290,12 +291,13 @@ agent FrameAgent {
 
 	// The frame is being assaulted
 	on Assault [isAttacked] {
-
-		info("DEBUGG : I GOT ATTACKED !")
+ 
+		info(
+			"=========================================== DEBUGG : I GOT ATTACKED ! emit FINDPATH! /hostedNumTile=" +hostedNumTile)
 		
 		// I have to run away by finding a path between me and the empty tile
-		
-		// ...
+		emit(new FindPathWithAstarAlgo(ID))
+		// ... 
 		
 	}
 	

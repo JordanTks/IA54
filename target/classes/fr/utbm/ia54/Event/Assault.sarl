@@ -6,7 +6,7 @@ package fr.utbm.ia54.Event
 import java.util.ArrayList
 import fr.utbm.ia54.Agent.TileAgent
 import fr.utbm.ia54.Agent.Position
-
+ 
 // La première ligne de commentaire est fausse :
 
 // Probablement obsolete. (La Tile recherche l'état de ses voisins et en cas d'état en agression, on connaît donc l'agresseur
@@ -24,7 +24,7 @@ event Assault {
 	}
 	
 	new (pos : Position, attacked : boolean) {
-		this.direction = pos
+		this.direction = pos  
 		this.isAttacked = attacked
 	}
 	

@@ -31,6 +31,7 @@ import fr.utbm.ia54.Class.CoordPair
 import fr.utbm.ia54.Class.InfosFrame
 import java.util.LinkedHashSet
 import io.sarl.core.Schedules
+import fr.utbm.ia54.Event.FindPathWithAstarAlgo
 
 enum Position {
 	NORTH,
@@ -56,15 +57,23 @@ agent BoardGameAgent {
 	var closedListOfFrames = new ArrayList<InfosFrame>()
 
 	// infos of the frame on which there is the Tile with the Token
+	var beginningFrame : FrameAgent
 	var beginningInfosFrame : InfosFrame
 	var uuidFRAMEwithTokenTile : UUID
 	var coordsFRAMEwithTokenTile : CoordPair
 	
-	// infos of the frale on which there is the BlankTile
+	// infos of the frame on which there is the BlankTile
 	var arrivalFrame : FrameAgent
 	var arrivalInfosFrame : InfosFrame
 	var uuidFRAMEwithBlankTile : UUID
 	var coordsFRAMEwithBlankTile : CoordPair
+	
+	// infos of the frame on which there is the beginningFrame (launcher of the A-star algorithm)
+	/*var beginningFrame : FrameAgent
+	var beginningInfosFrame : InfosFrame
+	var uuidFRAMEwithTokenTile : UUID
+	var coordsFRAMEwithTokenTile : CoordPair*/
+	
 	
 	var tileList = new ArrayList<TileAgent>()
 	var tokenPriorityList = new ArrayList<ArrayList<TileAgent>>()
@@ -156,8 +165,7 @@ agent BoardGameAgent {
 			coordsFRAMEwithBlankTile = frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1).coordPair
 			arrivalInfosFrame = new InfosFrame(uuidFRAMEwithBlankTile, coordsFRAMEwithBlankTile)
 			arrivalFrame = frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1)
-			info("///////////////// FrameSet) LAST IN frameList=" + frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1).ID)
-			info("///////////////// FrameSet) arrivalFrame.ID=" + arrivalFrame.ID)
+//			info("///////////////// FrameSet) arrivalFrame.ID=" + arrivalFrame.ID)
 		}
 	}
 	
@@ -208,15 +216,13 @@ agent BoardGameAgent {
 			// Sending the token
 			wake(new TokenReleased)
 
-			// Wait until every agent is spawned
-			info("*************** nbFrameSet=" + nbFrameSet+" /nbTileSet="+nbTileSet)
-			info("!!!!!!!!!!!!! BEGIN TEST OF the A-star ALGORITHM !!!!!!!!!!!!!")
-			
-			//TODO: NOT PRECISE AT ALL : more delay if bigger size
-			if(PROBLEM_SIZE<10)
-				in(250 * PROBLEM_SIZE)[findPath]
-			else
-				in(300 * PROBLEM_SIZE)[findPath]
+			// Wait until every agent is spawned - TODO: NOT PRECISE AT ALL : more delay if bigger size
+//			info("- Begin A-star algorithm -")
+//			
+//			if(PROBLEM_SIZE<10)
+//				in(500 * PROBLEM_SIZE)[findPath]
+//			else
+//				in(700 * PROBLEM_SIZE)[findPath]
 		}
 	}
 
@@ -231,22 +237,24 @@ agent BoardGameAgent {
 					emit(new TokenReceived(), Scopes.addresses(defaultSpace.getAddress(t.ID)))
 					
 					// set the infosFrame for the frame on which there is the Tile with the Token
-					for(var i=0; i<frameList.size; i++){
-						if(frameList.get(i).hostedTile === t.ID){
-							uuidFRAMEwithTokenTile = frameList.get(i).ID
-							coordsFRAMEwithTokenTile = frameList.get(i).coordPair
-							beginningInfosFrame = new InfosFrame(uuidFRAMEwithTokenTile, coordsFRAMEwithTokenTile)
-							info("++++++++++++++++++++++++++++ TokenReleased) beginningFrame=" + uuidFRAMEwithTokenTile)
-							break
-						}
-					}
+//					for(var i=0; i<frameList.size; i++){
+//						if(frameList.get(i).hostedTile === t.ID){
+//							uuidFRAMEwithTokenTile = frameList.get(i).ID
+//							coordsFRAMEwithTokenTile = frameList.get(i).coordPair
+//							beginningInfosFrame = new InfosFrame(uuidFRAMEwithTokenTile, coordsFRAMEwithTokenTile)
+//							beginningFrame = frameList.get(i)
+//							
+//							info("++++++++++++++++++++++++++++ TokenReleased) beginningFrame=" + uuidFRAMEwithTokenTile)
+//							break
+//						}
+//					}
 					
 					
 					return
 				}
 			}
 			
-			tokenPriorityList.remove(0)
+			tokenPriorityList.remove(0) 
 			
 			// It is over
 			if (tokenPriorityList.empty)
@@ -291,11 +299,7 @@ agent BoardGameAgent {
 	 */
 	 // TKS
 	def addNeighbourFrames(currentFrame : FrameAgent)
-	{			
-		if(arrivalFrame != null)
-			info("////////////////////// addNeighbour) arrivalFrame.UUID="+arrivalFrame.ID)
-		else info("///////////////////// addNeighbour) arrivalFrame NULL")
-		
+	{					
 		// the north's frame exists======================================================================================================================
 		if (currentFrame.northNeighbour != null) {
 			var index = frameUUIDList.indexOf(currentFrame.northNeighbour)
@@ -303,7 +307,7 @@ agent BoardGameAgent {
 			// TODO: ne rien faire si elle est satisfaite (ou bloquée ?)
 			if (!frameList.get(index).isSatisfied) {
 
-				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var newCoords = frameList.get(index).coordPair
+				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var coordNeighbour = frameList.get(index).coordPair
 
 				// if doesn't exist in the closed list
 				if (!isInFrameList(coordNeighbour, closedListOfFrames)) {
@@ -322,8 +326,6 @@ agent BoardGameAgent {
 					infosFrame.costG = closedListOfFrames.get(indexForClosedList).costG +
 						distEuclidian(frameList.get(index), currentFrame)
 
-					// TODO: ATTENTION ! DOIT ETRE LA FRAME POSSEDANT LA BLANKTILE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//					var arrivalFrame = frameList.get(((PROBLEM_SIZE * PROBLEM_SIZE) - 1)) // TKS: modify with the frame which has the blankTile
 					// costH of north's neighbour: it to arrival
 					infosFrame.costH = distEuclidian(frameList.get(index), arrivalFrame)
 					infosFrame.costF = infosFrame.costG + infosFrame.costH
@@ -360,7 +362,7 @@ agent BoardGameAgent {
 			// TODO: ne rien faire si elle est satisfaite (ou bloquée ?)
 			if (!frameList.get(index).isSatisfied) {
 
-				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var newCoords = frameList.get(index).coordPair
+				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var coordNeighbour = frameList.get(index).coordPair
 
 				// if doesn't exist in the closed list
 				if (!isInFrameList(coordNeighbour, closedListOfFrames)) {
@@ -378,9 +380,7 @@ agent BoardGameAgent {
 
 					infosFrame.costG = closedListOfFrames.get(indexForClosedList).costG +
 						distEuclidian(frameList.get(index), currentFrame)
-
-					// TODO: ATTENTION ! DOIT ETRE LA FRAME POSSEDANT LA BLANKTILE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//					var arrivalFrame = frameList.get(((PROBLEM_SIZE * PROBLEM_SIZE) - 1)) // TKS: modify with the frame which has the blankTile
+						
 					// costH of south's neighbour: it to arrival
 					infosFrame.costH = distEuclidian(frameList.get(index), arrivalFrame)
 					infosFrame.costF = infosFrame.costG + infosFrame.costH
@@ -417,7 +417,7 @@ agent BoardGameAgent {
 			// TODO: ne rien faire si elle est satisfaite (ou bloquée ?)
 			if (!frameList.get(index).isSatisfied) {
 
-				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var newCoords = frameList.get(index).coordPair
+				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var coordNeighbour = frameList.get(index).coordPair
 												
 				// if doesn't exist in the closed list
 				if (!isInFrameList(coordNeighbour, closedListOfFrames)) {
@@ -436,8 +436,6 @@ agent BoardGameAgent {
 					infosFrame.costG = closedListOfFrames.get(indexForClosedList).costG +
 						distEuclidian(frameList.get(index), currentFrame)
 
-					// TODO: ATTENTION ! DOIT ETRE LA FRAME POSSEDANT LA BLANKTILE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//					var arrivalFrame = frameList.get(((PROBLEM_SIZE * PROBLEM_SIZE) - 1)) // TKS: modify with the frame which has the blankTile
 					// costH of east's neighbour: it to arrival
 					infosFrame.costH = distEuclidian(frameList.get(index), arrivalFrame)
 					infosFrame.costF = infosFrame.costG + infosFrame.costH
@@ -474,7 +472,7 @@ agent BoardGameAgent {
 			//TODO: ne rien faire si elle est satisfaite (ou bloquée ?)
 			if (!frameList.get(index).isSatisfied) {
 
-				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var newCoords = frameList.get(index).coordPair
+				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var coordNeighbour = frameList.get(index).coordPair
 												
 				// if doesn't exist in the closed list
 				if (!isInFrameList(coordNeighbour, closedListOfFrames)) {
@@ -493,8 +491,6 @@ agent BoardGameAgent {
 					infosFrame.costG = closedListOfFrames.get(indexForClosedList).costG +
 						distEuclidian(frameList.get(index), currentFrame)
 
-					// TODO: ATTENTION ! DOIT ETRE LA FRAME POSSEDANT LA BLANKTILE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//					var arrivalFrame = frameList.get(((PROBLEM_SIZE * PROBLEM_SIZE) - 1)) // TKS: modify with the frame which has the blankTile
 					// costH of west's neighbour: it to arrival
 					infosFrame.costH = distEuclidian(frameList.get(index), arrivalFrame)
 					infosFrame.costF = infosFrame.costG + infosFrame.costH
@@ -656,9 +652,9 @@ def getBestFrame(listFrames : ArrayList<InfosFrame>) : InfosFrame {
 		
 		// if destination is reached : build the path in the opposite direction of the chain of aggression
 		if(currentFrame.coordsCurrentFrame.equals(arrivalInfosFrame.coordsCurrentFrame)){
-			info("######## A-star : destination IS reached !")
+			info("- A-star : destination IS reached! -")
 		} else {
-			info("######## A-star : destination IS NOT reached !")
+			info("- A-star : destination IS NOT reached! -")
 		}
 		
 		
@@ -674,29 +670,93 @@ def getBestFrame(listFrames : ArrayList<InfosFrame>) : InfosFrame {
 			}				
 		}
 		
+		// YB
+		var listSwap : ArrayList<Integer> = new ArrayList()
+		
 		info("---- Chain of aggression below ----")
-		for(ite : chainAggression){
-			info("path="+ite.coordsCurrentFrame.toString+" /ID="+ite.uuidCurrentFrame)
+		for(var i=0; i<chainAggression.size; i++){
 			
-			// colorize the chain of aggression BUT not the beginningFrame
-			if (!ite.coordsCurrentFrame.equals(coordsFRAMEwithTokenTile)) {
-				for(var i=0; i<frameList.size; i++){
-					if(frameList.get(i).ID === ite.uuidCurrentFrame){
-						emit(new ActionUI("green", frameList.get(i).hostedNumTile), Scopes.addresses(defaultSpace.getAddress(ID)))
+			//Frame with the Tile which wants to move 
+			if (chainAggression.get(i).coordsCurrentFrame.equals(beginningFrame.coordPair)) {
+
+				info("BeginningFrame= " + chainAggression.get(i).coordsCurrentFrame.toString)
+				
+				for (var j = 0; j < frameList.size; j++) {
+					if (frameList.get(j).ID === chainAggression.get(i).uuidCurrentFrame) {
+
+						// YB
+						listSwap.add(frameList.get(j).hostedNumTile)
+
+						ctrl.setColor("green", frameList.get(j).hostedNumTile)
+
+						// YB
+						Thread.sleep(1000)
+
 						break
 					}
 				}
 			}
+			
+			// colorize the chain of aggression (NOT the extremities)
+			else if (!chainAggression.get(i).coordsCurrentFrame.equals(arrivalFrame.coordPair)) {
+
+				info("Frame"+(i + 1) + "= " + chainAggression.get(i).coordsCurrentFrame.toString)
+				
+				for(var j=0; j<frameList.size; j++){
+					if (frameList.get(j).ID === chainAggression.get(i).uuidCurrentFrame) {
+
+						// YB
+						listSwap.add(frameList.get(j).hostedNumTile)
+						
+						ctrl.setColor("blue", frameList.get(j).hostedNumTile)
+						
+						// YB
+						Thread.sleep(1000)
+						
+						break
+					}
+				}
+			}
+			else {
+				info("ArrivalFrame= " + chainAggression.get(i).coordsCurrentFrame.toString)
+			}
 		}
+		
+		// YB
+		//ctrl.swap(listSwap)
 			
 	}
+	
+	// receive the event to execute the algo A*
+	on FindPathWithAstarAlgo {
+		uuidFRAMEwithTokenTile = occurrence.beginningFrame
+		
+		for(var i=0; i<frameList.size; i++){
+			if(frameList.get(i).ID === uuidFRAMEwithTokenTile){
+				beginningFrame = frameList.get(i)
+				coordsFRAMEwithTokenTile = frameList.get(i).coordPair
+				var infosFrame = new InfosFrame(uuidFRAMEwithTokenTile, coordsFRAMEwithTokenTile) 
+				beginningInfosFrame = infosFrame
+				break
+			}
+		}
+		
+		info("====================== receive event FINDPATH /uuidBeginningFrame")
 
-	on Destroy {
+		// TODO: NOT PRECISE AT ALL : more delay if bigger size
+		if (PROBLEM_SIZE < 10)
+			in(400 * PROBLEM_SIZE)[findPath]
+		else
+			in(600 * PROBLEM_SIZE)[findPath]
+		
+	}
+
+	on Destroy { 
 		// Event trigger when the agent is destroyed from the system.
 		// You should put all the resource releasing statements in this block of code.
 		info("The agent was stopped.")
 	}
-
+ 
 	on AgentSpawned {
 		// A new agent has been spawned in our context.
 	}

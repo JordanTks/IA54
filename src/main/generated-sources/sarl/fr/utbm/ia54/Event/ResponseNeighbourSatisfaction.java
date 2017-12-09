@@ -68,4 +68,7 @@ public class ResponseNeighbourSatisfaction extends Event {
     result.append("neighbourSatisfaction  = ").append(this.neighbourSatisfaction);
     return result.toString();
   }
+  
+  @SyntheticMember
+  private final static long serialVersionUID = -3294225030L;
 }

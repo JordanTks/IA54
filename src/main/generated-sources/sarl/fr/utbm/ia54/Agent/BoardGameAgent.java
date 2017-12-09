@@ -6,6 +6,7 @@ import fr.utbm.ia54.Agent.FrameAgent;
 import fr.utbm.ia54.Agent.TileAgent;
 import fr.utbm.ia54.Class.CoordPair;
 import fr.utbm.ia54.Class.InfosFrame;
+import fr.utbm.ia54.Event.FindPathWithAstarAlgo;
 import fr.utbm.ia54.Event.FrameSet;
 import fr.utbm.ia54.Event.TileSet;
 import fr.utbm.ia54.Event.TokenReceived;
@@ -43,6 +44,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
@@ -68,6 +70,8 @@ public class BoardGameAgent extends Agent {
   
   private ArrayList<InfosFrame> closedListOfFrames = new ArrayList<InfosFrame>();
   
+  private FrameAgent beginningFrame;
+  
   private InfosFrame beginningInfosFrame;
   
   private UUID uuidFRAMEwithTokenTile;
@@ -82,6 +86,12 @@ public class BoardGameAgent extends Agent {
   
   private CoordPair coordsFRAMEwithBlankTile;
   
+  /**
+   * var beginningFrame : FrameAgent
+   * var beginningInfosFrame : InfosFrame
+   * var uuidFRAMEwithTokenTile : UUID
+   * var coordsFRAMEwithTokenTile : CoordPair
+   */
   private ArrayList<TileAgent> tileList = new ArrayList<TileAgent>();
   
   private ArrayList<ArrayList<TileAgent>> tokenPriorityList = new ArrayList<ArrayList<TileAgent>>();
@@ -180,14 +190,6 @@ public class BoardGameAgent extends Agent {
       InfosFrame _infosFrame = new InfosFrame(this.uuidFRAMEwithBlankTile, this.coordsFRAMEwithBlankTile);
       this.arrivalInfosFrame = _infosFrame;
       this.arrivalFrame = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1));
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      UUID _iD = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1)).getID();
-      String _plus = ("///////////////// FrameSet) LAST IN frameList=" + _iD);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(_plus);
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      UUID _iD_1 = this.arrivalFrame.getID();
-      String _plus_1 = ("///////////////// FrameSet) arrivalFrame.ID=" + _iD_1);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus_1);
     }
   }
   
@@ -237,23 +239,6 @@ public class BoardGameAgent extends Agent {
       Behaviors _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER = this.$castSkill(Behaviors.class, (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS == null || this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS = this.$getSkill(Behaviors.class)) : this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS);
       TokenReleased _tokenReleased = new TokenReleased();
       _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER.wake(_tokenReleased);
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(((("*************** nbFrameSet=" + Integer.valueOf(this.nbFrameSet)) + " /nbTileSet=") + Integer.valueOf(this.nbTileSet)));
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info("!!!!!!!!!!!!! BEGIN TEST OF the A-star ALGORITHM !!!!!!!!!!!!!");
-      if ((this.PROBLEM_SIZE < 10)) {
-        Schedules _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER = this.$castSkill(Schedules.class, (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = this.$getSkill(Schedules.class)) : this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
-        final Procedure1<Agent> _function_1 = (Agent it) -> {
-          this.findPath();
-        };
-        _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER.in((250 * this.PROBLEM_SIZE), _function_1);
-      } else {
-        Schedules _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER_1 = this.$castSkill(Schedules.class, (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = this.$getSkill(Schedules.class)) : this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
-        final Procedure1<Agent> _function_2 = (Agent it) -> {
-          this.findPath();
-        };
-        _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER_1.in((300 * this.PROBLEM_SIZE), _function_2);
-      }
     }
   }
   
@@ -270,20 +255,6 @@ public class BoardGameAgent extends Agent {
             TokenReceived _tokenReceived = new TokenReceived();
             DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
             _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReceived, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(t.getID())));
-            for (int i = 0; (i < this.frameList.size()); i++) {
-              UUID _hostedTile = this.frameList.get(i).getHostedTile();
-              UUID _iD = t.getID();
-              boolean _tripleEquals = (_hostedTile == _iD);
-              if (_tripleEquals) {
-                this.uuidFRAMEwithTokenTile = this.frameList.get(i).getID();
-                this.coordsFRAMEwithTokenTile = this.frameList.get(i).getCoordPair();
-                InfosFrame _infosFrame = new InfosFrame(this.uuidFRAMEwithTokenTile, this.coordsFRAMEwithTokenTile);
-                this.beginningInfosFrame = _infosFrame;
-                Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(("++++++++++++++++++++++++++++ TokenReleased) beginningFrame=" + this.uuidFRAMEwithTokenTile));
-                break;
-              }
-            }
             return;
           }
         }
@@ -348,19 +319,9 @@ public class BoardGameAgent extends Agent {
   protected Object addNeighbourFrames(final FrameAgent currentFrame) {
     Object _xblockexpression = null;
     {
-      boolean _notEquals = (!Objects.equal(this.arrivalFrame, null));
-      if (_notEquals) {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        UUID _iD = this.arrivalFrame.getID();
-        String _plus = ("////////////////////// addNeighbour) arrivalFrame.UUID=" + _iD);
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
-      } else {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("///////////////////// addNeighbour) arrivalFrame NULL");
-      }
       UUID _northNeighbour = currentFrame.getNorthNeighbour();
-      boolean _notEquals_1 = (!Objects.equal(_northNeighbour, null));
-      if (_notEquals_1) {
+      boolean _notEquals = (!Objects.equal(_northNeighbour, null));
+      if (_notEquals) {
         int index = this.frameUUIDList.indexOf(currentFrame.getNorthNeighbour());
         boolean _isSatisfied = this.frameList.get(index).getIsSatisfied();
         boolean _not = (!_isSatisfied);
@@ -376,8 +337,8 @@ public class BoardGameAgent extends Agent {
               {
                 indexForClosedList++;
                 UUID _uuidCurrentFrame = iterator.getUuidCurrentFrame();
-                UUID _iD_1 = currentFrame.getID();
-                boolean _equals = Objects.equal(_uuidCurrentFrame, _iD_1);
+                UUID _iD = currentFrame.getID();
+                boolean _equals = Objects.equal(_uuidCurrentFrame, _iD);
                 if (_equals) {
                   break;
                 }
@@ -385,13 +346,13 @@ public class BoardGameAgent extends Agent {
             }
             int _costG = this.closedListOfFrames.get(indexForClosedList).getCostG();
             int _distEuclidian = this.distEuclidian(this.frameList.get(index), currentFrame);
-            int _plus_1 = (_costG + _distEuclidian);
-            infosFrame.setCostG(_plus_1);
+            int _plus = (_costG + _distEuclidian);
+            infosFrame.setCostG(_plus);
             infosFrame.setCostH(this.distEuclidian(this.frameList.get(index), this.arrivalFrame));
             int _costG_1 = infosFrame.getCostG();
             int _costH = infosFrame.getCostH();
-            int _plus_2 = (_costG_1 + _costH);
-            infosFrame.setCostF(_plus_2);
+            int _plus_1 = (_costG_1 + _costH);
+            infosFrame.setCostF(_plus_1);
             infosFrame.setUuidPreviousFrame(currentFrame.getID());
             infosFrame.setCoordsPreviousFrame(currentFrame.getCoordPair());
             int indexForOpenList = (-1);
@@ -421,8 +382,8 @@ public class BoardGameAgent extends Agent {
         }
       }
       UUID _southNeighbour = currentFrame.getSouthNeighbour();
-      boolean _notEquals_2 = (!Objects.equal(_southNeighbour, null));
-      if (_notEquals_2) {
+      boolean _notEquals_1 = (!Objects.equal(_southNeighbour, null));
+      if (_notEquals_1) {
         int index_1 = this.frameUUIDList.indexOf(currentFrame.getSouthNeighbour());
         boolean _isSatisfied_1 = this.frameList.get(index_1).getIsSatisfied();
         boolean _not_2 = (!_isSatisfied_1);
@@ -438,8 +399,8 @@ public class BoardGameAgent extends Agent {
               {
                 indexForClosedList_1++;
                 UUID _uuidCurrentFrame = iterator_2.getUuidCurrentFrame();
-                UUID _iD_1 = currentFrame.getID();
-                boolean _equals = Objects.equal(_uuidCurrentFrame, _iD_1);
+                UUID _iD = currentFrame.getID();
+                boolean _equals = Objects.equal(_uuidCurrentFrame, _iD);
                 if (_equals) {
                   break;
                 }
@@ -447,13 +408,13 @@ public class BoardGameAgent extends Agent {
             }
             int _costG_2 = this.closedListOfFrames.get(indexForClosedList_1).getCostG();
             int _distEuclidian_1 = this.distEuclidian(this.frameList.get(index_1), currentFrame);
-            int _plus_3 = (_costG_2 + _distEuclidian_1);
-            infosFrame_1.setCostG(_plus_3);
+            int _plus_2 = (_costG_2 + _distEuclidian_1);
+            infosFrame_1.setCostG(_plus_2);
             infosFrame_1.setCostH(this.distEuclidian(this.frameList.get(index_1), this.arrivalFrame));
             int _costG_3 = infosFrame_1.getCostG();
             int _costH_1 = infosFrame_1.getCostH();
-            int _plus_4 = (_costG_3 + _costH_1);
-            infosFrame_1.setCostF(_plus_4);
+            int _plus_3 = (_costG_3 + _costH_1);
+            infosFrame_1.setCostF(_plus_3);
             infosFrame_1.setUuidPreviousFrame(currentFrame.getID());
             infosFrame_1.setCoordsPreviousFrame(currentFrame.getCoordPair());
             int indexForOpenList_1 = (-1);
@@ -483,8 +444,8 @@ public class BoardGameAgent extends Agent {
         }
       }
       UUID _eastNeighbour = currentFrame.getEastNeighbour();
-      boolean _notEquals_3 = (!Objects.equal(_eastNeighbour, null));
-      if (_notEquals_3) {
+      boolean _notEquals_2 = (!Objects.equal(_eastNeighbour, null));
+      if (_notEquals_2) {
         int index_2 = this.frameUUIDList.indexOf(currentFrame.getEastNeighbour());
         boolean _isSatisfied_2 = this.frameList.get(index_2).getIsSatisfied();
         boolean _not_4 = (!_isSatisfied_2);
@@ -500,8 +461,8 @@ public class BoardGameAgent extends Agent {
               {
                 indexForClosedList_2++;
                 UUID _uuidCurrentFrame = iterator_4.getUuidCurrentFrame();
-                UUID _iD_1 = currentFrame.getID();
-                boolean _equals = Objects.equal(_uuidCurrentFrame, _iD_1);
+                UUID _iD = currentFrame.getID();
+                boolean _equals = Objects.equal(_uuidCurrentFrame, _iD);
                 if (_equals) {
                   break;
                 }
@@ -509,13 +470,13 @@ public class BoardGameAgent extends Agent {
             }
             int _costG_4 = this.closedListOfFrames.get(indexForClosedList_2).getCostG();
             int _distEuclidian_2 = this.distEuclidian(this.frameList.get(index_2), currentFrame);
-            int _plus_5 = (_costG_4 + _distEuclidian_2);
-            infosFrame_2.setCostG(_plus_5);
+            int _plus_4 = (_costG_4 + _distEuclidian_2);
+            infosFrame_2.setCostG(_plus_4);
             infosFrame_2.setCostH(this.distEuclidian(this.frameList.get(index_2), this.arrivalFrame));
             int _costG_5 = infosFrame_2.getCostG();
             int _costH_2 = infosFrame_2.getCostH();
-            int _plus_6 = (_costG_5 + _costH_2);
-            infosFrame_2.setCostF(_plus_6);
+            int _plus_5 = (_costG_5 + _costH_2);
+            infosFrame_2.setCostF(_plus_5);
             infosFrame_2.setUuidPreviousFrame(currentFrame.getID());
             infosFrame_2.setCoordsPreviousFrame(currentFrame.getCoordPair());
             int indexForOpenList_2 = (-1);
@@ -546,8 +507,8 @@ public class BoardGameAgent extends Agent {
       }
       Object _xifexpression = null;
       UUID _westNeighbour = currentFrame.getWestNeighbour();
-      boolean _notEquals_4 = (!Objects.equal(_westNeighbour, null));
-      if (_notEquals_4) {
+      boolean _notEquals_3 = (!Objects.equal(_westNeighbour, null));
+      if (_notEquals_3) {
         Object _xblockexpression_1 = null;
         {
           int index_3 = this.frameUUIDList.indexOf(currentFrame.getWestNeighbour());
@@ -571,8 +532,8 @@ public class BoardGameAgent extends Agent {
                     {
                       indexForClosedList_3++;
                       UUID _uuidCurrentFrame = iterator_6.getUuidCurrentFrame();
-                      UUID _iD_1 = currentFrame.getID();
-                      boolean _equals = Objects.equal(_uuidCurrentFrame, _iD_1);
+                      UUID _iD = currentFrame.getID();
+                      boolean _equals = Objects.equal(_uuidCurrentFrame, _iD);
                       if (_equals) {
                         break;
                       }
@@ -580,13 +541,13 @@ public class BoardGameAgent extends Agent {
                   }
                   int _costG_6 = this.closedListOfFrames.get(indexForClosedList_3).getCostG();
                   int _distEuclidian_3 = this.distEuclidian(this.frameList.get(index_3), currentFrame);
-                  int _plus_7 = (_costG_6 + _distEuclidian_3);
-                  infosFrame_3.setCostG(_plus_7);
+                  int _plus_6 = (_costG_6 + _distEuclidian_3);
+                  infosFrame_3.setCostG(_plus_6);
                   infosFrame_3.setCostH(this.distEuclidian(this.frameList.get(index_3), this.arrivalFrame));
                   int _costG_7 = infosFrame_3.getCostG();
                   int _costH_3 = infosFrame_3.getCostH();
-                  int _plus_8 = (_costG_7 + _costH_3);
-                  infosFrame_3.setCostF(_plus_8);
+                  int _plus_7 = (_costG_7 + _costH_3);
+                  infosFrame_3.setCostF(_plus_7);
                   infosFrame_3.setUuidPreviousFrame(currentFrame.getID());
                   infosFrame_3.setCoordsPreviousFrame(currentFrame.getCoordPair());
                   int indexForOpenList_3 = (-1);
@@ -734,121 +695,174 @@ public class BoardGameAgent extends Agent {
    * execute the A-star algorithm
    */
   protected void findPath() {
-    InfosFrame currentFrame = this.beginningInfosFrame;
-    this.openListOfFrames.add(this.beginningInfosFrame);
-    this.addInClosedList(this.beginningInfosFrame.getCoordsCurrentFrame());
-    int indexOfFrameList = (-1);
-    for (final FrameAgent ite : this.frameList) {
-      {
-        indexOfFrameList++;
-        boolean _equals = ite.getCoordPair().equals(this.beginningInfosFrame.getCoordsCurrentFrame());
-        if (_equals) {
-          break;
-        }
-      }
-    }
-    this.addNeighbourFrames(this.frameList.get(indexOfFrameList));
-    while (((!currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame())) && (!this.openListOfFrames.isEmpty()))) {
-      {
-        currentFrame = this.getBestFrame(this.openListOfFrames);
-        this.addInClosedList(currentFrame.getCoordsCurrentFrame());
-        int indexOfFrameList2 = (-1);
-        for (final FrameAgent ite_1 : this.frameList) {
-          {
-            indexOfFrameList2++;
-            boolean _equals = ite_1.getCoordPair().equals(currentFrame.getCoordsCurrentFrame());
-            if (_equals) {
-              break;
-            }
+    try {
+      InfosFrame currentFrame = this.beginningInfosFrame;
+      this.openListOfFrames.add(this.beginningInfosFrame);
+      this.addInClosedList(this.beginningInfosFrame.getCoordsCurrentFrame());
+      int indexOfFrameList = (-1);
+      for (final FrameAgent ite : this.frameList) {
+        {
+          indexOfFrameList++;
+          boolean _equals = ite.getCoordPair().equals(this.beginningInfosFrame.getCoordsCurrentFrame());
+          if (_equals) {
+            break;
           }
         }
-        this.addNeighbourFrames(this.frameList.get(indexOfFrameList2));
       }
-    }
-    boolean _equals = currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame());
-    if (_equals) {
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("######## A-star : destination IS reached !");
-    } else {
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("######## A-star : destination IS NOT reached !");
-    }
-    ArrayList<InfosFrame> tmpChainAggression = this.buildChainAggression(this.beginningInfosFrame);
-    ArrayList<InfosFrame> chainAggression = new ArrayList<InfosFrame>();
-    int _size = tmpChainAggression.size();
-    int _minus = (_size - 1);
-    InfosFrame tmpFrame = tmpChainAggression.get(_minus);
-    chainAggression.add(tmpFrame);
-    for (int i = (tmpChainAggression.size() - 2); (i >= 0); i--) {
-      UUID _uuidCurrentFrame = tmpFrame.getUuidCurrentFrame();
-      UUID _uuidCurrentFrame_1 = tmpChainAggression.get(i).getUuidCurrentFrame();
-      boolean _tripleEquals = (_uuidCurrentFrame == _uuidCurrentFrame_1);
-      boolean _not = (!_tripleEquals);
-      if (_not) {
-        tmpFrame = tmpChainAggression.get(i);
-        chainAggression.add(tmpFrame);
+      this.addNeighbourFrames(this.frameList.get(indexOfFrameList));
+      while (((!currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame())) && (!this.openListOfFrames.isEmpty()))) {
+        {
+          currentFrame = this.getBestFrame(this.openListOfFrames);
+          this.addInClosedList(currentFrame.getCoordsCurrentFrame());
+          int indexOfFrameList2 = (-1);
+          for (final FrameAgent ite_1 : this.frameList) {
+            {
+              indexOfFrameList2++;
+              boolean _equals = ite_1.getCoordPair().equals(currentFrame.getCoordsCurrentFrame());
+              if (_equals) {
+                break;
+              }
+            }
+          }
+          this.addNeighbourFrames(this.frameList.get(indexOfFrameList2));
+        }
       }
-    }
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info("---- Chain of aggression below ----");
-    for (final InfosFrame ite_1 : chainAggression) {
-      {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        String _string = ite_1.getCoordsCurrentFrame().toString();
-        String _plus = ("path=" + _string);
-        String _plus_1 = (_plus + " /ID=");
-        UUID _uuidCurrentFrame = ite_1.getUuidCurrentFrame();
-        String _plus_2 = (_plus_1 + _uuidCurrentFrame);
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus_2);
-        boolean _equals_1 = ite_1.getCoordsCurrentFrame().equals(this.coordsFRAMEwithTokenTile);
-        boolean _not = (!_equals_1);
+      boolean _equals = currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame());
+      if (_equals) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("- A-star : destination IS reached! -");
+      } else {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("- A-star : destination IS NOT reached! -");
+      }
+      ArrayList<InfosFrame> tmpChainAggression = this.buildChainAggression(this.beginningInfosFrame);
+      ArrayList<InfosFrame> chainAggression = new ArrayList<InfosFrame>();
+      int _size = tmpChainAggression.size();
+      int _minus = (_size - 1);
+      InfosFrame tmpFrame = tmpChainAggression.get(_minus);
+      chainAggression.add(tmpFrame);
+      for (int i = (tmpChainAggression.size() - 2); (i >= 0); i--) {
+        UUID _uuidCurrentFrame = tmpFrame.getUuidCurrentFrame();
+        UUID _uuidCurrentFrame_1 = tmpChainAggression.get(i).getUuidCurrentFrame();
+        boolean _tripleEquals = (_uuidCurrentFrame == _uuidCurrentFrame_1);
+        boolean _not = (!_tripleEquals);
         if (_not) {
-          for (int i = 0; (i < this.frameList.size()); i++) {
-            UUID _iD = this.frameList.get(i).getID();
-            UUID _uuidCurrentFrame_1 = ite_1.getUuidCurrentFrame();
-            boolean _tripleEquals = (_iD == _uuidCurrentFrame_1);
+          tmpFrame = tmpChainAggression.get(i);
+          chainAggression.add(tmpFrame);
+        }
+      }
+      ArrayList<Integer> listSwap = new ArrayList<Integer>();
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info("---- Chain of aggression below ----");
+      for (int i = 0; (i < chainAggression.size()); i++) {
+        boolean _equals_1 = chainAggression.get(i).getCoordsCurrentFrame().equals(this.beginningFrame.getCoordPair());
+        if (_equals_1) {
+          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+          String _string = chainAggression.get(i).getCoordsCurrentFrame().toString();
+          String _plus = ("BeginningFrame= " + _string);
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus);
+          for (int j = 0; (j < this.frameList.size()); j++) {
+            UUID _iD = this.frameList.get(j).getID();
+            UUID _uuidCurrentFrame = chainAggression.get(i).getUuidCurrentFrame();
+            boolean _tripleEquals = (_iD == _uuidCurrentFrame);
             if (_tripleEquals) {
-              DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-              int _hostedNumTile = this.frameList.get(i).getHostedNumTile();
-              ActionUI _actionUI = new ActionUI("green", _hostedNumTile);
-              DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-              _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_actionUI, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(this.getID())));
+              listSwap.add(Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
+              this.ctrl.setColor("green", Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
+              Thread.sleep(1000);
               break;
             }
           }
+        } else {
+          boolean _equals_2 = chainAggression.get(i).getCoordsCurrentFrame().equals(this.arrivalFrame.getCoordPair());
+          boolean _not = (!_equals_2);
+          if (_not) {
+            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+            String _string_1 = chainAggression.get(i).getCoordsCurrentFrame().toString();
+            String _plus_1 = ((("Frame" + Integer.valueOf((i + 1))) + "= ") + _string_1);
+            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4.info(_plus_1);
+            for (int j = 0; (j < this.frameList.size()); j++) {
+              UUID _iD = this.frameList.get(j).getID();
+              UUID _uuidCurrentFrame = chainAggression.get(i).getUuidCurrentFrame();
+              boolean _tripleEquals = (_iD == _uuidCurrentFrame);
+              if (_tripleEquals) {
+                listSwap.add(Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
+                this.ctrl.setColor("blue", Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
+                Thread.sleep(1000);
+                break;
+              }
+            }
+          } else {
+            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+            String _string_2 = chainAggression.get(i).getCoordsCurrentFrame().toString();
+            String _plus_2 = ("ArrivalFrame= " + _string_2);
+            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5.info(_plus_2);
+          }
         }
       }
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
     }
   }
   
   @SyntheticMember
-  private void $behaviorUnit$Destroy$5(final Destroy occurrence) {
+  private void $behaviorUnit$FindPathWithAstarAlgo$5(final FindPathWithAstarAlgo occurrence) {
+    this.uuidFRAMEwithTokenTile = occurrence.beginningFrame;
+    for (int i = 0; (i < this.frameList.size()); i++) {
+      UUID _iD = this.frameList.get(i).getID();
+      boolean _tripleEquals = (_iD == this.uuidFRAMEwithTokenTile);
+      if (_tripleEquals) {
+        this.beginningFrame = this.frameList.get(i);
+        this.coordsFRAMEwithTokenTile = this.frameList.get(i).getCoordPair();
+        InfosFrame infosFrame = new InfosFrame(this.uuidFRAMEwithTokenTile, this.coordsFRAMEwithTokenTile);
+        this.beginningInfosFrame = infosFrame;
+        break;
+      }
+    }
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("====================== receive event FINDPATH /uuidBeginningFrame");
+    if ((this.PROBLEM_SIZE < 10)) {
+      Schedules _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER = this.$castSkill(Schedules.class, (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = this.$getSkill(Schedules.class)) : this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
+      final Procedure1<Agent> _function = (Agent it) -> {
+        this.findPath();
+      };
+      _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER.in((400 * this.PROBLEM_SIZE), _function);
+    } else {
+      Schedules _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER_1 = this.$castSkill(Schedules.class, (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = this.$getSkill(Schedules.class)) : this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
+      final Procedure1<Agent> _function_1 = (Agent it) -> {
+        this.findPath();
+      };
+      _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER_1.in((600 * this.PROBLEM_SIZE), _function_1);
+    }
+  }
+  
+  @SyntheticMember
+  private void $behaviorUnit$Destroy$6(final Destroy occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was stopped.");
   }
   
   @SyntheticMember
-  private void $behaviorUnit$AgentSpawned$6(final AgentSpawned occurrence) {
+  private void $behaviorUnit$AgentSpawned$7(final AgentSpawned occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$AgentKilled$7(final AgentKilled occurrence) {
+  private void $behaviorUnit$AgentKilled$8(final AgentKilled occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$ContextJoined$8(final ContextJoined occurrence) {
+  private void $behaviorUnit$ContextJoined$9(final ContextJoined occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$ContextLeft$9(final ContextLeft occurrence) {
+  private void $behaviorUnit$ContextLeft$10(final ContextLeft occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$MemberJoined$10(final MemberJoined occurrence) {
+  private void $behaviorUnit$MemberJoined$11(final MemberJoined occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$MemberLeft$11(final MemberLeft occurrence) {
+  private void $behaviorUnit$MemberLeft$12(final MemberLeft occurrence) {
   }
   
   @Extension
@@ -928,14 +942,6 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   @PerceptGuardEvaluator
-  private void $guardEvaluator$Initialize(final Initialize occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Initialize$0(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
   private void $guardEvaluator$ActionUI(final ActionUI occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
@@ -944,26 +950,10 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   @PerceptGuardEvaluator
-  private void $guardEvaluator$ContextLeft(final ContextLeft occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextLeft$9(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$ContextJoined(final ContextJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextJoined$8(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
   private void $guardEvaluator$MemberLeft(final MemberLeft occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberLeft$11(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberLeft$12(occurrence));
   }
   
   @SyntheticMember
@@ -971,7 +961,7 @@ public class BoardGameAgent extends Agent {
   private void $guardEvaluator$AgentSpawned(final AgentSpawned occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentSpawned$6(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentSpawned$7(occurrence));
   }
   
   @SyntheticMember
@@ -984,18 +974,58 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   @PerceptGuardEvaluator
-  private void $guardEvaluator$Destroy(final Destroy occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+  private void $guardEvaluator$AgentKilled(final AgentKilled occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$5(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentKilled$8(occurrence));
   }
   
   @SyntheticMember
   @PerceptGuardEvaluator
-  private void $guardEvaluator$AgentKilled(final AgentKilled occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+  private void $guardEvaluator$MemberJoined(final MemberJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentKilled$7(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberJoined$11(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$Initialize(final Initialize occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Initialize$0(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$ContextLeft(final ContextLeft occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextLeft$10(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$ContextJoined(final ContextJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextJoined$9(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$FindPathWithAstarAlgo(final FindPathWithAstarAlgo occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$FindPathWithAstarAlgo$5(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$Destroy(final Destroy occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$6(occurrence));
   }
   
   @SyntheticMember
@@ -1012,14 +1042,6 @@ public class BoardGameAgent extends Agent {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
     ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$TileSet$2(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$MemberJoined(final MemberJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberJoined$10(occurrence));
   }
   
   @Override
