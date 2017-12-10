@@ -31,13 +31,15 @@ import java.util.HashMap
 import java.util.LinkedHashMap
 import fr.utbm.ia54.Event.ResponseNeighbourSatisfaction
 import fr.utbm.ia54.Event.FindPathWithAstarAlgo
+import io.sarl.core.Behaviors
+import fr.utbm.ia54.Event.SafetyWait
 
 /** 
  * @author Jordan
  * 
  */
 agent FrameAgent {
-	uses Logging, Lifecycle, Schedules, InnerContextAccess, DefaultContextInteractions
+	uses Logging, Lifecycle, Schedules, InnerContextAccess, DefaultContextInteractions, Behaviors
 
 	// PathCalculation
 	val TIMEOUT = 50
@@ -96,9 +98,15 @@ agent FrameAgent {
 
 		loggingName = 'FrameAgent' + idNum
 
-		emit(new FrameSet(this))
+		in (1000) [wake(new SafetyWait())]
+		//emit(new FrameSet(this))
 		
 		// info("DEBUGG : Agent is set up.")
+	}
+	
+	// Attempt at avoiding null pointer exceptions
+	on SafetyWait {
+		emit(new FrameSet(this))
 	}
 	
 	// AK : PathCalculation by spreading message

@@ -136,6 +136,13 @@ public class BoardGameAgent extends Agent {
     if (_tripleEquals) {
       Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
       _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Every single FrameAgent is set. Spawning every single TileAgent.");
+      for (final FrameAgent f : this.frameList) {
+        if ((f == null)) {
+          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("ERROR 1 : ONE OF THE FRAME RETURNED NULL POINTER");
+          return;
+        }
+      }
       final Comparator<FrameAgent> _function = (FrameAgent a, FrameAgent b) -> {
         int _numFrame = a.getNumFrame();
         int _numFrame_1 = b.getNumFrame();
@@ -143,19 +150,19 @@ public class BoardGameAgent extends Agent {
       };
       Collections.<FrameAgent>sort(this.frameList, _function);
       int c = 0;
-      for (final FrameAgent f : this.frameList) {
+      for (final FrameAgent f_1 : this.frameList) {
         {
           if (((c % this.PROBLEM_SIZE) != 0)) {
-            f.setWestNeighbour(this.frameList.get((c - 1)).getID());
+            f_1.setWestNeighbour(this.frameList.get((c - 1)).getID());
           }
           if (((c / this.PROBLEM_SIZE) != 0)) {
-            f.setNorthNeighbour(this.frameList.get((c - this.PROBLEM_SIZE)).getID());
+            f_1.setNorthNeighbour(this.frameList.get((c - this.PROBLEM_SIZE)).getID());
           }
           if (((c + this.PROBLEM_SIZE) < (this.PROBLEM_SIZE * this.PROBLEM_SIZE))) {
-            f.setSouthNeighbour(this.frameList.get((c + this.PROBLEM_SIZE)).getID());
+            f_1.setSouthNeighbour(this.frameList.get((c + this.PROBLEM_SIZE)).getID());
           }
           if (((c % this.PROBLEM_SIZE) != (this.PROBLEM_SIZE - 1))) {
-            f.setEastNeighbour(this.frameList.get((c + 1)).getID());
+            f_1.setEastNeighbour(this.frameList.get((c + 1)).getID());
           }
           c++;
         }
@@ -165,8 +172,8 @@ public class BoardGameAgent extends Agent {
         startingTiles.add(Integer.valueOf(i));
       }
       Collections.shuffle(startingTiles);
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(("Starting positions " + startingTiles));
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(("Starting positions " + startingTiles));
       this.ctrl.monTest(startingTiles);
       for (int i = 0; (i < (Math.pow(this.PROBLEM_SIZE, 2) - 1)); i++) {
         {
@@ -212,6 +219,13 @@ public class BoardGameAgent extends Agent {
     if (_tripleEquals) {
       Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
       _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Every single TileAgent is set. Setting token priority lists.");
+      for (final TileAgent t : this.tileList) {
+        if ((t == null)) {
+          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("ERROR 2 : ONE OF THE TILE RETURNED NULL POINTER");
+          return;
+        }
+      }
       final Comparator<TileAgent> _function = (TileAgent a, TileAgent b) -> {
         int _numTile = a.getNumTile();
         int _numTile_1 = b.getNumTile();
@@ -223,8 +237,8 @@ public class BoardGameAgent extends Agent {
         ArrayList<TileAgent> _arrayList = new ArrayList<TileAgent>();
         this.tokenPriorityList.add(_arrayList);
       }
-      for (final TileAgent t : this.tileList) {
-        this.tokenPriorityList.get(t.getTokenPriority()).add(t);
+      for (final TileAgent t_1 : this.tileList) {
+        this.tokenPriorityList.get(t_1.getTokenPriority()).add(t_1);
       }
       for (final ArrayList<TileAgent> l : this.tokenPriorityList) {
         {
@@ -242,8 +256,8 @@ public class BoardGameAgent extends Agent {
           }
         }
       }
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("TokenPriorityList data set up.");
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info("TokenPriorityList data set up.");
       Behaviors _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER = this.$castSkill(Behaviors.class, (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS == null || this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS = this.$getSkill(Behaviors.class)) : this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS);
       TokenReleased _tokenReleased = new TokenReleased();
       _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER.wake(_tokenReleased);

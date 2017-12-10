@@ -113,6 +113,15 @@ agent BoardGameAgent {
 		{
 			info("Every single FrameAgent is set. Spawning every single TileAgent.")
 
+			// Detects error that randomly happens
+			for (f : frameList) {
+				if (f === null) {
+					info("ERROR 1 : ONE OF THE FRAME RETURNED NULL POINTER")
+					return
+				}
+
+			}
+			
 			// Ordering initial list of frame in order to set neighbours
 			Collections.sort(frameList)[a, b|a.numFrame - b.numFrame]
 			
@@ -184,6 +193,17 @@ agent BoardGameAgent {
 
 		if (nbTileSet === Math.round(Math.pow(PROBLEM_SIZE, 2))) {
 			info("Every single TileAgent is set. Setting token priority lists.")
+
+			// Detects error that randomly happens
+			for (t : tileList)
+			{
+				if (t === null)
+				{
+					info("ERROR 2 : ONE OF THE TILE RETURNED NULL POINTER")
+					return
+				}
+
+			}
 
 			// Ordering initial list by numTile to avoid later more complicated computation
 			Collections.sort(tileList)[a, b|a.numTile - b.numTile]

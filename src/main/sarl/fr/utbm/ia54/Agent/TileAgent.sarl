@@ -23,6 +23,7 @@ import fr.utbm.ia54.Event.ResponseNeighbourSatisfaction
 import java.util.Map
 import io.sarl.core.Behaviors
 import io.sarl.core.Schedules
+import fr.utbm.ia54.Event.SafetyWait
 
 agent TileAgent {
 	uses Logging, DefaultContextInteractions, Behaviors, Schedules
@@ -64,10 +65,16 @@ agent TileAgent {
 		{
 			pleased = true
 		}
-		 
-		emit(new TileSet(this,null)) 
+
+		in(1000)[wake(new SafetyWait())]
+		//emit(new TileSet(this,null)) 
 		
 		// info("DEBUGG : Agent is set up.")
+	}
+
+	// Attempt at avoiding null pointer exceptions
+	on SafetyWait {
+		emit(new TileSet(this, null))
 	}
 	
 	on TokenReceived {
