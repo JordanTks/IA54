@@ -1,5 +1,6 @@
 package fr.utbm.ia54.Event;
 
+import fr.utbm.ia54.Agent.EmptyTileAgent;
 import fr.utbm.ia54.Agent.TileAgent;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
@@ -16,8 +17,11 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class TileSet extends Event {
   public TileAgent tile;
   
-  public TileSet(final TileAgent t) {
+  public EmptyTileAgent blank;
+  
+  public TileSet(final TileAgent t, final EmptyTileAgent b) {
     this.tile = t;
+    this.blank = b;
   }
   
   @Override
@@ -43,9 +47,10 @@ public class TileSet extends Event {
   protected String attributesToString() {
     StringBuilder result = new StringBuilder(super.attributesToString());
     result.append("tile  = ").append(this.tile);
+    result.append("blank  = ").append(this.blank);
     return result.toString();
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 235223155L;
+  private final static long serialVersionUID = -1615184137L;
 }

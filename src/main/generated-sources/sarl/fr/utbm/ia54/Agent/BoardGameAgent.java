@@ -70,9 +70,9 @@ public class BoardGameAgent extends Agent {
   
   private ArrayList<InfosFrame> closedListOfFrames = new ArrayList<InfosFrame>();
   
-  private FrameAgent beginningFrame;
+  private FrameAgent haveTokenFrame;
   
-  private InfosFrame beginningInfosFrame;
+  private InfosFrame haveTokenInfosFrame;
   
   private UUID uuidFRAMEwithTokenTile;
   
@@ -86,12 +86,16 @@ public class BoardGameAgent extends Agent {
   
   private CoordPair coordsFRAMEwithBlankTile;
   
-  /**
-   * var beginningFrame : FrameAgent
-   * var beginningInfosFrame : InfosFrame
-   * var uuidFRAMEwithTokenTile : UUID
-   * var coordsFRAMEwithTokenTile : CoordPair
-   */
+  private FrameAgent beginningFrame;
+  
+  private InfosFrame beginningInfosFrame;
+  
+  private UUID uuidFRAMEbeginning;
+  
+  private CoordPair coordsFRAMEbeginning;
+  
+  private EmptyTileAgent blankTile;
+  
   private ArrayList<TileAgent> tileList = new ArrayList<TileAgent>();
   
   private ArrayList<ArrayList<TileAgent>> tokenPriorityList = new ArrayList<ArrayList<TileAgent>>();
@@ -182,7 +186,8 @@ public class BoardGameAgent extends Agent {
         }
       }
       Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
-      UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(EmptyTileAgent.class);
+      UUID _iD = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1)).getID();
+      UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(EmptyTileAgent.class, new Object[] { _iD, Integer.valueOf((this.PROBLEM_SIZE * this.PROBLEM_SIZE)) });
       FrameAgent _get = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1));
       _get.setHostedTile(id);
       this.uuidFRAMEwithBlankTile = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1)).getID();
@@ -190,6 +195,7 @@ public class BoardGameAgent extends Agent {
       InfosFrame _infosFrame = new InfosFrame(this.uuidFRAMEwithBlankTile, this.coordsFRAMEwithBlankTile);
       this.arrivalInfosFrame = _infosFrame;
       this.arrivalFrame = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1));
+      this.arrivalFrame.setHostedNumTile(0);
     }
   }
   
@@ -198,6 +204,8 @@ public class BoardGameAgent extends Agent {
     this.nbTileSet++;
     if ((occurrence.tile != null)) {
       this.tileList.add(occurrence.tile);
+    } else {
+      this.blankTile = occurrence.blank;
     }
     long _round = Math.round(Math.pow(this.PROBLEM_SIZE, 2));
     boolean _tripleEquals = (this.nbTileSet == _round);
@@ -255,6 +263,23 @@ public class BoardGameAgent extends Agent {
             TokenReceived _tokenReceived = new TokenReceived();
             DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
             _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReceived, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(t.getID())));
+            for (int i = 0; (i < this.frameList.size()); i++) {
+              UUID _hostedTile = this.frameList.get(i).getHostedTile();
+              UUID _iD = t.getID();
+              boolean _tripleEquals = (_hostedTile == _iD);
+              if (_tripleEquals) {
+                this.uuidFRAMEwithTokenTile = this.frameList.get(i).getID();
+                this.coordsFRAMEwithTokenTile = this.frameList.get(i).getCoordPair();
+                InfosFrame _infosFrame = new InfosFrame(this.uuidFRAMEwithTokenTile, this.coordsFRAMEwithTokenTile);
+                this.haveTokenInfosFrame = _infosFrame;
+                this.haveTokenFrame = this.frameList.get(i);
+                Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+                int _hostedNumTile = this.haveTokenFrame.getHostedNumTile();
+                String _plus = ("on TokenReleased: hostedNumTile=" + Integer.valueOf(_hostedNumTile));
+                _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
+                break;
+              }
+            }
             return;
           }
         }
@@ -323,13 +348,11 @@ public class BoardGameAgent extends Agent {
       boolean _notEquals = (!Objects.equal(_northNeighbour, null));
       if (_notEquals) {
         int index = this.frameUUIDList.indexOf(currentFrame.getNorthNeighbour());
-        boolean _isSatisfied = this.frameList.get(index).getIsSatisfied();
-        boolean _not = (!_isSatisfied);
-        if (_not) {
+        if ((((!this.frameList.get(index).getIsSatisfied()) && (!this.frameList.get(index).getIsBlocked())) && (!Objects.equal(this.frameList.get(index).getID(), this.uuidFRAMEwithTokenTile)))) {
           CoordPair coordNeighbour = this.listCoordPairsOfFrames.get(index);
           boolean _isInFrameList = this.isInFrameList(coordNeighbour, this.closedListOfFrames);
-          boolean _not_1 = (!_isInFrameList);
-          if (_not_1) {
+          boolean _not = (!_isInFrameList);
+          if (_not) {
             UUID _northNeighbour_1 = currentFrame.getNorthNeighbour();
             InfosFrame infosFrame = new InfosFrame(_northNeighbour_1, coordNeighbour);
             int indexForClosedList = (-1);
@@ -356,23 +379,24 @@ public class BoardGameAgent extends Agent {
             infosFrame.setUuidPreviousFrame(currentFrame.getID());
             infosFrame.setCoordsPreviousFrame(currentFrame.getCoordPair());
             int indexForOpenList = (-1);
-            for (final InfosFrame iterator_1 : this.openListOfFrames) {
-              {
-                indexForOpenList++;
-                UUID _uuidCurrentFrame = iterator_1.getUuidCurrentFrame();
-                UUID _northNeighbour_2 = currentFrame.getNorthNeighbour();
-                boolean _equals = Objects.equal(_uuidCurrentFrame, _northNeighbour_2);
-                if (_equals) {
-                  break;
+            boolean _isEmpty = this.openListOfFrames.isEmpty();
+            boolean _not_1 = (!_isEmpty);
+            if (_not_1) {
+              for (final InfosFrame iterator_1 : this.openListOfFrames) {
+                {
+                  indexForOpenList++;
+                  UUID _uuidCurrentFrame = iterator_1.getUuidCurrentFrame();
+                  UUID _northNeighbour_2 = currentFrame.getNorthNeighbour();
+                  boolean _equals = Objects.equal(_uuidCurrentFrame, _northNeighbour_2);
+                  if (_equals) {
+                    break;
+                  }
                 }
               }
             }
             boolean _isInFrameList_1 = this.isInFrameList(coordNeighbour, this.openListOfFrames);
             if (_isInFrameList_1) {
-              int _costF = infosFrame.getCostF();
-              int _costF_1 = this.openListOfFrames.get(indexForOpenList).getCostF();
-              boolean _lessThan = (_costF < _costF_1);
-              if (_lessThan) {
+              if (((indexForOpenList > (-1)) && (infosFrame.getCostF() < this.openListOfFrames.get(indexForOpenList).getCostF()))) {
                 this.openListOfFrames.set(indexForOpenList, infosFrame);
               }
             } else {
@@ -385,13 +409,11 @@ public class BoardGameAgent extends Agent {
       boolean _notEquals_1 = (!Objects.equal(_southNeighbour, null));
       if (_notEquals_1) {
         int index_1 = this.frameUUIDList.indexOf(currentFrame.getSouthNeighbour());
-        boolean _isSatisfied_1 = this.frameList.get(index_1).getIsSatisfied();
-        boolean _not_2 = (!_isSatisfied_1);
-        if (_not_2) {
+        if ((((!this.frameList.get(index_1).getIsSatisfied()) && (!this.frameList.get(index_1).getIsBlocked())) && (!Objects.equal(this.frameList.get(index_1).getID(), this.uuidFRAMEwithTokenTile)))) {
           CoordPair coordNeighbour_1 = this.listCoordPairsOfFrames.get(index_1);
           boolean _isInFrameList_2 = this.isInFrameList(coordNeighbour_1, this.closedListOfFrames);
-          boolean _not_3 = (!_isInFrameList_2);
-          if (_not_3) {
+          boolean _not_2 = (!_isInFrameList_2);
+          if (_not_2) {
             UUID _southNeighbour_1 = currentFrame.getSouthNeighbour();
             InfosFrame infosFrame_1 = new InfosFrame(_southNeighbour_1, coordNeighbour_1);
             int indexForClosedList_1 = (-1);
@@ -418,23 +440,26 @@ public class BoardGameAgent extends Agent {
             infosFrame_1.setUuidPreviousFrame(currentFrame.getID());
             infosFrame_1.setCoordsPreviousFrame(currentFrame.getCoordPair());
             int indexForOpenList_1 = (-1);
-            for (final InfosFrame iterator_3 : this.openListOfFrames) {
-              {
-                indexForOpenList_1++;
-                UUID _uuidCurrentFrame = iterator_3.getUuidCurrentFrame();
-                UUID _southNeighbour_2 = currentFrame.getSouthNeighbour();
-                boolean _equals = Objects.equal(_uuidCurrentFrame, _southNeighbour_2);
-                if (_equals) {
-                  break;
+            boolean _isEmpty_1 = this.openListOfFrames.isEmpty();
+            boolean _not_3 = (!_isEmpty_1);
+            if (_not_3) {
+              for (final InfosFrame iterator_3 : this.openListOfFrames) {
+                {
+                  indexForOpenList_1++;
+                  UUID _uuidCurrentFrame = iterator_3.getUuidCurrentFrame();
+                  UUID _southNeighbour_2 = currentFrame.getSouthNeighbour();
+                  boolean _equals = Objects.equal(_uuidCurrentFrame, _southNeighbour_2);
+                  if (_equals) {
+                    break;
+                  }
                 }
               }
             }
-            boolean _isInFrameList_3 = this.isInFrameList(coordNeighbour_1, this.openListOfFrames);
-            if (_isInFrameList_3) {
-              int _costF_2 = infosFrame_1.getCostF();
-              int _costF_3 = this.openListOfFrames.get(indexForOpenList_1).getCostF();
-              boolean _lessThan_1 = (_costF_2 < _costF_3);
-              if (_lessThan_1) {
+            if (((indexForOpenList_1 > (-1)) && this.isInFrameList(coordNeighbour_1, this.openListOfFrames))) {
+              int _costF = infosFrame_1.getCostF();
+              int _costF_1 = this.openListOfFrames.get(indexForOpenList_1).getCostF();
+              boolean _lessThan = (_costF < _costF_1);
+              if (_lessThan) {
                 this.openListOfFrames.set(indexForOpenList_1, infosFrame_1);
               }
             } else {
@@ -447,13 +472,11 @@ public class BoardGameAgent extends Agent {
       boolean _notEquals_2 = (!Objects.equal(_eastNeighbour, null));
       if (_notEquals_2) {
         int index_2 = this.frameUUIDList.indexOf(currentFrame.getEastNeighbour());
-        boolean _isSatisfied_2 = this.frameList.get(index_2).getIsSatisfied();
-        boolean _not_4 = (!_isSatisfied_2);
-        if (_not_4) {
+        if ((((!this.frameList.get(index_2).getIsSatisfied()) && (!this.frameList.get(index_2).getIsBlocked())) && (!Objects.equal(this.frameList.get(index_2).getID(), this.uuidFRAMEwithTokenTile)))) {
           CoordPair coordNeighbour_2 = this.listCoordPairsOfFrames.get(index_2);
-          boolean _isInFrameList_4 = this.isInFrameList(coordNeighbour_2, this.closedListOfFrames);
-          boolean _not_5 = (!_isInFrameList_4);
-          if (_not_5) {
+          boolean _isInFrameList_3 = this.isInFrameList(coordNeighbour_2, this.closedListOfFrames);
+          boolean _not_4 = (!_isInFrameList_3);
+          if (_not_4) {
             UUID _eastNeighbour_1 = currentFrame.getEastNeighbour();
             InfosFrame infosFrame_2 = new InfosFrame(_eastNeighbour_1, coordNeighbour_2);
             int indexForClosedList_2 = (-1);
@@ -480,23 +503,26 @@ public class BoardGameAgent extends Agent {
             infosFrame_2.setUuidPreviousFrame(currentFrame.getID());
             infosFrame_2.setCoordsPreviousFrame(currentFrame.getCoordPair());
             int indexForOpenList_2 = (-1);
-            for (final InfosFrame iterator_5 : this.openListOfFrames) {
-              {
-                indexForOpenList_2++;
-                UUID _uuidCurrentFrame = iterator_5.getUuidCurrentFrame();
-                UUID _eastNeighbour_2 = currentFrame.getEastNeighbour();
-                boolean _equals = Objects.equal(_uuidCurrentFrame, _eastNeighbour_2);
-                if (_equals) {
-                  break;
+            boolean _isEmpty_2 = this.openListOfFrames.isEmpty();
+            boolean _not_5 = (!_isEmpty_2);
+            if (_not_5) {
+              for (final InfosFrame iterator_5 : this.openListOfFrames) {
+                {
+                  indexForOpenList_2++;
+                  UUID _uuidCurrentFrame = iterator_5.getUuidCurrentFrame();
+                  UUID _eastNeighbour_2 = currentFrame.getEastNeighbour();
+                  boolean _equals = Objects.equal(_uuidCurrentFrame, _eastNeighbour_2);
+                  if (_equals) {
+                    break;
+                  }
                 }
               }
             }
-            boolean _isInFrameList_5 = this.isInFrameList(coordNeighbour_2, this.openListOfFrames);
-            if (_isInFrameList_5) {
-              int _costF_4 = infosFrame_2.getCostF();
-              int _costF_5 = this.openListOfFrames.get(indexForOpenList_2).getCostF();
-              boolean _lessThan_2 = (_costF_4 < _costF_5);
-              if (_lessThan_2) {
+            if (((indexForOpenList_2 > (-1)) && this.isInFrameList(coordNeighbour_2, this.openListOfFrames))) {
+              int _costF_2 = infosFrame_2.getCostF();
+              int _costF_3 = this.openListOfFrames.get(indexForOpenList_2).getCostF();
+              boolean _lessThan_1 = (_costF_2 < _costF_3);
+              if (_lessThan_1) {
                 this.openListOfFrames.set(indexForOpenList_2, infosFrame_2);
               }
             } else {
@@ -513,16 +539,14 @@ public class BoardGameAgent extends Agent {
         {
           int index_3 = this.frameUUIDList.indexOf(currentFrame.getWestNeighbour());
           Object _xifexpression_1 = null;
-          boolean _isSatisfied_3 = this.frameList.get(index_3).getIsSatisfied();
-          boolean _not_6 = (!_isSatisfied_3);
-          if (_not_6) {
+          if ((((!this.frameList.get(index_3).getIsSatisfied()) && (!this.frameList.get(index_3).getIsBlocked())) && (!Objects.equal(this.frameList.get(index_3).getID(), this.uuidFRAMEwithTokenTile)))) {
             Object _xblockexpression_2 = null;
             {
               CoordPair coordNeighbour_3 = this.listCoordPairsOfFrames.get(index_3);
               Object _xifexpression_2 = null;
-              boolean _isInFrameList_6 = this.isInFrameList(coordNeighbour_3, this.closedListOfFrames);
-              boolean _not_7 = (!_isInFrameList_6);
-              if (_not_7) {
+              boolean _isInFrameList_4 = this.isInFrameList(coordNeighbour_3, this.closedListOfFrames);
+              boolean _not_6 = (!_isInFrameList_4);
+              if (_not_6) {
                 Object _xblockexpression_3 = null;
                 {
                   UUID _westNeighbour_1 = currentFrame.getWestNeighbour();
@@ -551,25 +575,28 @@ public class BoardGameAgent extends Agent {
                   infosFrame_3.setUuidPreviousFrame(currentFrame.getID());
                   infosFrame_3.setCoordsPreviousFrame(currentFrame.getCoordPair());
                   int indexForOpenList_3 = (-1);
-                  for (final InfosFrame iterator_7 : this.openListOfFrames) {
-                    {
-                      indexForOpenList_3++;
-                      UUID _uuidCurrentFrame = iterator_7.getUuidCurrentFrame();
-                      UUID _westNeighbour_2 = currentFrame.getWestNeighbour();
-                      boolean _equals = Objects.equal(_uuidCurrentFrame, _westNeighbour_2);
-                      if (_equals) {
-                        break;
+                  boolean _isEmpty_3 = this.openListOfFrames.isEmpty();
+                  boolean _not_7 = (!_isEmpty_3);
+                  if (_not_7) {
+                    for (final InfosFrame iterator_7 : this.openListOfFrames) {
+                      {
+                        indexForOpenList_3++;
+                        UUID _uuidCurrentFrame = iterator_7.getUuidCurrentFrame();
+                        UUID _westNeighbour_2 = currentFrame.getWestNeighbour();
+                        boolean _equals = Objects.equal(_uuidCurrentFrame, _westNeighbour_2);
+                        if (_equals) {
+                          break;
+                        }
                       }
                     }
                   }
                   Object _xifexpression_3 = null;
-                  boolean _isInFrameList_7 = this.isInFrameList(coordNeighbour_3, this.openListOfFrames);
-                  if (_isInFrameList_7) {
+                  if (((indexForOpenList_3 > (-1)) && this.isInFrameList(coordNeighbour_3, this.openListOfFrames))) {
                     InfosFrame _xifexpression_4 = null;
-                    int _costF_6 = infosFrame_3.getCostF();
-                    int _costF_7 = this.openListOfFrames.get(indexForOpenList_3).getCostF();
-                    boolean _lessThan_3 = (_costF_6 < _costF_7);
-                    if (_lessThan_3) {
+                    int _costF_4 = infosFrame_3.getCostF();
+                    int _costF_5 = this.openListOfFrames.get(indexForOpenList_3).getCostF();
+                    boolean _lessThan_2 = (_costF_4 < _costF_5);
+                    if (_lessThan_2) {
                       _xifexpression_4 = this.openListOfFrames.set(indexForOpenList_3, infosFrame_3);
                     }
                     _xifexpression_3 = _xifexpression_4;
@@ -697,6 +724,10 @@ public class BoardGameAgent extends Agent {
   protected void findPath() {
     try {
       InfosFrame currentFrame = this.beginningInfosFrame;
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      String _string = this.beginningInfosFrame.toString();
+      String _plus = ("/// beginningInfosFrame=" + _string);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
       this.openListOfFrames.add(this.beginningInfosFrame);
       this.addInClosedList(this.beginningInfosFrame.getCoordsCurrentFrame());
       int indexOfFrameList = (-1);
@@ -729,75 +760,77 @@ public class BoardGameAgent extends Agent {
       }
       boolean _equals = currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame());
       if (_equals) {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("- A-star : destination IS reached! -");
-      } else {
         Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("- A-star : destination IS NOT reached! -");
-      }
-      ArrayList<InfosFrame> tmpChainAggression = this.buildChainAggression(this.beginningInfosFrame);
-      ArrayList<InfosFrame> chainAggression = new ArrayList<InfosFrame>();
-      int _size = tmpChainAggression.size();
-      int _minus = (_size - 1);
-      InfosFrame tmpFrame = tmpChainAggression.get(_minus);
-      chainAggression.add(tmpFrame);
-      for (int i = (tmpChainAggression.size() - 2); (i >= 0); i--) {
-        UUID _uuidCurrentFrame = tmpFrame.getUuidCurrentFrame();
-        UUID _uuidCurrentFrame_1 = tmpChainAggression.get(i).getUuidCurrentFrame();
-        boolean _tripleEquals = (_uuidCurrentFrame == _uuidCurrentFrame_1);
-        boolean _not = (!_tripleEquals);
-        if (_not) {
-          tmpFrame = tmpChainAggression.get(i);
-          chainAggression.add(tmpFrame);
-        }
-      }
-      ArrayList<Integer> listSwap = new ArrayList<Integer>();
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info("---- Chain of aggression below ----");
-      for (int i = 0; (i < chainAggression.size()); i++) {
-        boolean _equals_1 = chainAggression.get(i).getCoordsCurrentFrame().equals(this.beginningFrame.getCoordPair());
-        if (_equals_1) {
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          String _string = chainAggression.get(i).getCoordsCurrentFrame().toString();
-          String _plus = ("BeginningFrame= " + _string);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus);
-          for (int j = 0; (j < this.frameList.size()); j++) {
-            UUID _iD = this.frameList.get(j).getID();
-            UUID _uuidCurrentFrame = chainAggression.get(i).getUuidCurrentFrame();
-            boolean _tripleEquals = (_iD == _uuidCurrentFrame);
-            if (_tripleEquals) {
-              listSwap.add(Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
-              this.ctrl.setColor("green", Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
-              Thread.sleep(1000);
-              break;
-            }
-          }
-        } else {
-          boolean _equals_2 = chainAggression.get(i).getCoordsCurrentFrame().equals(this.arrivalFrame.getCoordPair());
-          boolean _not = (!_equals_2);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("## A-star : destination IS reached! ##");
+        ArrayList<InfosFrame> tmpChainAggression = this.buildChainAggression(this.beginningInfosFrame);
+        ArrayList<InfosFrame> chainAggression = new ArrayList<InfosFrame>();
+        int _size = tmpChainAggression.size();
+        int _minus = (_size - 1);
+        InfosFrame tmpFrame = tmpChainAggression.get(_minus);
+        chainAggression.add(tmpFrame);
+        for (int i = (tmpChainAggression.size() - 2); (i >= 0); i--) {
+          UUID _uuidCurrentFrame = tmpFrame.getUuidCurrentFrame();
+          UUID _uuidCurrentFrame_1 = tmpChainAggression.get(i).getUuidCurrentFrame();
+          boolean _tripleEquals = (_uuidCurrentFrame == _uuidCurrentFrame_1);
+          boolean _not = (!_tripleEquals);
           if (_not) {
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+            tmpFrame = tmpChainAggression.get(i);
+            chainAggression.add(tmpFrame);
+          }
+        }
+        ArrayList<Integer> listSwap = new ArrayList<Integer>();
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info("---- Chain of aggression below ----");
+        for (int i = 0; (i < chainAggression.size()); i++) {
+          boolean _equals_1 = chainAggression.get(i).getCoordsCurrentFrame().equals(this.beginningFrame.getCoordPair());
+          if (_equals_1) {
+            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
             String _string_1 = chainAggression.get(i).getCoordsCurrentFrame().toString();
-            String _plus_1 = ((("Frame" + Integer.valueOf((i + 1))) + "= ") + _string_1);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4.info(_plus_1);
+            String _plus_1 = ("BeginningFrame= " + _string_1);
+            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus_1);
             for (int j = 0; (j < this.frameList.size()); j++) {
               UUID _iD = this.frameList.get(j).getID();
               UUID _uuidCurrentFrame = chainAggression.get(i).getUuidCurrentFrame();
               boolean _tripleEquals = (_iD == _uuidCurrentFrame);
               if (_tripleEquals) {
                 listSwap.add(Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
-                this.ctrl.setColor("blue", Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
+                this.ctrl.setColor("green", Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
                 Thread.sleep(1000);
                 break;
               }
             }
           } else {
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            String _string_2 = chainAggression.get(i).getCoordsCurrentFrame().toString();
-            String _plus_2 = ("ArrivalFrame= " + _string_2);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5.info(_plus_2);
+            boolean _equals_2 = chainAggression.get(i).getCoordsCurrentFrame().equals(this.arrivalFrame.getCoordPair());
+            boolean _not = (!_equals_2);
+            if (_not) {
+              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+              String _string_2 = chainAggression.get(i).getCoordsCurrentFrame().toString();
+              String _plus_2 = ((("Frame" + Integer.valueOf((i + 1))) + "= ") + _string_2);
+              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4.info(_plus_2);
+              for (int j = 0; (j < this.frameList.size()); j++) {
+                UUID _iD = this.frameList.get(j).getID();
+                UUID _uuidCurrentFrame = chainAggression.get(i).getUuidCurrentFrame();
+                boolean _tripleEquals = (_iD == _uuidCurrentFrame);
+                if (_tripleEquals) {
+                  listSwap.add(Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
+                  this.ctrl.setColor("blue", Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
+                  Thread.sleep(1000);
+                  break;
+                }
+              }
+            } else {
+              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+              String _string_3 = chainAggression.get(i).getCoordsCurrentFrame().toString();
+              String _plus_3 = ("ArrivalFrame= " + _string_3);
+              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5.info(_plus_3);
+            }
           }
         }
+        this.swapTilesInChainAggression(chainAggression);
+        this.swapTokenAndBlank();
+      } else {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info("## A-star : destination IS NOT reached! ##");
       }
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -806,33 +839,258 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$FindPathWithAstarAlgo$5(final FindPathWithAstarAlgo occurrence) {
-    this.uuidFRAMEwithTokenTile = occurrence.beginningFrame;
+    this.uuidFRAMEbeginning = occurrence.beginningFrame;
     for (int i = 0; (i < this.frameList.size()); i++) {
       UUID _iD = this.frameList.get(i).getID();
-      boolean _tripleEquals = (_iD == this.uuidFRAMEwithTokenTile);
+      boolean _tripleEquals = (_iD == this.uuidFRAMEbeginning);
       if (_tripleEquals) {
         this.beginningFrame = this.frameList.get(i);
-        this.coordsFRAMEwithTokenTile = this.frameList.get(i).getCoordPair();
-        InfosFrame infosFrame = new InfosFrame(this.uuidFRAMEwithTokenTile, this.coordsFRAMEwithTokenTile);
+        this.coordsFRAMEbeginning = this.frameList.get(i).getCoordPair();
+        InfosFrame infosFrame = new InfosFrame(this.uuidFRAMEbeginning, this.coordsFRAMEbeginning);
         this.beginningInfosFrame = infosFrame;
         break;
       }
     }
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("====================== receive event FINDPATH /uuidBeginningFrame");
-    if ((this.PROBLEM_SIZE < 10)) {
-      Schedules _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER = this.$castSkill(Schedules.class, (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = this.$getSkill(Schedules.class)) : this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
-      final Procedure1<Agent> _function = (Agent it) -> {
-        this.findPath();
-      };
-      _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER.in((400 * this.PROBLEM_SIZE), _function);
+    UUID _iD = this.beginningFrame.getID();
+    UUID _iD_1 = this.arrivalFrame.getID();
+    boolean _notEquals = (!Objects.equal(_iD, _iD_1));
+    if (_notEquals) {
+      if ((this.PROBLEM_SIZE < 10)) {
+        Schedules _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER = this.$castSkill(Schedules.class, (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = this.$getSkill(Schedules.class)) : this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
+        final Procedure1<Agent> _function = (Agent it) -> {
+          this.findPath();
+        };
+        _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER.in((400 * this.PROBLEM_SIZE), _function);
+      } else {
+        Schedules _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER_1 = this.$castSkill(Schedules.class, (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = this.$getSkill(Schedules.class)) : this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
+        final Procedure1<Agent> _function_1 = (Agent it) -> {
+          this.findPath();
+        };
+        _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER_1.in((600 * this.PROBLEM_SIZE), _function_1);
+      }
     } else {
-      Schedules _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER_1 = this.$castSkill(Schedules.class, (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = this.$getSkill(Schedules.class)) : this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
-      final Procedure1<Agent> _function_1 = (Agent it) -> {
-        this.findPath();
-      };
-      _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER_1.in((600 * this.PROBLEM_SIZE), _function_1);
+      this.swapTokenAndBlank();
     }
+  }
+  
+  protected void changeSatisfaction() {
+    for (int i = 0; (i < (this.frameList.size() - 1)); i++) {
+      int _idNum = this.frameList.get(i).getIdNum();
+      int _hostedNumTile = this.frameList.get(i).getHostedNumTile();
+      boolean _tripleEquals = (_idNum == _hostedNumTile);
+      if (_tripleEquals) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        int _idNum_1 = this.frameList.get(i).getIdNum();
+        String _plus = ("--> frame[" + Integer.valueOf(_idNum_1));
+        String _plus_1 = (_plus + "] is satisfied !");
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus_1);
+        FrameAgent _get = this.frameList.get(i);
+        _get.setIsSatisfied(true);
+      } else {
+        FrameAgent _get_1 = this.frameList.get(i);
+        _get_1.setIsSatisfied(false);
+      }
+    }
+    for (final TileAgent iteTile : this.tileList) {
+      int _numTile = iteTile.getNumTile();
+      int _numFrameHost = iteTile.getNumFrameHost();
+      boolean _tripleEquals = (_numTile == _numFrameHost);
+      if (_tripleEquals) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        int _numTile_1 = iteTile.getNumTile();
+        String _plus = ("--> tile[" + Integer.valueOf(_numTile_1));
+        String _plus_1 = (_plus + "] is satisfied TOO !");
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus_1);
+      }
+    }
+  }
+  
+  protected void swapTokenAndBlank() {
+    UUID tmpTOKENtileUuid = null;
+    int tmpTOKENtileNum = 0;
+    UUID tmpBLANKtileUuid = null;
+    int tmpBLANKtileNum = 0;
+    TileAgent tokenTile = null;
+    for (int i = 0; (i < this.tileList.size()); i++) {
+      UUID _uuidFrameHost = this.tileList.get(i).getUuidFrameHost();
+      UUID _iD = this.haveTokenFrame.getID();
+      boolean _tripleEquals = (_uuidFrameHost == _iD);
+      if (_tripleEquals) {
+        tokenTile = this.tileList.get(i);
+        tmpTOKENtileUuid = this.tileList.get(i).getUuidFrameHost();
+        tmpTOKENtileNum = this.tileList.get(i).getNumFrameHost();
+      }
+    }
+    tmpBLANKtileUuid = this.blankTile.getUuidFrameHost();
+    tmpBLANKtileNum = this.blankTile.getNumFrameHost();
+    tokenTile.setUuidFrameHost(tmpBLANKtileUuid);
+    tokenTile.setNumFrameHost(tmpBLANKtileNum);
+    this.blankTile.setUuidFrameHost(tmpTOKENtileUuid);
+    this.blankTile.setNumFrameHost(tmpTOKENtileNum);
+    FrameAgent tmpF = this.haveTokenFrame;
+    this.haveTokenFrame = this.arrivalFrame;
+    this.arrivalFrame = tmpF;
+    UUID tmpHostedTile = this.haveTokenFrame.getHostedTile();
+    int tmpHostedNumTile = this.haveTokenFrame.getHostedNumTile();
+    this.haveTokenFrame.setHostedTile(this.arrivalFrame.getHostedTile());
+    this.haveTokenFrame.setHostedNumTile(this.arrivalFrame.getHostedNumTile());
+    this.arrivalFrame.setHostedTile(tmpHostedTile);
+    this.arrivalFrame.setHostedNumTile(tmpHostedNumTile);
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(" ");
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("=============== swapTokenAndBlank ===============");
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info("---------- Infos FRAMES for numTile/uuidTile after the swap ----------");
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    int _idNum = this.haveTokenFrame.getIdNum();
+    String _plus = ("haveTokenFrame: idNum=" + Integer.valueOf(_idNum));
+    String _plus_1 = (_plus + " /numHostedTile=");
+    int _hostedNumTile = this.haveTokenFrame.getHostedNumTile();
+    String _plus_2 = (_plus_1 + Integer.valueOf(_hostedNumTile));
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus_2);
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    int _idNum_1 = this.arrivalFrame.getIdNum();
+    String _plus_3 = ("arrivalFrame: idNum=" + Integer.valueOf(_idNum_1));
+    String _plus_4 = (_plus_3 + " /numHostedTile=");
+    int _hostedNumTile_1 = this.arrivalFrame.getHostedNumTile();
+    String _plus_5 = (_plus_4 + Integer.valueOf(_hostedNumTile_1));
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4.info(_plus_5);
+    for (int n = 0; (n < this.frameList.size()); n++) {
+      for (final FrameAgent ite : this.frameList) {
+        int _idNum_2 = ite.getIdNum();
+        boolean _tripleEquals = (_idNum_2 == (n + 1));
+        if (_tripleEquals) {
+          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+          int _hostedNumTile_2 = ite.getHostedNumTile();
+          String _plus_6 = ((("frame[" + Integer.valueOf((n + 1))) + "]= tile: ") + Integer.valueOf(_hostedNumTile_2));
+          String _plus_7 = (_plus_6 + " / ");
+          UUID _hostedTile = ite.getHostedTile();
+          String _plus_8 = (_plus_7 + _hostedTile);
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5.info(_plus_8);
+        }
+      }
+    }
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5.info("---------- Infos TILES for numFrame/uuidFrame after the swap ----------");
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_6 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    int _numFrameHost = this.blankTile.getNumFrameHost();
+    String _plus_6 = ("tile[0]= frame: " + Integer.valueOf(_numFrameHost));
+    String _plus_7 = (_plus_6 + " /");
+    UUID _uuidFrameHost = this.blankTile.getUuidFrameHost();
+    String _plus_8 = (_plus_7 + _uuidFrameHost);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_6.info(_plus_8);
+    for (int n = 0; (n < this.tileList.size()); n++) {
+      for (final TileAgent ite : this.tileList) {
+        int _numTile = ite.getNumTile();
+        boolean _tripleEquals = (_numTile == (n + 1));
+        if (_tripleEquals) {
+          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+          int _numFrameHost_1 = ite.getNumFrameHost();
+          String _plus_9 = ((("tile[" + Integer.valueOf((n + 1))) + "]= frame: ") + Integer.valueOf(_numFrameHost_1));
+          String _plus_10 = (_plus_9 + " / ");
+          UUID _uuidFrameHost_1 = ite.getUuidFrameHost();
+          String _plus_11 = (_plus_10 + _uuidFrameHost_1);
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7.info(_plus_11);
+        }
+      }
+    }
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7.info("------------------------------------------------------------------");
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_8 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_8.info(" ");
+    this.changeSatisfaction();
+  }
+  
+  protected void swapTilesInChainAggression(final ArrayList<InfosFrame> chainAggression) {
+    UUID tmpFRAMEuuidHostedTile = null;
+    int tmpFRAMEnumHostedTile = 0;
+    UUID tmpTILEuuidFrameHost = null;
+    int tmpTILEnumFrameHost = 0;
+    UUID tmp1 = null;
+    int tmp2 = 0;
+    UUID tmp11 = null;
+    int tmp22 = 0;
+    for (int i = (chainAggression.size() - 1); (i >= 0); i--) {
+      for (int j = 0; (j < this.frameList.size()); j++) {
+        UUID _iD = this.frameList.get(j).getID();
+        UUID _uuidCurrentFrame = chainAggression.get(i).getUuidCurrentFrame();
+        boolean _tripleEquals = (_iD == _uuidCurrentFrame);
+        if (_tripleEquals) {
+          EmptyTileAgent tmpBlankTile = null;
+          TileAgent tmpTile = null;
+          for (int iTile = 0; (iTile < this.tileList.size()); iTile++) {
+            UUID _iD_1 = this.tileList.get(iTile).getID();
+            UUID _hostedTile = this.frameList.get(j).getHostedTile();
+            boolean _tripleEquals_1 = (_iD_1 == _hostedTile);
+            if (_tripleEquals_1) {
+              tmpTile = this.tileList.get(iTile);
+              break;
+            }
+          }
+          int _size = chainAggression.size();
+          int _minus = (_size - 1);
+          boolean _equals = (i == _minus);
+          if (_equals) {
+            tmpFRAMEuuidHostedTile = this.frameList.get(j).getHostedTile();
+            tmpFRAMEnumHostedTile = this.frameList.get(j).getHostedNumTile();
+            tmpTILEuuidFrameHost = this.blankTile.getUuidFrameHost();
+            tmpTILEnumFrameHost = this.blankTile.getNumFrameHost();
+          }
+          if ((i > 0)) {
+            for (int k = 0; (k < this.frameList.size()); k++) {
+              UUID _iD_1 = this.frameList.get(k).getID();
+              UUID _uuidCurrentFrame_1 = chainAggression.get((i - 1)).getUuidCurrentFrame();
+              boolean _tripleEquals_1 = (_iD_1 == _uuidCurrentFrame_1);
+              if (_tripleEquals_1) {
+                for (int jTile = 0; (jTile < this.tileList.size()); jTile++) {
+                  UUID _iD_2 = this.tileList.get(jTile).getID();
+                  UUID _hostedTile = this.frameList.get(k).getHostedTile();
+                  boolean _tripleEquals_2 = (_iD_2 == _hostedTile);
+                  if (_tripleEquals_2) {
+                    tmp1 = this.tileList.get(jTile).getUuidFrameHost();
+                    tmp2 = this.tileList.get(jTile).getNumFrameHost();
+                    int _size_1 = chainAggression.size();
+                    int _minus_1 = (_size_1 - 1);
+                    boolean _equals_1 = (i == _minus_1);
+                    if (_equals_1) {
+                      tmp11 = this.tileList.get(jTile).getUuidFrameHost();
+                      tmp22 = this.tileList.get(jTile).getNumFrameHost();
+                      TileAgent _get = this.tileList.get(jTile);
+                      _get.setUuidFrameHost(this.blankTile.getUuidFrameHost());
+                      TileAgent _get_1 = this.tileList.get(jTile);
+                      _get_1.setNumFrameHost(this.blankTile.getNumFrameHost());
+                    } else {
+                      TileAgent _get_2 = this.tileList.get(jTile);
+                      _get_2.setUuidFrameHost(tmp11);
+                      TileAgent _get_3 = this.tileList.get(jTile);
+                      _get_3.setNumFrameHost(tmp22);
+                      tmp11 = tmp1;
+                      tmp22 = tmp2;
+                    }
+                    break;
+                  }
+                }
+                FrameAgent _get = this.frameList.get(j);
+                _get.setHostedTile(this.frameList.get(k).getHostedTile());
+                FrameAgent _get_1 = this.frameList.get(j);
+                _get_1.setHostedNumTile(this.frameList.get(k).getHostedNumTile());
+                break;
+              }
+            }
+          } else {
+            FrameAgent _get = this.frameList.get(j);
+            _get.setHostedTile(this.blankTile.getID());
+            FrameAgent _get_1 = this.frameList.get(j);
+            _get_1.setHostedNumTile(this.blankTile.getNumTile());
+            this.blankTile.setUuidFrameHost(this.frameList.get(j).getID());
+            this.blankTile.setNumFrameHost(this.frameList.get(j).getIdNum());
+            this.arrivalFrame = this.frameList.get(j);
+          }
+        }
+      }
+    }
+    this.changeSatisfaction();
   }
   
   @SyntheticMember
@@ -1067,6 +1325,9 @@ public class BoardGameAgent extends Agent {
     if (!java.util.Objects.equals(this.uuidFRAMEwithBlankTile, other.uuidFRAMEwithBlankTile)) {
       return false;
     }
+    if (!java.util.Objects.equals(this.uuidFRAMEbeginning, other.uuidFRAMEbeginning)) {
+      return false;
+    }
     return super.equals(obj);
   }
   
@@ -1081,6 +1342,7 @@ public class BoardGameAgent extends Agent {
     result = prime * result + this.nbTileSet;
     result = prime * result + java.util.Objects.hashCode(this.uuidFRAMEwithTokenTile);
     result = prime * result + java.util.Objects.hashCode(this.uuidFRAMEwithBlankTile);
+    result = prime * result + java.util.Objects.hashCode(this.uuidFRAMEbeginning);
     return result;
   }
   

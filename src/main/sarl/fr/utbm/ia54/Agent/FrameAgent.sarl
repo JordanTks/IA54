@@ -45,7 +45,7 @@ agent FrameAgent {
 	var previousPathCalculationJumpValue : int
 
 	// FrameAgent state
-	var isSatisfied = false // TODO: same as pleased !?
+	var isSatisfied = false
 	var isBlocked = false // the tile which with it is paired will never move
 	
 	// FrameAgent knowledge
@@ -274,6 +274,10 @@ agent FrameAgent {
 		return "costG="+this.costG+" /costH="+this.costH+" /costF="+this.costF
 	}
 	
+	def getIdNum : int {
+		return this.idNum
+	}
+	
 	// The assault must be forwarded to the right frame
 	on Assault [!isAttacked] {
 		
@@ -366,7 +370,7 @@ agent FrameAgent {
 		// You should put all the resource releasing statements in this block of code.
 		info("The agent was stopped.")
 	}
-
+ 
 	on AgentSpawned {
 		// A new agent has been spawned in our context.
 	}

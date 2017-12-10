@@ -55,6 +55,8 @@ public class TileAgent extends Agent {
   
   private int numFrameHost;
   
+  private int numFrameHostFromZero;
+  
   private UUID uuidFrameHost;
   
   private int problemSize;
@@ -77,17 +79,18 @@ public class TileAgent extends Agent {
     Object _get_1 = occurrence.parameters[1];
     this.uuidFrameHost = ((UUID) _get_1);
     Object _get_2 = occurrence.parameters[2];
-    this.numFrameHost = (((Integer) _get_2)).intValue();
+    this.numFrameHostFromZero = (((Integer) _get_2)).intValue();
     Object _get_3 = occurrence.parameters[3];
     this.problemSize = (((Integer) _get_3)).intValue();
+    this.numFrameHost = (this.numFrameHostFromZero + 1);
     this.tokenPriority = Math.min(((this.numTile - 1) / this.problemSize), ((this.numTile - 1) % this.problemSize));
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.setLoggingName(("TileAgent" + Integer.valueOf(this.numTile)));
-    if ((this.numTileFromZero == this.numFrameHost)) {
+    if ((this.numTileFromZero == this.numFrameHostFromZero)) {
       this.pleased = true;
     }
     DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    TileSet _tileSet = new TileSet(this);
+    TileSet _tileSet = new TileSet(this, null);
     _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tileSet);
   }
   
@@ -110,8 +113,8 @@ public class TileAgent extends Agent {
   
   @Pure
   protected boolean chooseTarget() {
-    if (((this.numFrameHost % this.problemSize) == (this.numTileFromZero % this.problemSize))) {
-      if ((this.numTileFromZero < this.numFrameHost)) {
+    if (((this.numFrameHostFromZero % this.problemSize) == (this.numTileFromZero % this.problemSize))) {
+      if ((this.numTileFromZero < this.numFrameHostFromZero)) {
         DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
         Assault _assault = new Assault(Position.NORTH, false);
         _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_assault, Scopes.identifiers(this.uuidFrameHost));
@@ -121,8 +124,8 @@ public class TileAgent extends Agent {
         _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_assault_1, Scopes.identifiers(this.uuidFrameHost));
       }
     } else {
-      if (((this.numFrameHost / this.problemSize) == (this.numTileFromZero / this.problemSize))) {
-        if ((this.numTileFromZero < this.numFrameHost)) {
+      if (((this.numFrameHostFromZero / this.problemSize) == (this.numTileFromZero / this.problemSize))) {
+        if ((this.numTileFromZero < this.numFrameHostFromZero)) {
           DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
           Assault _assault_2 = new Assault(Position.WEST, false);
           _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_assault_2, Scopes.identifiers(this.uuidFrameHost));
@@ -132,8 +135,8 @@ public class TileAgent extends Agent {
           _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3.emit(_assault_3, Scopes.identifiers(this.uuidFrameHost));
         }
       } else {
-        boolean north = ((this.numFrameHost / this.problemSize) >= (this.numTileFromZero / this.problemSize));
-        boolean west = ((this.numFrameHost % this.problemSize) >= (this.numTileFromZero % this.problemSize));
+        boolean north = ((this.numFrameHostFromZero / this.problemSize) >= (this.numTileFromZero / this.problemSize));
+        boolean west = ((this.numFrameHostFromZero % this.problemSize) >= (this.numTileFromZero % this.problemSize));
         DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
         AskNeighbourSatisfaction _askNeighbourSatisfaction = new AskNeighbourSatisfaction(north, west);
         _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4.emit(_askNeighbourSatisfaction, Scopes.identifiers(this.uuidFrameHost));
@@ -167,6 +170,33 @@ public class TileAgent extends Agent {
   }
   
   @Pure
+  protected int getNumFrameHost() {
+    return this.numFrameHost;
+  }
+  
+  protected void setNumFrameHost(final int num) {
+    this.numFrameHost = num;
+  }
+  
+  @Pure
+  protected int getNumFrameHostFromZero() {
+    return this.numFrameHostFromZero;
+  }
+  
+  protected void setNumFrameHostFromZero(final int num) {
+    this.numFrameHostFromZero = num;
+  }
+  
+  @Pure
+  protected UUID getUuidFrameHost() {
+    return this.uuidFrameHost;
+  }
+  
+  protected void setUuidFrameHost(final UUID uuid) {
+    this.uuidFrameHost = uuid;
+  }
+  
+  @Pure
   protected int getTokenPriority() {
     return this.tokenPriority;
   }
@@ -179,6 +209,10 @@ public class TileAgent extends Agent {
   @Pure
   protected boolean getIsHappy() {
     return this.pleased;
+  }
+  
+  protected void setIsHappy(final boolean happy) {
+    this.setIsHappy(happy);
   }
   
   @SyntheticMember
@@ -380,6 +414,8 @@ public class TileAgent extends Agent {
       return false;
     if (other.numFrameHost != this.numFrameHost)
       return false;
+    if (other.numFrameHostFromZero != this.numFrameHostFromZero)
+      return false;
     if (!Objects.equals(this.uuidFrameHost, other.uuidFrameHost)) {
       return false;
     }
@@ -404,6 +440,7 @@ public class TileAgent extends Agent {
     result = prime * result + this.numTile;
     result = prime * result + this.numTileFromZero;
     result = prime * result + this.numFrameHost;
+    result = prime * result + this.numFrameHostFromZero;
     result = prime * result + Objects.hashCode(this.uuidFrameHost);
     result = prime * result + this.problemSize;
     result = prime * result + this.tokenPriority;

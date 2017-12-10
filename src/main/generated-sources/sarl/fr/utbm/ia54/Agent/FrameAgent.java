@@ -308,6 +308,11 @@ public class FrameAgent extends Agent {
     return ((((("costG=" + Integer.valueOf(this.costG)) + " /costH=") + Integer.valueOf(this.costH)) + " /costF=") + Integer.valueOf(this.costF));
   }
   
+  @Pure
+  protected int getIdNum() {
+    return this.idNum;
+  }
+  
   @SyntheticMember
   private void $behaviorUnit$Assault$5(final Assault occurrence) {
     if ((occurrence.direction == Position.NORTH)) {

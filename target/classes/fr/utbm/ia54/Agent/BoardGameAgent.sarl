@@ -57,8 +57,8 @@ agent BoardGameAgent {
 	var closedListOfFrames = new ArrayList<InfosFrame>()
 
 	// infos of the frame on which there is the Tile with the Token
-	var beginningFrame : FrameAgent
-	var beginningInfosFrame : InfosFrame
+	var haveTokenFrame : FrameAgent
+	var haveTokenInfosFrame : InfosFrame
 	var uuidFRAMEwithTokenTile : UUID
 	var coordsFRAMEwithTokenTile : CoordPair
 	
@@ -69,12 +69,12 @@ agent BoardGameAgent {
 	var coordsFRAMEwithBlankTile : CoordPair
 	
 	// infos of the frame on which there is the beginningFrame (launcher of the A-star algorithm)
-	/*var beginningFrame : FrameAgent
+	var beginningFrame : FrameAgent
 	var beginningInfosFrame : InfosFrame
-	var uuidFRAMEwithTokenTile : UUID
-	var coordsFRAMEwithTokenTile : CoordPair*/
+	var uuidFRAMEbeginning : UUID
+	var coordsFRAMEbeginning : CoordPair
 	
-	
+	var blankTile : EmptyTileAgent
 	var tileList = new ArrayList<TileAgent>()
 	var tokenPriorityList = new ArrayList<ArrayList<TileAgent>>()
 
@@ -159,12 +159,14 @@ agent BoardGameAgent {
 			}
 			
 			// Spawn blank tile
-			var id = spawn(EmptyTileAgent)
+			var id = spawn(EmptyTileAgent,#[frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1).ID, PROBLEM_SIZE * PROBLEM_SIZE])
 			frameList.get(PROBLEM_SIZE*PROBLEM_SIZE - 1).hostedTile = id
+			
 			uuidFRAMEwithBlankTile = frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1).ID
 			coordsFRAMEwithBlankTile = frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1).coordPair
 			arrivalInfosFrame = new InfosFrame(uuidFRAMEwithBlankTile, coordsFRAMEwithBlankTile)
 			arrivalFrame = frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1)
+			arrivalFrame.hostedNumTile = 0
 //			info("///////////////// FrameSet) arrivalFrame.ID=" + arrivalFrame.ID)
 		}
 	}
@@ -173,8 +175,12 @@ agent BoardGameAgent {
 		
 		nbTileSet++
 		
+		// TileAgent spawned
 		if (occurrence.tile !== null) // DO NOT REMOVE THIS TEST
 			tileList.add(occurrence.tile)
+		// EmptyTileAgent (blankTile) spawned
+		else
+			blankTile = occurrence.blank
 
 		if (nbTileSet === Math.round(Math.pow(PROBLEM_SIZE, 2))) {
 			info("Every single TileAgent is set. Setting token priority lists.")
@@ -237,17 +243,17 @@ agent BoardGameAgent {
 					emit(new TokenReceived(), Scopes.addresses(defaultSpace.getAddress(t.ID)))
 					
 					// set the infosFrame for the frame on which there is the Tile with the Token
-//					for(var i=0; i<frameList.size; i++){
-//						if(frameList.get(i).hostedTile === t.ID){
-//							uuidFRAMEwithTokenTile = frameList.get(i).ID
-//							coordsFRAMEwithTokenTile = frameList.get(i).coordPair
-//							beginningInfosFrame = new InfosFrame(uuidFRAMEwithTokenTile, coordsFRAMEwithTokenTile)
-//							beginningFrame = frameList.get(i)
-//							
-//							info("++++++++++++++++++++++++++++ TokenReleased) beginningFrame=" + uuidFRAMEwithTokenTile)
-//							break
-//						}
-//					}
+					for(var i=0; i<frameList.size; i++){
+						if(frameList.get(i).hostedTile === t.ID){
+							uuidFRAMEwithTokenTile = frameList.get(i).ID
+							coordsFRAMEwithTokenTile = frameList.get(i).coordPair
+							haveTokenInfosFrame = new InfosFrame(uuidFRAMEwithTokenTile, coordsFRAMEwithTokenTile)
+							haveTokenFrame = frameList.get(i)
+							
+							info("on TokenReleased: hostedNumTile=" + haveTokenFrame.hostedNumTile)
+							break
+						}
+					}
 					
 					
 					return
@@ -304,8 +310,8 @@ agent BoardGameAgent {
 		if (currentFrame.northNeighbour != null) {
 			var index = frameUUIDList.indexOf(currentFrame.northNeighbour)
 
-			// TODO: ne rien faire si elle est satisfaite (ou bloquée ?)
-			if (!frameList.get(index).isSatisfied) {
+			// not satisfied AND not blocked AND not the FRAMEwithTokenTile
+			if (!frameList.get(index).isSatisfied && !frameList.get(index).isBlocked && (frameList.get(index).ID != uuidFRAMEwithTokenTile)) {
 
 				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var coordNeighbour = frameList.get(index).coordPair
 
@@ -335,22 +341,25 @@ agent BoardGameAgent {
 					infosFrame.coordsPreviousFrame = currentFrame.coordPair
 
 					var indexForOpenList = -1
-					for (iterator : openListOfFrames) {
+					if(!openListOfFrames.empty){
+						for (iterator : openListOfFrames) {
 						indexForOpenList++
 						if (iterator.uuidCurrentFrame == currentFrame.northNeighbour)
 							break
+						}
 					}
-
-					// if already exists: compare the cost
-					if (isInFrameList(coordNeighbour, openListOfFrames)) {
-						// only if the new path is shorter: update it ELSE do nothing
-						if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF)
-							openListOfFrames.set(indexForOpenList, infosFrame)
-						
-					} // the treated frame (north's frame) is not in the openList yet: add it
-					else {
-						openListOfFrames.add(infosFrame)
-					}
+					//if(indexForOpenList > -1){
+						// if already exists: compare the cost
+						if (isInFrameList(coordNeighbour, openListOfFrames)) {
+							// only if the new path is shorter: update it ELSE do nothing
+							if((indexForOpenList > -1) && (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF))
+								openListOfFrames.set(indexForOpenList, infosFrame)
+							
+						} // the treated frame (north's frame) is not in the openList yet: add it
+						else {
+							openListOfFrames.add(infosFrame)
+						}
+					//}
 				}
 			}
 		}
@@ -359,8 +368,8 @@ agent BoardGameAgent {
 		if (currentFrame.southNeighbour != null) {
 			var index = frameUUIDList.indexOf(currentFrame.southNeighbour)
 
-			// TODO: ne rien faire si elle est satisfaite (ou bloquée ?)
-			if (!frameList.get(index).isSatisfied) {
+			// not satisfied AND not blocked AND not the FRAMEwithTokenTile
+			if (!frameList.get(index).isSatisfied && !frameList.get(index).isBlocked && (frameList.get(index).ID != uuidFRAMEwithTokenTile)) {
 
 				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var coordNeighbour = frameList.get(index).coordPair
 
@@ -390,22 +399,25 @@ agent BoardGameAgent {
 					infosFrame.coordsPreviousFrame = currentFrame.coordPair
 
 					var indexForOpenList = -1
-					for (iterator : openListOfFrames) {
-						indexForOpenList++
-						if (iterator.uuidCurrentFrame == currentFrame.southNeighbour)
-							break
+					if(!openListOfFrames.empty){
+						for (iterator : openListOfFrames) {
+							indexForOpenList++
+							if (iterator.uuidCurrentFrame == currentFrame.southNeighbour)
+								break
+						}
 					}
-
-					// if already exists: compare the cost
-					if (isInFrameList(coordNeighbour, openListOfFrames)) {
-						// only if the new path is shorter: update it ELSE do nothing
-						if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF) 
-							openListOfFrames.set(indexForOpenList, infosFrame)
-						
-					} // the treated frame (south's frame) is not in the openList yet: add it
-					else {
-						openListOfFrames.add(infosFrame)
-					}
+					//if(indexForOpenList > -1){
+						// if already exists: compare the cost
+						if ((indexForOpenList > -1) && (isInFrameList(coordNeighbour, openListOfFrames))) {
+							// only if the new path is shorter: update it ELSE do nothing
+							if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF) 
+								openListOfFrames.set(indexForOpenList, infosFrame)
+							
+						} // the treated frame (south's frame) is not in the openList yet: add it
+						else {
+							openListOfFrames.add(infosFrame)
+						}	
+					//}
 				}
 			}
 		}
@@ -414,8 +426,8 @@ agent BoardGameAgent {
 		if (currentFrame.eastNeighbour != null) {
 			var index = frameUUIDList.indexOf(currentFrame.eastNeighbour)
 
-			// TODO: ne rien faire si elle est satisfaite (ou bloquée ?)
-			if (!frameList.get(index).isSatisfied) {
+			// not satisfied AND not blocked AND not the FRAMEwithTokenTile
+			if (!frameList.get(index).isSatisfied && !frameList.get(index).isBlocked && (frameList.get(index).ID != uuidFRAMEwithTokenTile)) {
 
 				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var coordNeighbour = frameList.get(index).coordPair
 												
@@ -445,22 +457,25 @@ agent BoardGameAgent {
 					infosFrame.coordsPreviousFrame = currentFrame.coordPair
 
 					var indexForOpenList = -1
-					for (iterator : openListOfFrames) {
-						indexForOpenList++
-						if (iterator.uuidCurrentFrame == currentFrame.eastNeighbour)
-							break
+					if(!openListOfFrames.empty){
+						for (iterator : openListOfFrames) {
+							indexForOpenList++
+							if (iterator.uuidCurrentFrame == currentFrame.eastNeighbour)
+								break
+						}
 					}
-
-					// if already exists: compare the cost
-					if (isInFrameList(coordNeighbour, openListOfFrames)) {
-						// only if the new path is shorter: update it ELSE do nothing
-						if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF) 
-							openListOfFrames.set(indexForOpenList, infosFrame)
-						
-					} // the treated frame (east's frame) is not in the openList yet: add it
-					else {
-						openListOfFrames.add(infosFrame)
-					}
+					//if(indexForOpenList > -1){
+						// if already exists: compare the cost
+						if ((indexForOpenList > -1) && (isInFrameList(coordNeighbour, openListOfFrames))) {
+							// only if the new path is shorter: update it ELSE do nothing
+							if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF) 
+								openListOfFrames.set(indexForOpenList, infosFrame)
+							
+						} // the treated frame (east's frame) is not in the openList yet: add it
+						else {
+							openListOfFrames.add(infosFrame)
+						}
+					//}
 				}
 			}
 		}
@@ -469,8 +484,8 @@ agent BoardGameAgent {
 		if (currentFrame.westNeighbour != null) {
 			var index = frameUUIDList.indexOf(currentFrame.westNeighbour)
 
-			//TODO: ne rien faire si elle est satisfaite (ou bloquée ?)
-			if (!frameList.get(index).isSatisfied) {
+			// not satisfied AND not blocked AND not the FRAMEwithTokenTile
+			if (!frameList.get(index).isSatisfied && !frameList.get(index).isBlocked && (frameList.get(index).ID != uuidFRAMEwithTokenTile)) {
 
 				var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var coordNeighbour = frameList.get(index).coordPair
 												
@@ -500,22 +515,25 @@ agent BoardGameAgent {
 					infosFrame.coordsPreviousFrame = currentFrame.coordPair
 
 					var indexForOpenList = -1
-					for (iterator : openListOfFrames) {
-						indexForOpenList++
-						if (iterator.uuidCurrentFrame == currentFrame.westNeighbour)
-							break
+					if(!openListOfFrames.empty){
+						for (iterator : openListOfFrames) {
+							indexForOpenList++
+							if (iterator.uuidCurrentFrame == currentFrame.westNeighbour)
+								break
+						}
 					}
-
-					// if already exists: compare the cost
-					if (isInFrameList(coordNeighbour, openListOfFrames)) {
-						// only if the new path is shorter: update it ELSE do nothing
-						if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF)
-							openListOfFrames.set(indexForOpenList, infosFrame)
-						
-					} // the treated frame (west's frame) is not in the openList yet: add it
-					else {
-						openListOfFrames.add(infosFrame)
-					}
+					//if(indexForOpenList > -1){
+						// if already exists: compare the cost
+						if ((indexForOpenList > -1) && (isInFrameList(coordNeighbour, openListOfFrames))) {
+							// only if the new path is shorter: update it ELSE do nothing
+							if (infosFrame.costF < openListOfFrames.get(indexForOpenList).costF)
+								openListOfFrames.set(indexForOpenList, infosFrame)
+							
+						} // the treated frame (west's frame) is not in the openList yet: add it
+						else {
+							openListOfFrames.add(infosFrame)
+						}
+					//}
 				}
 			}
 		}
@@ -621,7 +639,7 @@ def getBestFrame(listFrames : ArrayList<InfosFrame>) : InfosFrame {
 //		val beginningFrameTMP = new InfosFrame(frameUUIDList.get(0), listCoordPairsOfFrames.get(0)) // TODO: CHANGE WITH THE FRAME ON WHICH THE FILE HAS THE TOKEN
 //		val arrivalFrame = new InfosFrame(frameUUIDList.get((PROBLEM_SIZE * PROBLEM_SIZE) - 1),listCoordPairsOfFrames.get((PROBLEM_SIZE * PROBLEM_SIZE) - 1))
 		var currentFrame = beginningInfosFrame
-		
+		info("/// beginningInfosFrame="+beginningInfosFrame.toString)
 		openListOfFrames.add(beginningInfosFrame)
 		addInClosedList(beginningInfosFrame.coordsCurrentFrame)
 		
@@ -652,106 +670,318 @@ def getBestFrame(listFrames : ArrayList<InfosFrame>) : InfosFrame {
 		
 		// if destination is reached : build the path in the opposite direction of the chain of aggression
 		if(currentFrame.coordsCurrentFrame.equals(arrivalInfosFrame.coordsCurrentFrame)){
-			info("- A-star : destination IS reached! -")
+			info("## A-star : destination IS reached! ##")	
+		
+			// sort in the opposite order AND remove duplicate frames
+			var tmpChainAggression = buildChainAggression(beginningInfosFrame)
+			var chainAggression = new ArrayList<InfosFrame>()
+			var tmpFrame = tmpChainAggression.get(tmpChainAggression.size - 1)
+			chainAggression.add(tmpFrame)
+			for (var i=tmpChainAggression.size-2; i>=0; i--) {
+				if (!(tmpFrame.uuidCurrentFrame === tmpChainAggression.get(i).uuidCurrentFrame)) {
+					tmpFrame = tmpChainAggression.get(i)
+					chainAggression.add(tmpFrame)
+				}				
+			}
+			
+			// YB
+			var listSwap : ArrayList<Integer> = new ArrayList()
+			
+			info("---- Chain of aggression below ----")
+			for(var i=0; i<chainAggression.size; i++){
+				
+				//Frame with the Tile which wants to move 
+				if (chainAggression.get(i).coordsCurrentFrame.equals(beginningFrame.coordPair)) {
+	
+					info("BeginningFrame= " + chainAggression.get(i).coordsCurrentFrame.toString)
+					
+					for (var j = 0; j < frameList.size; j++) {
+						if (frameList.get(j).ID === chainAggression.get(i).uuidCurrentFrame) {
+	
+							// YB
+							listSwap.add(frameList.get(j).hostedNumTile)
+	
+							ctrl.setColor("green", frameList.get(j).hostedNumTile)
+	
+							// YB
+							Thread.sleep(1000)
+	
+							break
+						}
+					}
+				}
+				
+				// colorize the chain of aggression (NOT the extremities)
+				else if (!chainAggression.get(i).coordsCurrentFrame.equals(arrivalFrame.coordPair)) {
+	
+					info("Frame"+(i + 1) + "= " + chainAggression.get(i).coordsCurrentFrame.toString)
+					
+					for(var j=0; j<frameList.size; j++){
+						if (frameList.get(j).ID === chainAggression.get(i).uuidCurrentFrame) {
+	
+							// YB
+							listSwap.add(frameList.get(j).hostedNumTile)
+							
+							ctrl.setColor("blue", frameList.get(j).hostedNumTile)
+							
+							// YB
+							Thread.sleep(1000)
+							
+							break
+						}
+					}
+				}
+				else {
+					info("ArrivalFrame= " + chainAggression.get(i).coordsCurrentFrame.toString)
+				}
+			}
+		
+			// YB
+			// ctrl.swap(listSwap)
+			// swap tiles in the chain of aggression (ex: 12345 --> 51234)
+			swapTilesInChainAggression(chainAggression)
+			swapTokenAndBlank
+				
 		} else {
-			info("- A-star : destination IS NOT reached! -")
+			info("## A-star : destination IS NOT reached! ##")
 		}
-		
-		
-		// sort in the opposite order AND remove duplicate frames
-		var tmpChainAggression = buildChainAggression(beginningInfosFrame)
-		var chainAggression = new ArrayList<InfosFrame>()
-		var tmpFrame = tmpChainAggression.get(tmpChainAggression.size - 1)
-		chainAggression.add(tmpFrame)
-		for (var i=tmpChainAggression.size-2; i>=0; i--) {
-			if (!(tmpFrame.uuidCurrentFrame === tmpChainAggression.get(i).uuidCurrentFrame)) {
-				tmpFrame = tmpChainAggression.get(i)
-				chainAggression.add(tmpFrame)
-			}				
-		}
-		
-		// YB
-		var listSwap : ArrayList<Integer> = new ArrayList()
-		
-		info("---- Chain of aggression below ----")
-		for(var i=0; i<chainAggression.size; i++){
-			
-			//Frame with the Tile which wants to move 
-			if (chainAggression.get(i).coordsCurrentFrame.equals(beginningFrame.coordPair)) {
-
-				info("BeginningFrame= " + chainAggression.get(i).coordsCurrentFrame.toString)
-				
-				for (var j = 0; j < frameList.size; j++) {
-					if (frameList.get(j).ID === chainAggression.get(i).uuidCurrentFrame) {
-
-						// YB
-						listSwap.add(frameList.get(j).hostedNumTile)
-
-						ctrl.setColor("green", frameList.get(j).hostedNumTile)
-
-						// YB
-						Thread.sleep(1000)
-
-						break
-					}
-				}
-			}
-			
-			// colorize the chain of aggression (NOT the extremities)
-			else if (!chainAggression.get(i).coordsCurrentFrame.equals(arrivalFrame.coordPair)) {
-
-				info("Frame"+(i + 1) + "= " + chainAggression.get(i).coordsCurrentFrame.toString)
-				
-				for(var j=0; j<frameList.size; j++){
-					if (frameList.get(j).ID === chainAggression.get(i).uuidCurrentFrame) {
-
-						// YB
-						listSwap.add(frameList.get(j).hostedNumTile)
-						
-						ctrl.setColor("blue", frameList.get(j).hostedNumTile)
-						
-						// YB
-						Thread.sleep(1000)
-						
-						break
-					}
-				}
-			}
-			else {
-				info("ArrivalFrame= " + chainAggression.get(i).coordsCurrentFrame.toString)
-			}
-		}
-		
-		// YB
-		//ctrl.swap(listSwap)
 			
 	}
 	
 	// receive the event to execute the algo A*
 	on FindPathWithAstarAlgo {
-		uuidFRAMEwithTokenTile = occurrence.beginningFrame
+		uuidFRAMEbeginning = occurrence.beginningFrame
 		
 		for(var i=0; i<frameList.size; i++){
-			if(frameList.get(i).ID === uuidFRAMEwithTokenTile){
+			if(frameList.get(i).ID === uuidFRAMEbeginning){
 				beginningFrame = frameList.get(i)
-				coordsFRAMEwithTokenTile = frameList.get(i).coordPair
-				var infosFrame = new InfosFrame(uuidFRAMEwithTokenTile, coordsFRAMEwithTokenTile) 
+				coordsFRAMEbeginning = frameList.get(i).coordPair
+				var infosFrame = new InfosFrame(uuidFRAMEbeginning, coordsFRAMEbeginning) 
 				beginningInfosFrame = infosFrame
 				break
 			}
 		}
 		
-		info("====================== receive event FINDPATH /uuidBeginningFrame")
+		// if you want to LOG numTile/uuidNumTile before the swap
+		/*info("====================== receive event FINDPATH /beginningFrame.hostedNumTile="+beginningFrame.hostedNumTile)
+		info("---------- Infos for numTile/uuidNumTile before the swap ----------")
+		info("[0]= "+blankTile.ID)
+		for(var ii=0; ii<tileList.size; ii++){
+			for(ite: tileList){
+				if(ite.numTile === ii+1){
+					info("["+(ii+1)+"]= "+ite.ID)
+				}
+			}
+		}
+		info("-------------------------------------------------------------------")*/
 
-		// TODO: NOT PRECISE AT ALL : more delay if bigger size
-		if (PROBLEM_SIZE < 10)
-			in(400 * PROBLEM_SIZE)[findPath]
-		else
-			in(600 * PROBLEM_SIZE)[findPath]
-		
+		// there is a path
+		if(beginningFrame.ID != arrivalFrame.ID){
+			// TODO: NOT PRECISE AT ALL : more delay if bigger size
+			if (PROBLEM_SIZE < 10)
+				in(400 * PROBLEM_SIZE)[findPath]
+			else
+				in(600 * PROBLEM_SIZE)[findPath]				
+		}
+		// we just have to swap the FrameWithTokenTile and the FrameWithBlankTile because beginningFrame==arrivalFrame
+		else{
+			swapTokenAndBlank
+			//info("############# FindPathWithAstarAlgo) no path ?")
+		}
+	}
+	
+	def changeSatisfaction{
+
+		for (var i=0; i<frameList.size-1; i++) {
+			if (frameList.get(i).idNum === frameList.get(i).hostedNumTile) {
+				info("--> frame[" + frameList.get(i).idNum + "] is satisfied !")
+				frameList.get(i).isSatisfied = true				
+			}
+			else
+				frameList.get(i).isSatisfied = false
+		}
+
+		for (iteTile : tileList) {
+			if (iteTile.numTile === iteTile.numFrameHost) {
+				info("--> tile[" + iteTile.numTile + "] is satisfied TOO !")
+				//iteTile.isHappy = true TODO: CAN'T SET the happiness because it goes in an infinite loop... !!
+			} //else
+				//iteTile.isHappy = false
+		}
 	}
 
-	on Destroy { 
+	def swapTokenAndBlank {
+		// tiles ----------------------------------------------------------
+		var tmpTOKENtileUuid : UUID
+		var tmpTOKENtileNum : int
+		var tmpBLANKtileUuid : UUID
+		var tmpBLANKtileNum : int 
+		var tokenTile : TileAgent
+
+		for (var i = 0; i < tileList.size; i++) {
+			if (tileList.get(i).uuidFrameHost === haveTokenFrame.ID) {
+				tokenTile = tileList.get(i)
+				tmpTOKENtileUuid = tileList.get(i).uuidFrameHost
+				tmpTOKENtileNum = tileList.get(i).numFrameHost
+			} 
+		}
+		
+		// for blankTile (arrivalFrame)
+		tmpBLANKtileUuid = blankTile.uuidFrameHost
+		tmpBLANKtileNum = blankTile.numFrameHost
+		tokenTile.uuidFrameHost = tmpBLANKtileUuid
+		tokenTile.numFrameHost = tmpBLANKtileNum
+		blankTile.uuidFrameHost = tmpTOKENtileUuid
+		blankTile.numFrameHost = tmpTOKENtileNum
+		
+		// frames ---------------------------------------------------------
+		var tmpF = haveTokenFrame
+		haveTokenFrame = arrivalFrame
+		arrivalFrame = tmpF
+		var tmpHostedTile = haveTokenFrame.hostedTile
+		var tmpHostedNumTile = haveTokenFrame.hostedNumTile
+		haveTokenFrame.hostedTile = arrivalFrame.hostedTile
+		haveTokenFrame.hostedNumTile = arrivalFrame.hostedNumTile
+		arrivalFrame.hostedTile = tmpHostedTile
+		arrivalFrame.hostedNumTile = tmpHostedNumTile	
+
+		// if you want to LOG
+		info(" ")
+		info("=============== swapTokenAndBlank ===============")		
+		info("---------- Infos FRAMES for numTile/uuidTile after the swap ----------")
+		info("haveTokenFrame: idNum=" + haveTokenFrame.idNum + " /numHostedTile=" + haveTokenFrame.hostedNumTile)
+		info("arrivalFrame: idNum=" + arrivalFrame.idNum + " /numHostedTile=" + arrivalFrame.hostedNumTile)
+		for (var n = 0; n < frameList.size; n++) {
+			for (ite : frameList) {
+				if (ite.idNum === n + 1) {
+					info("frame[" + (n + 1) + "]= tile: " + ite.hostedNumTile + " / " + ite.hostedTile)
+				}
+			}
+		}
+		info("---------- Infos TILES for numFrame/uuidFrame after the swap ----------")
+		info("tile[0]= frame: " + blankTile.numFrameHost + " /" + blankTile.uuidFrameHost)
+		for (var n = 0; n < tileList.size; n++) {
+			for (ite : tileList) {
+				if (ite.numTile === n + 1) {
+					info("tile[" + (n + 1) + "]= frame: " + ite.numFrameHost + " / " + ite.uuidFrameHost)
+				}
+			}
+		}
+		info("------------------------------------------------------------------") 
+		info(" ")
+				
+		changeSatisfaction
+	}
+	
+	// swap all tiles in the chain of aggression (ex: 12345 --> 51234)
+	def swapTilesInChainAggression(chainAggression : ArrayList<InfosFrame>){
+		var tmpFRAMEuuidHostedTile : UUID
+		var tmpFRAMEnumHostedTile : int
+		var tmpTILEuuidFrameHost : UUID
+		var tmpTILEnumFrameHost : int
+		var tmp1 : UUID 	// tile.uuidFrameHost
+		var tmp2 : int		// tile.numFrameHost
+		var tmp11 : UUID	// same
+		var tmp22 : int		// same
+		 
+		// browse the chain of aggression in the opposite direction 
+		for(var i=chainAggression.size-1; i>=0; i--){
+			
+			// search the corresponded FRAME of the current element in chainAggression
+			for(var j=0; j<frameList.size; j++){
+				if(frameList.get(j).ID === chainAggression.get(i).uuidCurrentFrame){
+					
+					var tmpBlankTile : EmptyTileAgent
+					var tmpTile : TileAgent
+					for(var iTile=0; iTile<tileList.size; iTile++){
+						if(tileList.get(iTile).ID === frameList.get(j).hostedTile){
+							tmpTile = tileList.get(iTile)
+							break		
+						}
+					}
+							
+					// the first operation to do : save the infos of the last element in chainAggression
+					if(i == chainAggression.size-1){
+						tmpFRAMEuuidHostedTile = frameList.get(j).hostedTile
+						tmpFRAMEnumHostedTile = frameList.get(j).hostedNumTile 
+						tmpTILEuuidFrameHost = blankTile.uuidFrameHost
+						tmpTILEnumFrameHost = blankTile.numFrameHost
+					}
+					
+					// the intermediates operations to do for elements 0<i<=N in chainAggression 
+					if (i > 0) {
+						// search the FRAME corresponding to the index (i-1) for the loop
+						for(var k=0; k<frameList.size; k++){
+							if (frameList.get(k).ID === chainAggression.get(i - 1).uuidCurrentFrame) {
+								
+								for(var jTile=0; jTile<tileList.size; jTile++){
+									if (tileList.get(jTile).ID === frameList.get(k).hostedTile) {
+										tmp1 = tileList.get(jTile).uuidFrameHost
+										tmp2 = tileList.get(jTile).numFrameHost
+																				
+										// first element
+										if(i==chainAggression.size-1){
+											tmp11 = tileList.get(jTile).uuidFrameHost
+											tmp22 = tileList.get(jTile).numFrameHost
+											tileList.get(jTile).uuidFrameHost = blankTile.uuidFrameHost
+											tileList.get(jTile).numFrameHost = blankTile.numFrameHost
+										}
+										// others
+										else {
+											tileList.get(jTile).uuidFrameHost = tmp11
+											tileList.get(jTile).numFrameHost = tmp22
+											tmp11 = tmp1
+											tmp22 = tmp2
+										}
+										break
+									}
+								}
+								
+								frameList.get(j).hostedTile = frameList.get(k).hostedTile
+								frameList.get(j).hostedNumTile = frameList.get(k).hostedNumTile
+								break
+							}
+						}
+					}
+					
+					// the last operation to do : use the previously saved infos for the element O in chainAggression
+					else {						
+						frameList.get(j).hostedTile = blankTile.ID
+						frameList.get(j).hostedNumTile = blankTile.numTile
+						blankTile.uuidFrameHost = frameList.get(j).ID
+						blankTile.numFrameHost = frameList.get(j).idNum
+						arrivalFrame = frameList.get(j)
+					}				
+				}				
+			}
+		}
+		
+		// if you want to LOG
+		/*info("---------- Infos FRAMES for numTile/uuidTile after the swap ----------")
+		info("arrivalFrame= " + arrivalFrame.idNum + " / " + arrivalFrame.ID)
+		for(var n=0; n<frameList.size; n++){
+			for(ite: frameList){
+				if(ite.idNum === n+1){
+					info("frame["+(n+1)+"]= tile: "+ite.hostedNumTile+" / "+ite.hostedTile)
+				}
+			}
+		}
+
+		info("---------- Infos TILES for numFrame/uuidFrame after the swap ----------")
+		info("tile[0]= frame: "+blankTile.numFrameHost + " /" + blankTile.uuidFrameHost)
+		for (var n = 0; n < tileList.size; n++) {
+			for (ite : tileList) {
+				if (ite.numTile === n + 1) {
+					info("tile[" + (n + 1) + "]= frame: " + ite.numFrameHost + " / " + ite.uuidFrameHost)
+				}
+			}
+		}
+		info("------------------------------------------------------------------")*/
+		
+		changeSatisfaction
+	}
+
+	on Destroy {
 		// Event trigger when the agent is destroyed from the system.
 		// You should put all the resource releasing statements in this block of code.
 		info("The agent was stopped.")

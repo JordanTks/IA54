@@ -4,6 +4,7 @@
 package fr.utbm.ia54.Event
 
 import fr.utbm.ia54.Agent.TileAgent
+import fr.utbm.ia54.Agent.EmptyTileAgent
 
 /** 
  * @author Norgannon
@@ -11,9 +12,11 @@ import fr.utbm.ia54.Agent.TileAgent
  */
 event TileSet {
 	var tile : TileAgent
+	var blank : EmptyTileAgent
 
-	new (t : TileAgent) {
+	new (t : TileAgent, b : EmptyTileAgent) {
 		this.tile = t
+		this.blank = b
 	}
 }
 

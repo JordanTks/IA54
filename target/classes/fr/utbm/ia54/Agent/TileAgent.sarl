@@ -31,38 +31,41 @@ agent TileAgent {
 	var angry = false // currently assaulting someone or not
 	var numTile : int
 	var numTileFromZero : int
-	var numFrameHost : int
+	var numFrameHost : int //from 1
+	var numFrameHostFromZero : int
 	var uuidFrameHost : UUID
 	var problemSize : int
 	var tokenPriority : int
-
+ 
 	var parentAgent : UUID
 	
 	on Initialize {
 
 		if (this.class === null)
 			return;
-
+ 
 		parentAgent = occurrence.spawner
 
 		numTile = occurrence.parameters.get(0) as Integer
 		numTileFromZero = numTile - 1
-
+  
 		uuidFrameHost = occurrence.parameters.get(1) as UUID
-		numFrameHost = occurrence.parameters.get(2) as Integer
+		numFrameHostFromZero = occurrence.parameters.get(2) as Integer
 		problemSize = occurrence.parameters.get(3) as Integer
+		
+		numFrameHost = numFrameHostFromZero + 1
 
 		// Setting tokenPriority consulted by the scheduler
 		tokenPriority = Math.min((numTile-1) / problemSize, (numTile-1) % problemSize)
 
 		loggingName = 'TileAgent' + numTile // num to change
 		
-		if(numTileFromZero === numFrameHost)
+		if (numTileFromZero === numFrameHostFromZero)
 		{
 			pleased = true
 		}
 		 
-		emit(new TileSet(this))
+		emit(new TileSet(this,null)) 
 		
 		// info("DEBUGG : Agent is set up.")
 	}
@@ -106,15 +109,15 @@ agent TileAgent {
 		// If I am on the same line or column as my desired spot, I just go in the spot direction
 		
 		// I am at the right longitude, therefore I will assault north or south
-		if (numFrameHost % problemSize === numTileFromZero % problemSize)
-			if (numTileFromZero < numFrameHost)
+		if (numFrameHostFromZero % problemSize === numTileFromZero % problemSize)
+			if (numTileFromZero < numFrameHostFromZero)
 				emit(new Assault(Position.NORTH, false), Scopes.identifiers(uuidFrameHost))
 			else
 				emit(new Assault(Position.SOUTH, false), Scopes.identifiers(uuidFrameHost))
 		
 		// I am at the right latitude, therefore I will assault east or west
-		else if (numFrameHost / problemSize === numTileFromZero / problemSize)
-			if (numTileFromZero < numFrameHost)
+		else if (numFrameHostFromZero / problemSize === numTileFromZero / problemSize)
+			if (numTileFromZero < numFrameHostFromZero)
 				emit(new Assault(Position.WEST, false), Scopes.identifiers(uuidFrameHost))
 			else
 				emit(new Assault(Position.EAST, false), Scopes.identifiers(uuidFrameHost))
@@ -127,10 +130,10 @@ agent TileAgent {
 			// Finding out these two possible directions :
 			
 			// Looking up if I am to the north or to the south of my target frame
-			var north = (numFrameHost / problemSize >= numTileFromZero / problemSize)
+			var north = (numFrameHostFromZero / problemSize >= numTileFromZero / problemSize)
 	
 			// Looking up if I am to the west or to the east of my target frame
-			var west = (numFrameHost % problemSize >= numTileFromZero % problemSize)
+			var west = (numFrameHostFromZero % problemSize >= numTileFromZero % problemSize)
 			
 		 	// I have to choose between two targets, I ask my frame to get more informations
 			emit(new AskNeighbourSatisfaction(north, west), Scopes.identifiers(uuidFrameHost))
@@ -140,7 +143,7 @@ agent TileAgent {
 		// If void function, code does not compile...
 		return true
 	}
-	
+	 
 	// We had to ask for more informations to choose who to target
 	on ResponseNeighbourSatisfaction {
 
@@ -167,6 +170,30 @@ agent TileAgent {
 	
 	on Assault {
 	}
+
+	def getNumFrameHost : int{
+		return this.numFrameHost
+	}
+	
+	def setNumFrameHost(num : int){
+		this.numFrameHost = num
+	}
+
+	def getNumFrameHostFromZero : int {
+		return this.numFrameHostFromZero
+	} 
+
+	def setNumFrameHostFromZero(num : int) {
+		this.numFrameHostFromZero = num
+	}
+	
+	def getUuidFrameHost : UUID{
+		return this.uuidFrameHost
+	}
+	
+	def setUuidFrameHost(uuid : UUID){
+		this.uuidFrameHost = uuid
+	}
 	
 	def getTokenPriority : int {
 		this.tokenPriority
@@ -178,12 +205,16 @@ agent TileAgent {
 
 	def getIsHappy : boolean {
 		this.pleased
-	}
+	} 
 	
+	def setIsHappy(happy : boolean){
+		this.isHappy = happy
+	}
+	 
 	on Destroy {
 		// Event trigger when the agent is destroyed from the system.
 		// You should put all the resource releasing statements in this block of code.
-		info("The agent was stopped.")
+		info("The agent was stopped.") 
 	}
 
 	on AgentSpawned {

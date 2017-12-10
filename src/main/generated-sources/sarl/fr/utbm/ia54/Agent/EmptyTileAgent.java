@@ -23,6 +23,7 @@ import io.sarl.lang.core.DynamicSkillProvider;
 import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 import javax.inject.Inject;
 import org.eclipse.xtext.xbase.lib.Extension;
@@ -36,13 +37,52 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlElementType(17)
 @SuppressWarnings("all")
 public class EmptyTileAgent extends Agent {
+  private boolean isHappy = false;
+  
+  private int numTile = 0;
+  
+  private int numFrameHost;
+  
+  private UUID uuidFrameHost;
+  
   @SyntheticMember
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.setLoggingName("EmptyTileAgent");
+    Object _get = occurrence.parameters[0];
+    this.uuidFrameHost = ((UUID) _get);
+    Object _get_1 = occurrence.parameters[1];
+    this.numFrameHost = (((Integer) _get_1)).intValue();
     DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    TileSet _tileSet = new TileSet(null);
+    TileSet _tileSet = new TileSet(null, this);
     _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tileSet);
+  }
+  
+  protected void setIsHappy(final boolean happy) {
+    this.isHappy = happy;
+  }
+  
+  @Pure
+  protected int getNumTile() {
+    return this.numTile;
+  }
+  
+  @Pure
+  protected int getNumFrameHost() {
+    return this.numFrameHost;
+  }
+  
+  protected void setNumFrameHost(final int num) {
+    this.numFrameHost = num;
+  }
+  
+  @Pure
+  protected UUID getUuidFrameHost() {
+    return this.uuidFrameHost;
+  }
+  
+  protected void setUuidFrameHost(final UUID uuid) {
+    this.uuidFrameHost = uuid;
   }
   
   @SyntheticMember
@@ -179,6 +219,42 @@ public class EmptyTileAgent extends Agent {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
     ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberJoined$7(occurrence));
+  }
+  
+  @Override
+  @Pure
+  @SyntheticMember
+  public boolean equals(final Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    EmptyTileAgent other = (EmptyTileAgent) obj;
+    if (other.isHappy != this.isHappy)
+      return false;
+    if (other.numTile != this.numTile)
+      return false;
+    if (other.numFrameHost != this.numFrameHost)
+      return false;
+    if (!Objects.equals(this.uuidFrameHost, other.uuidFrameHost)) {
+      return false;
+    }
+    return super.equals(obj);
+  }
+  
+  @Override
+  @Pure
+  @SyntheticMember
+  public int hashCode() {
+    int result = super.hashCode();
+    final int prime = 31;
+    result = prime * result + (this.isHappy ? 1231 : 1237);
+    result = prime * result + this.numTile;
+    result = prime * result + this.numFrameHost;
+    result = prime * result + Objects.hashCode(this.uuidFrameHost);
+    return result;
   }
   
   @SyntheticMember

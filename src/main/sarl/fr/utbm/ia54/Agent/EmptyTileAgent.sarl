@@ -15,6 +15,7 @@ import io.sarl.core.MemberLeft
 import fr.utbm.ia54.Event.TokenReceived
 import fr.utbm.ia54.Event.TileSet
 import io.sarl.core.DefaultContextInteractions
+import java.util.UUID
 
 /** 
  * @author Norgannon
@@ -24,12 +25,44 @@ agent EmptyTileAgent {
 	
 	uses Logging, DefaultContextInteractions
 
+	var isHappy = false
+	var numTile = 0
+	var numFrameHost : int
+	var uuidFrameHost : UUID
+  
 	on Initialize {
 		loggingName = 'EmptyTileAgent'
 
-		emit(new TileSet(null))
+		uuidFrameHost = occurrence.parameters.get(0) as UUID
+		numFrameHost = occurrence.parameters.get(1) as Integer
+
+		emit(new TileSet(null,this))
 
 		// info("DEBUGG : Agent is set up.")
+	}
+	
+	def setIsHappy(happy : boolean){
+		this.isHappy = happy
+	}
+	
+	def getNumTile : int{
+		return this.numTile
+	}
+	
+	def getNumFrameHost : int{
+		return this.numFrameHost
+	}
+	
+	def setNumFrameHost(num : int){
+		this.numFrameHost = num
+	}
+	
+	def getUuidFrameHost : UUID{
+		return this.uuidFrameHost
+	} 
+	
+	def setUuidFrameHost(uuid : UUID){
+		this.uuidFrameHost = uuid
 	}
 
 	on TokenReceived {
