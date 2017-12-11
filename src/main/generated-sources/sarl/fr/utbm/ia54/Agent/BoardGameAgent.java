@@ -893,11 +893,6 @@ public class BoardGameAgent extends Agent {
       int _hostedNumTile = this.frameList.get(i).getHostedNumTile();
       boolean _tripleEquals = (_idNum == _hostedNumTile);
       if (_tripleEquals) {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        int _idNum_1 = this.frameList.get(i).getIdNum();
-        String _plus = ("--> frame[" + Integer.valueOf(_idNum_1));
-        String _plus_1 = (_plus + "] is satisfied !");
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus_1);
         FrameAgent _get = this.frameList.get(i);
         _get.setIsSatisfied(true);
       } else {
@@ -910,11 +905,9 @@ public class BoardGameAgent extends Agent {
       int _numFrameHost = iteTile.getNumFrameHost();
       boolean _tripleEquals = (_numTile == _numFrameHost);
       if (_tripleEquals) {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        int _numTile_1 = iteTile.getNumTile();
-        String _plus = ("--> tile[" + Integer.valueOf(_numTile_1));
-        String _plus_1 = (_plus + "] is satisfied TOO !");
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus_1);
+        iteTile.setIsHappy(true);
+      } else {
+        iteTile.setIsHappy(false);
       }
     }
   }

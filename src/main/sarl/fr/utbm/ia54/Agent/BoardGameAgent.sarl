@@ -814,19 +814,24 @@ def getBestFrame(listFrames : ArrayList<InfosFrame>) : InfosFrame {
 
 		for (var i=0; i<frameList.size-1; i++) {
 			if (frameList.get(i).idNum === frameList.get(i).hostedNumTile) {
-				info("--> frame[" + frameList.get(i).idNum + "] is satisfied !")
+				// info("--> frame[" + frameList.get(i).idNum + "] is satisfied !")
 				frameList.get(i).isSatisfied = true				
 			}
 			else
+			{
+				// info("--> frame[" + frameList.get(i).idNum + "] is not satisfied")
 				frameList.get(i).isSatisfied = false
+			}
 		}
-
+		
 		for (iteTile : tileList) {
 			if (iteTile.numTile === iteTile.numFrameHost) {
-				info("--> tile[" + iteTile.numTile + "] is satisfied TOO !")
-				//iteTile.isHappy = true TODO: CAN'T SET the happiness because it goes in an infinite loop... !!
-			} //else
-				//iteTile.isHappy = false
+				// info("--> tile[" + iteTile.numTile + "] is satisfied !")
+				iteTile.setIsHappy(true)
+			} else {
+				// info("--> tile[" + iteTile.numTile + "] is not satisfied")
+				iteTile.setIsHappy(false)	
+			}
 		}
 	}
 

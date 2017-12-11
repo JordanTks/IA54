@@ -28,7 +28,7 @@ import fr.utbm.ia54.Event.SafetyWait
 agent TileAgent {
 	uses Logging, DefaultContextInteractions, Behaviors, Schedules
 
-	var pleased = false // at right place or no (though kind of redundant with bool pleasant on frameAgent (could be useless)) 
+	var isHappy = false // at right place or no (though kind of redundant with bool pleasant on frameAgent (could be useless)) 
 	var angry = false // currently assaulting someone or not
 	var numTile : int
 	var numTileFromZero : int
@@ -63,7 +63,7 @@ agent TileAgent {
 		
 		if (numTileFromZero === numFrameHostFromZero)
 		{
-			pleased = true
+			isHappy = true
 		}
 
 		in(1000)[wake(new SafetyWait())]
@@ -81,7 +81,7 @@ agent TileAgent {
 		
 		info("I received the token.")
 		
-		if (pleased) {
+		if (isHappy) {
 			emit(new TokenReleased())
 		
 		} else { 
@@ -211,7 +211,7 @@ agent TileAgent {
 	}
 
 	def getIsHappy : boolean {
-		this.pleased
+		this.isHappy
 	} 
 	
 	def setIsHappy(happy : boolean){

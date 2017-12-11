@@ -47,7 +47,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlElementType(17)
 @SuppressWarnings("all")
 public class TileAgent extends Agent {
-  private boolean pleased = false;
+  private boolean isHappy = false;
   
   private boolean angry = false;
   
@@ -89,7 +89,7 @@ public class TileAgent extends Agent {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.setLoggingName(("TileAgent" + Integer.valueOf(this.numTile)));
     if ((this.numTileFromZero == this.numFrameHostFromZero)) {
-      this.pleased = true;
+      this.isHappy = true;
     }
     Schedules _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER = this.$castSkill(Schedules.class, (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = this.$getSkill(Schedules.class)) : this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
     final Procedure1<Agent> _function = (Agent it) -> {
@@ -111,7 +111,7 @@ public class TileAgent extends Agent {
   private void $behaviorUnit$TokenReceived$2(final TokenReceived occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("I received the token.");
-    if (this.pleased) {
+    if (this.isHappy) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       TokenReleased _tokenReleased = new TokenReleased();
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReleased);
@@ -221,11 +221,11 @@ public class TileAgent extends Agent {
   
   @Pure
   protected boolean getIsHappy() {
-    return this.pleased;
+    return this.isHappy;
   }
   
   protected void setIsHappy(final boolean happy) {
-    this.setIsHappy(happy);
+    this.isHappy = happy;
   }
   
   @SyntheticMember
@@ -425,7 +425,7 @@ public class TileAgent extends Agent {
     if (getClass() != obj.getClass())
       return false;
     TileAgent other = (TileAgent) obj;
-    if (other.pleased != this.pleased)
+    if (other.isHappy != this.isHappy)
       return false;
     if (other.angry != this.angry)
       return false;
@@ -456,7 +456,7 @@ public class TileAgent extends Agent {
   public int hashCode() {
     int result = super.hashCode();
     final int prime = 31;
-    result = prime * result + (this.pleased ? 1231 : 1237);
+    result = prime * result + (this.isHappy ? 1231 : 1237);
     result = prime * result + (this.angry ? 1231 : 1237);
     result = prime * result + this.numTile;
     result = prime * result + this.numTileFromZero;
