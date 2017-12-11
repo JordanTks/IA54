@@ -226,7 +226,7 @@ public class TaquinFxViewerController extends FxViewerController {
   
   @FXML
   @Pure
-  public void swap(final List<Integer> list) {
+  public void swap(final int number) {
     abstract class __TaquinFxViewerController_2 implements Runnable {
       public abstract void run();
     }
@@ -236,33 +236,24 @@ public class TaquinFxViewerController extends FxViewerController {
         ObservableList<Node> listTiles = TaquinFxViewerController.this.gridDisplay.tilePane.getChildren();
         Text tile1 = null;
         Text tile2 = null;
-        do {
+        for (int i = 0; (i < listTiles.size()); i++) {
           {
-            for (int i = 0; (i < listTiles.size()); i++) {
-              {
-                Node _get = listTiles.get(i);
-                Text t = ((Text) _get);
-                boolean _equals = t.getText().equals("");
-                if (_equals) {
-                  tile1 = t;
-                }
-                int _size = list.size();
-                int _minus = (_size - 2);
-                boolean _equals_1 = t.getText().equals(Integer.toString((list.get(_minus)).intValue()));
-                if (_equals_1) {
-                  tile2 = t;
-                }
-              }
+            Node _get = listTiles.get(i);
+            Text t = ((Text) _get);
+            boolean _equals = t.getText().equals(" ");
+            if (_equals) {
+              tile1 = t;
             }
-            String c = "";
-            c = tile1.getText();
-            tile1.setText(tile2.getText());
-            tile2.setText(c);
-            int _size = list.size();
-            int _minus = (_size - 2);
-            list.remove(_minus);
+            boolean _equals_1 = t.getText().equals(Integer.toString(number));
+            if (_equals_1) {
+              tile2 = t;
+            }
           }
-        } while((list.size() > 1));
+        }
+        String c = "";
+        c = tile1.getText();
+        tile1.setText(tile2.getText());
+        tile2.setText(c);
       }
     };
     Platform.runLater(___TaquinFxViewerController_2);

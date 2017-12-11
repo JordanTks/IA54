@@ -557,9 +557,14 @@ agent BoardGameAgent {
 					info("ArrivalFrame= " + chainAggression.get(i).coordsCurrentFrame.toString)
 				}
 			}
-		
+
 			// YB
-			// ctrl.swap(listSwap)
+			Collections.reverse(listSwap)
+			for (number : listSwap) {
+				ctrl.swap(number)
+				Thread.sleep(500)
+			}
+			
 			// swap tiles in the chain of aggression (ex: 12345 --> 51234)
 			swapTilesInChainAggression(chainAggression)
 			swapTokenAndBlank

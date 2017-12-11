@@ -84,7 +84,7 @@ class TaquinFxViewerController extends FxViewerController {
 	}
 	
 	// SWAP numTile
-	@FXML def swap(list : List<Integer>) {
+	@FXML def swap(number : int) {
 		Platform.runLater(
 			new Runnable() {
 				def run {
@@ -93,29 +93,22 @@ class TaquinFxViewerController extends FxViewerController {
 					var tile1 : Text
 					var tile2 : Text
 
-					do {
+					for (var i = 0; i < listTiles.size; i++) {
+						var t = listTiles.get(i) as Text
 
-						for (var i = 0; i < listTiles.size; i++) {
-							var t = listTiles.get(i) as Text
-
-							if (t.text.equals("")) {
-								tile1 = t
-							}
-
-							if (t.text.equals(Integer.toString(list.get(list.size - 2)))) {
-								tile2 = t
-							}
-
+						if (t.text.equals(" ")) {
+							tile1 = t
 						}
 
-						var c = ""
-						c = tile1.text
-						tile1.text = tile2.text
-						tile2.text = c
+						if (t.text.equals(Integer.toString(number))) {
+							tile2 = t
+						}
 
-						list.remove(list.size() - 2);
-
-					} while (list.size > 1)
+					}
+					var c = ""
+					c = tile1.text
+					tile1.text = tile2.text
+					tile2.text = c
 
 				}
 			}

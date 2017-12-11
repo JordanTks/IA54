@@ -658,6 +658,13 @@ public class BoardGameAgent extends Agent {
             }
           }
         }
+        Collections.reverse(listSwap);
+        for (final Integer number : listSwap) {
+          {
+            this.ctrl.swap((number).intValue());
+            Thread.sleep(500);
+          }
+        }
         this.swapTilesInChainAggression(chainAggression);
         this.swapTokenAndBlank();
         this.resetAllObjects();
