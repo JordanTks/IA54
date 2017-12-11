@@ -1,6 +1,5 @@
 package fr.utbm.ia54.Class;
 
-// TKS
 public class CoordPair {
 	final private int x;
 	final private int y;
@@ -23,6 +22,4 @@ public class CoordPair {
 	public String toString() {
 		return "CoordPair [x=" + x + ", y=" + y + "]";
 	}
-	
-	
 }

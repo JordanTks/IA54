@@ -69,7 +69,6 @@ agent FrameAgent {
 	var idNum = -1
   	var idNumFromZero : int
   
-	// TKS
 	var xRow = -1
 	var yCol = -1
 	var coordPair : CoordPair // coords (Xrow,Ycol) of the frame
@@ -84,12 +83,10 @@ agent FrameAgent {
 		idNum = occurrence.parameters.get(0) as Integer
 		//idNumFromZero = idNum - 1
 
-		// TKS
 		xRow = occurrence.parameters.get(1) as Integer
 		yCol = occurrence.parameters.get(2) as Integer
 		coordPair = new CoordPair(xRow,yCol)
 		
-
 		nbNeighbours = 0
 		northNeighbour = null
 		eastNeighbour = null
@@ -209,7 +206,6 @@ agent FrameAgent {
 			emit(new ResponseNeighbourSatisfaction(neighbourSatisfaction), Scopes.identifiers(hostedTile))
 	}
 	
-	// TKS-------------------------------
 	def getXRow : int{
 		return this.xRow
 	}

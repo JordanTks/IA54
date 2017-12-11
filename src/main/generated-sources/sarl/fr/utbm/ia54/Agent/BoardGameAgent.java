@@ -311,11 +311,6 @@ public class BoardGameAgent extends Agent {
     this.ctrl.setColor(occurrence.prop, Integer.valueOf(occurrence.target));
   }
   
-  /**
-   * calculate the euclidean distance between 2 frames
-   * @params a,b : 2 FrameAgent
-   * @return int: square euclidean distance
-   */
   @Pure
   protected int distEuclidian(final FrameAgent a, final FrameAgent b) {
     int _xRow = a.getXRow();
@@ -335,11 +330,6 @@ public class BoardGameAgent extends Agent {
     return (_multiply + _multiply_1);
   }
   
-  /**
-   * determinate if the frame is in the list
-   * @params pair, listOfFrames : CoordPair & ArrayList<InfosFrame>
-   * @return boolean: true if the CoordPair correspond to coords of an FrameAgent in the list
-   */
   @Pure
   protected boolean isInFrameList(final CoordPair pair, final ArrayList<InfosFrame> listOfFrames) {
     for (final InfosFrame fa : listOfFrames) {
@@ -351,275 +341,70 @@ public class BoardGameAgent extends Agent {
     return false;
   }
   
-  /**
-   * add the neighbour's frames of the current frame
-   * @params currentFrame: the current FrameAgent
-   */
-  protected Object addNeighbourFrames(final FrameAgent currentFrame) {
+  protected Object addOneNeighbourFrame(final FrameAgent currentFrame, final UUID neighbour) {
     Object _xblockexpression = null;
     {
-      UUID _northNeighbour = currentFrame.getNorthNeighbour();
-      boolean _notEquals = (!Objects.equal(_northNeighbour, null));
-      if (_notEquals) {
-        int index = this.frameUUIDList.indexOf(currentFrame.getNorthNeighbour());
-        if ((((!this.frameList.get(index).getIsSatisfied()) && (!this.frameList.get(index).getIsBlocked())) && (!Objects.equal(this.frameList.get(index).getID(), this.uuidFRAMEwithTokenTile)))) {
+      int index = this.frameUUIDList.indexOf(neighbour);
+      Object _xifexpression = null;
+      if ((((!this.frameList.get(index).getIsSatisfied()) && (!this.frameList.get(index).getIsBlocked())) && (!Objects.equal(this.frameList.get(index).getID(), this.uuidFRAMEwithTokenTile)))) {
+        Object _xblockexpression_1 = null;
+        {
           CoordPair coordNeighbour = this.listCoordPairsOfFrames.get(index);
+          Object _xifexpression_1 = null;
           boolean _isInFrameList = this.isInFrameList(coordNeighbour, this.closedListOfFrames);
           boolean _not = (!_isInFrameList);
           if (_not) {
-            UUID _northNeighbour_1 = currentFrame.getNorthNeighbour();
-            InfosFrame infosFrame = new InfosFrame(_northNeighbour_1, coordNeighbour);
-            int indexForClosedList = (-1);
-            for (final InfosFrame iterator : this.closedListOfFrames) {
-              {
-                indexForClosedList++;
-                UUID _uuidCurrentFrame = iterator.getUuidCurrentFrame();
-                UUID _iD = currentFrame.getID();
-                boolean _equals = Objects.equal(_uuidCurrentFrame, _iD);
-                if (_equals) {
-                  break;
-                }
-              }
-            }
-            int _costG = this.closedListOfFrames.get(indexForClosedList).getCostG();
-            int _distEuclidian = this.distEuclidian(this.frameList.get(index), currentFrame);
-            int _plus = (_costG + _distEuclidian);
-            infosFrame.setCostG(_plus);
-            infosFrame.setCostH(this.distEuclidian(this.frameList.get(index), this.arrivalFrame));
-            int _costG_1 = infosFrame.getCostG();
-            int _costH = infosFrame.getCostH();
-            int _plus_1 = (_costG_1 + _costH);
-            infosFrame.setCostF(_plus_1);
-            infosFrame.setUuidPreviousFrame(currentFrame.getID());
-            infosFrame.setCoordsPreviousFrame(currentFrame.getCoordPair());
-            int indexForOpenList = (-1);
-            boolean _isEmpty = this.openListOfFrames.isEmpty();
-            boolean _not_1 = (!_isEmpty);
-            if (_not_1) {
-              for (final InfosFrame iterator_1 : this.openListOfFrames) {
-                {
-                  indexForOpenList++;
-                  UUID _uuidCurrentFrame = iterator_1.getUuidCurrentFrame();
-                  UUID _northNeighbour_2 = currentFrame.getNorthNeighbour();
-                  boolean _equals = Objects.equal(_uuidCurrentFrame, _northNeighbour_2);
-                  if (_equals) {
-                    break;
-                  }
-                }
-              }
-            }
-            boolean _isInFrameList_1 = this.isInFrameList(coordNeighbour, this.openListOfFrames);
-            if (_isInFrameList_1) {
-              if (((indexForOpenList > (-1)) && (infosFrame.getCostF() < this.openListOfFrames.get(indexForOpenList).getCostF()))) {
-                this.openListOfFrames.set(indexForOpenList, infosFrame);
-              }
-            } else {
-              this.openListOfFrames.add(infosFrame);
-            }
-          }
-        }
-      }
-      UUID _southNeighbour = currentFrame.getSouthNeighbour();
-      boolean _notEquals_1 = (!Objects.equal(_southNeighbour, null));
-      if (_notEquals_1) {
-        int index_1 = this.frameUUIDList.indexOf(currentFrame.getSouthNeighbour());
-        if ((((!this.frameList.get(index_1).getIsSatisfied()) && (!this.frameList.get(index_1).getIsBlocked())) && (!Objects.equal(this.frameList.get(index_1).getID(), this.uuidFRAMEwithTokenTile)))) {
-          CoordPair coordNeighbour_1 = this.listCoordPairsOfFrames.get(index_1);
-          boolean _isInFrameList_2 = this.isInFrameList(coordNeighbour_1, this.closedListOfFrames);
-          boolean _not_2 = (!_isInFrameList_2);
-          if (_not_2) {
-            UUID _southNeighbour_1 = currentFrame.getSouthNeighbour();
-            InfosFrame infosFrame_1 = new InfosFrame(_southNeighbour_1, coordNeighbour_1);
-            int indexForClosedList_1 = (-1);
-            for (final InfosFrame iterator_2 : this.closedListOfFrames) {
-              {
-                indexForClosedList_1++;
-                UUID _uuidCurrentFrame = iterator_2.getUuidCurrentFrame();
-                UUID _iD = currentFrame.getID();
-                boolean _equals = Objects.equal(_uuidCurrentFrame, _iD);
-                if (_equals) {
-                  break;
-                }
-              }
-            }
-            int _costG_2 = this.closedListOfFrames.get(indexForClosedList_1).getCostG();
-            int _distEuclidian_1 = this.distEuclidian(this.frameList.get(index_1), currentFrame);
-            int _plus_2 = (_costG_2 + _distEuclidian_1);
-            infosFrame_1.setCostG(_plus_2);
-            infosFrame_1.setCostH(this.distEuclidian(this.frameList.get(index_1), this.arrivalFrame));
-            int _costG_3 = infosFrame_1.getCostG();
-            int _costH_1 = infosFrame_1.getCostH();
-            int _plus_3 = (_costG_3 + _costH_1);
-            infosFrame_1.setCostF(_plus_3);
-            infosFrame_1.setUuidPreviousFrame(currentFrame.getID());
-            infosFrame_1.setCoordsPreviousFrame(currentFrame.getCoordPair());
-            int indexForOpenList_1 = (-1);
-            boolean _isEmpty_1 = this.openListOfFrames.isEmpty();
-            boolean _not_3 = (!_isEmpty_1);
-            if (_not_3) {
-              for (final InfosFrame iterator_3 : this.openListOfFrames) {
-                {
-                  indexForOpenList_1++;
-                  UUID _uuidCurrentFrame = iterator_3.getUuidCurrentFrame();
-                  UUID _southNeighbour_2 = currentFrame.getSouthNeighbour();
-                  boolean _equals = Objects.equal(_uuidCurrentFrame, _southNeighbour_2);
-                  if (_equals) {
-                    break;
-                  }
-                }
-              }
-            }
-            if (((indexForOpenList_1 > (-1)) && this.isInFrameList(coordNeighbour_1, this.openListOfFrames))) {
-              int _costF = infosFrame_1.getCostF();
-              int _costF_1 = this.openListOfFrames.get(indexForOpenList_1).getCostF();
-              boolean _lessThan = (_costF < _costF_1);
-              if (_lessThan) {
-                this.openListOfFrames.set(indexForOpenList_1, infosFrame_1);
-              }
-            } else {
-              this.openListOfFrames.add(infosFrame_1);
-            }
-          }
-        }
-      }
-      UUID _eastNeighbour = currentFrame.getEastNeighbour();
-      boolean _notEquals_2 = (!Objects.equal(_eastNeighbour, null));
-      if (_notEquals_2) {
-        int index_2 = this.frameUUIDList.indexOf(currentFrame.getEastNeighbour());
-        if ((((!this.frameList.get(index_2).getIsSatisfied()) && (!this.frameList.get(index_2).getIsBlocked())) && (!Objects.equal(this.frameList.get(index_2).getID(), this.uuidFRAMEwithTokenTile)))) {
-          CoordPair coordNeighbour_2 = this.listCoordPairsOfFrames.get(index_2);
-          boolean _isInFrameList_3 = this.isInFrameList(coordNeighbour_2, this.closedListOfFrames);
-          boolean _not_4 = (!_isInFrameList_3);
-          if (_not_4) {
-            UUID _eastNeighbour_1 = currentFrame.getEastNeighbour();
-            InfosFrame infosFrame_2 = new InfosFrame(_eastNeighbour_1, coordNeighbour_2);
-            int indexForClosedList_2 = (-1);
-            for (final InfosFrame iterator_4 : this.closedListOfFrames) {
-              {
-                indexForClosedList_2++;
-                UUID _uuidCurrentFrame = iterator_4.getUuidCurrentFrame();
-                UUID _iD = currentFrame.getID();
-                boolean _equals = Objects.equal(_uuidCurrentFrame, _iD);
-                if (_equals) {
-                  break;
-                }
-              }
-            }
-            int _costG_4 = this.closedListOfFrames.get(indexForClosedList_2).getCostG();
-            int _distEuclidian_2 = this.distEuclidian(this.frameList.get(index_2), currentFrame);
-            int _plus_4 = (_costG_4 + _distEuclidian_2);
-            infosFrame_2.setCostG(_plus_4);
-            infosFrame_2.setCostH(this.distEuclidian(this.frameList.get(index_2), this.arrivalFrame));
-            int _costG_5 = infosFrame_2.getCostG();
-            int _costH_2 = infosFrame_2.getCostH();
-            int _plus_5 = (_costG_5 + _costH_2);
-            infosFrame_2.setCostF(_plus_5);
-            infosFrame_2.setUuidPreviousFrame(currentFrame.getID());
-            infosFrame_2.setCoordsPreviousFrame(currentFrame.getCoordPair());
-            int indexForOpenList_2 = (-1);
-            boolean _isEmpty_2 = this.openListOfFrames.isEmpty();
-            boolean _not_5 = (!_isEmpty_2);
-            if (_not_5) {
-              for (final InfosFrame iterator_5 : this.openListOfFrames) {
-                {
-                  indexForOpenList_2++;
-                  UUID _uuidCurrentFrame = iterator_5.getUuidCurrentFrame();
-                  UUID _eastNeighbour_2 = currentFrame.getEastNeighbour();
-                  boolean _equals = Objects.equal(_uuidCurrentFrame, _eastNeighbour_2);
-                  if (_equals) {
-                    break;
-                  }
-                }
-              }
-            }
-            if (((indexForOpenList_2 > (-1)) && this.isInFrameList(coordNeighbour_2, this.openListOfFrames))) {
-              int _costF_2 = infosFrame_2.getCostF();
-              int _costF_3 = this.openListOfFrames.get(indexForOpenList_2).getCostF();
-              boolean _lessThan_1 = (_costF_2 < _costF_3);
-              if (_lessThan_1) {
-                this.openListOfFrames.set(indexForOpenList_2, infosFrame_2);
-              }
-            } else {
-              this.openListOfFrames.add(infosFrame_2);
-            }
-          }
-        }
-      }
-      Object _xifexpression = null;
-      UUID _westNeighbour = currentFrame.getWestNeighbour();
-      boolean _notEquals_3 = (!Objects.equal(_westNeighbour, null));
-      if (_notEquals_3) {
-        Object _xblockexpression_1 = null;
-        {
-          int index_3 = this.frameUUIDList.indexOf(currentFrame.getWestNeighbour());
-          Object _xifexpression_1 = null;
-          if ((((!this.frameList.get(index_3).getIsSatisfied()) && (!this.frameList.get(index_3).getIsBlocked())) && (!Objects.equal(this.frameList.get(index_3).getID(), this.uuidFRAMEwithTokenTile)))) {
             Object _xblockexpression_2 = null;
             {
-              CoordPair coordNeighbour_3 = this.listCoordPairsOfFrames.get(index_3);
-              Object _xifexpression_2 = null;
-              boolean _isInFrameList_4 = this.isInFrameList(coordNeighbour_3, this.closedListOfFrames);
-              boolean _not_6 = (!_isInFrameList_4);
-              if (_not_6) {
-                Object _xblockexpression_3 = null;
+              InfosFrame infosFrame = new InfosFrame(neighbour, coordNeighbour);
+              int indexForClosedList = (-1);
+              for (final InfosFrame iterator : this.closedListOfFrames) {
                 {
-                  UUID _westNeighbour_1 = currentFrame.getWestNeighbour();
-                  InfosFrame infosFrame_3 = new InfosFrame(_westNeighbour_1, coordNeighbour_3);
-                  int indexForClosedList_3 = (-1);
-                  for (final InfosFrame iterator_6 : this.closedListOfFrames) {
-                    {
-                      indexForClosedList_3++;
-                      UUID _uuidCurrentFrame = iterator_6.getUuidCurrentFrame();
-                      UUID _iD = currentFrame.getID();
-                      boolean _equals = Objects.equal(_uuidCurrentFrame, _iD);
-                      if (_equals) {
-                        break;
-                      }
-                    }
+                  indexForClosedList++;
+                  UUID _uuidCurrentFrame = iterator.getUuidCurrentFrame();
+                  UUID _iD = currentFrame.getID();
+                  boolean _equals = Objects.equal(_uuidCurrentFrame, _iD);
+                  if (_equals) {
+                    break;
                   }
-                  int _costG_6 = this.closedListOfFrames.get(indexForClosedList_3).getCostG();
-                  int _distEuclidian_3 = this.distEuclidian(this.frameList.get(index_3), currentFrame);
-                  int _plus_6 = (_costG_6 + _distEuclidian_3);
-                  infosFrame_3.setCostG(_plus_6);
-                  infosFrame_3.setCostH(this.distEuclidian(this.frameList.get(index_3), this.arrivalFrame));
-                  int _costG_7 = infosFrame_3.getCostG();
-                  int _costH_3 = infosFrame_3.getCostH();
-                  int _plus_7 = (_costG_7 + _costH_3);
-                  infosFrame_3.setCostF(_plus_7);
-                  infosFrame_3.setUuidPreviousFrame(currentFrame.getID());
-                  infosFrame_3.setCoordsPreviousFrame(currentFrame.getCoordPair());
-                  int indexForOpenList_3 = (-1);
-                  boolean _isEmpty_3 = this.openListOfFrames.isEmpty();
-                  boolean _not_7 = (!_isEmpty_3);
-                  if (_not_7) {
-                    for (final InfosFrame iterator_7 : this.openListOfFrames) {
-                      {
-                        indexForOpenList_3++;
-                        UUID _uuidCurrentFrame = iterator_7.getUuidCurrentFrame();
-                        UUID _westNeighbour_2 = currentFrame.getWestNeighbour();
-                        boolean _equals = Objects.equal(_uuidCurrentFrame, _westNeighbour_2);
-                        if (_equals) {
-                          break;
-                        }
-                      }
-                    }
-                  }
-                  Object _xifexpression_3 = null;
-                  if (((indexForOpenList_3 > (-1)) && this.isInFrameList(coordNeighbour_3, this.openListOfFrames))) {
-                    InfosFrame _xifexpression_4 = null;
-                    int _costF_4 = infosFrame_3.getCostF();
-                    int _costF_5 = this.openListOfFrames.get(indexForOpenList_3).getCostF();
-                    boolean _lessThan_2 = (_costF_4 < _costF_5);
-                    if (_lessThan_2) {
-                      _xifexpression_4 = this.openListOfFrames.set(indexForOpenList_3, infosFrame_3);
-                    }
-                    _xifexpression_3 = _xifexpression_4;
-                  } else {
-                    _xifexpression_3 = Boolean.valueOf(this.openListOfFrames.add(infosFrame_3));
-                  }
-                  _xblockexpression_3 = _xifexpression_3;
                 }
-                _xifexpression_2 = _xblockexpression_3;
+              }
+              int _costG = this.closedListOfFrames.get(indexForClosedList).getCostG();
+              int _distEuclidian = this.distEuclidian(this.frameList.get(index), currentFrame);
+              int _plus = (_costG + _distEuclidian);
+              infosFrame.setCostG(_plus);
+              infosFrame.setCostH(this.distEuclidian(this.frameList.get(index), this.arrivalFrame));
+              int _costG_1 = infosFrame.getCostG();
+              int _costH = infosFrame.getCostH();
+              int _plus_1 = (_costG_1 + _costH);
+              infosFrame.setCostF(_plus_1);
+              infosFrame.setUuidPreviousFrame(currentFrame.getID());
+              infosFrame.setCoordsPreviousFrame(currentFrame.getCoordPair());
+              int indexForOpenList = (-1);
+              boolean _isEmpty = this.openListOfFrames.isEmpty();
+              boolean _not_1 = (!_isEmpty);
+              if (_not_1) {
+                for (final InfosFrame iterator_1 : this.openListOfFrames) {
+                  {
+                    indexForOpenList++;
+                    UUID _uuidCurrentFrame = iterator_1.getUuidCurrentFrame();
+                    boolean _equals = Objects.equal(_uuidCurrentFrame, neighbour);
+                    if (_equals) {
+                      break;
+                    }
+                  }
+                }
+              }
+              Object _xifexpression_2 = null;
+              boolean _isInFrameList_1 = this.isInFrameList(coordNeighbour, this.openListOfFrames);
+              if (_isInFrameList_1) {
+                InfosFrame _xifexpression_3 = null;
+                if (((indexForOpenList > (-1)) && (infosFrame.getCostF() < this.openListOfFrames.get(indexForOpenList).getCostF()))) {
+                  _xifexpression_3 = this.openListOfFrames.set(indexForOpenList, infosFrame);
+                }
+                _xifexpression_2 = _xifexpression_3;
+              } else {
+                _xifexpression_2 = Boolean.valueOf(this.openListOfFrames.add(infosFrame));
               }
               _xblockexpression_2 = _xifexpression_2;
             }
@@ -634,11 +419,59 @@ public class BoardGameAgent extends Agent {
     return _xblockexpression;
   }
   
-  /**
-   * get the frame with best cost from the frameList
-   * @param listFrames: list of InfosFrame
-   * @return InfosFrame: the infosFrame with the best (lower) cost OR null if the list is empty
-   */
+  protected Object addNeighbourFrames(final FrameAgent currentFrame) {
+    Object _xblockexpression = null;
+    {
+      UUID _northNeighbour = currentFrame.getNorthNeighbour();
+      boolean _notEquals = (!Objects.equal(_northNeighbour, null));
+      if (_notEquals) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        int _idNum = currentFrame.getIdNum();
+        String _plus = ("frame" + Integer.valueOf(_idNum));
+        String _plus_1 = (_plus + ": NORTH neighbour");
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus_1);
+        this.addOneNeighbourFrame(currentFrame, currentFrame.getNorthNeighbour());
+      }
+      UUID _southNeighbour = currentFrame.getSouthNeighbour();
+      boolean _notEquals_1 = (!Objects.equal(_southNeighbour, null));
+      if (_notEquals_1) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        int _idNum_1 = currentFrame.getIdNum();
+        String _plus_2 = ("frame" + Integer.valueOf(_idNum_1));
+        String _plus_3 = (_plus_2 + ": SOUTH neighbour");
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(_plus_3);
+        this.addOneNeighbourFrame(currentFrame, currentFrame.getSouthNeighbour());
+      }
+      UUID _eastNeighbour = currentFrame.getEastNeighbour();
+      boolean _notEquals_2 = (!Objects.equal(_eastNeighbour, null));
+      if (_notEquals_2) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        int _idNum_2 = currentFrame.getIdNum();
+        String _plus_4 = ("frame" + Integer.valueOf(_idNum_2));
+        String _plus_5 = (_plus_4 + ": EAST neighbour");
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(_plus_5);
+        this.addOneNeighbourFrame(currentFrame, currentFrame.getEastNeighbour());
+      }
+      Object _xifexpression = null;
+      UUID _westNeighbour = currentFrame.getWestNeighbour();
+      boolean _notEquals_3 = (!Objects.equal(_westNeighbour, null));
+      if (_notEquals_3) {
+        Object _xblockexpression_1 = null;
+        {
+          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+          int _idNum_3 = currentFrame.getIdNum();
+          String _plus_6 = ("frame" + Integer.valueOf(_idNum_3));
+          String _plus_7 = (_plus_6 + ": WEST neighbour");
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus_7);
+          _xblockexpression_1 = this.addOneNeighbourFrame(currentFrame, currentFrame.getWestNeighbour());
+        }
+        _xifexpression = _xblockexpression_1;
+      }
+      _xblockexpression = _xifexpression;
+    }
+    return _xblockexpression;
+  }
+  
   @Pure
   protected InfosFrame getBestFrame(final ArrayList<InfosFrame> listFrames) {
     boolean _isEmpty = listFrames.isEmpty();
@@ -659,10 +492,6 @@ public class BoardGameAgent extends Agent {
     return null;
   }
   
-  /**
-   * add the InfosFrame in the closedList and remove it from the openList
-   * @param coords: CoordPair of the frame to manipulate
-   */
   protected InfosFrame addInClosedList(final CoordPair coords) {
     InfosFrame _xblockexpression = null;
     {
@@ -682,10 +511,6 @@ public class BoardGameAgent extends Agent {
     return _xblockexpression;
   }
   
-  /**
-   * get the chain of aggression in a list of InfosFrame
-   * return ArrayList<InfosFrame>: the list of InfosFrame for the aggression in the right order
-   */
   protected ArrayList<InfosFrame> buildChainAggression(final InfosFrame beginningFrame) {
     ArrayList<InfosFrame> chain = new ArrayList<InfosFrame>();
     int _size = this.closedListOfFrames.size();
@@ -732,16 +557,9 @@ public class BoardGameAgent extends Agent {
     return chain;
   }
   
-  /**
-   * execute the A-star algorithm
-   */
   protected void findPath() {
     try {
       InfosFrame currentFrame = this.beginningInfosFrame;
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      String _string = this.beginningInfosFrame.toString();
-      String _plus = ("/// beginningInfosFrame=" + _string);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
       this.openListOfFrames.add(this.beginningInfosFrame);
       this.addInClosedList(this.beginningInfosFrame.getCoordsCurrentFrame());
       int indexOfFrameList = (-1);
@@ -774,8 +592,8 @@ public class BoardGameAgent extends Agent {
       }
       boolean _equals = currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame());
       if (_equals) {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("## A-star : destination IS reached! ##");
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("## A-star : destination IS reached! ##");
         ArrayList<InfosFrame> tmpChainAggression = this.buildChainAggression(this.beginningInfosFrame);
         ArrayList<InfosFrame> chainAggression = new ArrayList<InfosFrame>();
         int _size = tmpChainAggression.size();
@@ -793,15 +611,15 @@ public class BoardGameAgent extends Agent {
           }
         }
         ArrayList<Integer> listSwap = new ArrayList<Integer>();
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info("---- Chain of aggression below ----");
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("---- Chain of aggression below ----");
         for (int i = 0; (i < chainAggression.size()); i++) {
           boolean _equals_1 = chainAggression.get(i).getCoordsCurrentFrame().equals(this.beginningFrame.getCoordPair());
           if (_equals_1) {
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            String _string_1 = chainAggression.get(i).getCoordsCurrentFrame().toString();
-            String _plus_1 = ("BeginningFrame= " + _string_1);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus_1);
+            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+            String _string = chainAggression.get(i).getCoordsCurrentFrame().toString();
+            String _plus = ("BeginningFrame= " + _string);
+            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(_plus);
             for (int j = 0; (j < this.frameList.size()); j++) {
               UUID _iD = this.frameList.get(j).getID();
               UUID _uuidCurrentFrame = chainAggression.get(i).getUuidCurrentFrame();
@@ -817,10 +635,10 @@ public class BoardGameAgent extends Agent {
             boolean _equals_2 = chainAggression.get(i).getCoordsCurrentFrame().equals(this.arrivalFrame.getCoordPair());
             boolean _not = (!_equals_2);
             if (_not) {
-              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-              String _string_2 = chainAggression.get(i).getCoordsCurrentFrame().toString();
-              String _plus_2 = ((("Frame" + Integer.valueOf((i + 1))) + "= ") + _string_2);
-              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4.info(_plus_2);
+              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+              String _string_1 = chainAggression.get(i).getCoordsCurrentFrame().toString();
+              String _plus_1 = ((("Frame" + Integer.valueOf((i + 1))) + "= ") + _string_1);
+              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus_1);
               for (int j = 0; (j < this.frameList.size()); j++) {
                 UUID _iD = this.frameList.get(j).getID();
                 UUID _uuidCurrentFrame = chainAggression.get(i).getUuidCurrentFrame();
@@ -833,22 +651,28 @@ public class BoardGameAgent extends Agent {
                 }
               }
             } else {
-              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-              String _string_3 = chainAggression.get(i).getCoordsCurrentFrame().toString();
-              String _plus_3 = ("ArrivalFrame= " + _string_3);
-              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5.info(_plus_3);
+              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+              String _string_2 = chainAggression.get(i).getCoordsCurrentFrame().toString();
+              String _plus_2 = ("ArrivalFrame= " + _string_2);
+              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4.info(_plus_2);
             }
           }
         }
         this.swapTilesInChainAggression(chainAggression);
         this.swapTokenAndBlank();
+        this.resetAllObjects();
       } else {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info("## A-star : destination IS NOT reached! ##");
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info("## A-star : destination IS NOT reached! ##");
       }
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  protected void resetAllObjects() {
+    this.openListOfFrames.clear();
+    this.closedListOfFrames.clear();
   }
   
   @SyntheticMember
@@ -1004,8 +828,6 @@ public class BoardGameAgent extends Agent {
     }
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7.info("------------------------------------------------------------------");
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_8 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_8.info(" ");
     this.changeSatisfaction();
   }
   
