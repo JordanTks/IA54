@@ -9,12 +9,13 @@ import fr.utbm.ia54.Event.ConfigureSimulation
 import fr.utbm.ia54.Event.CreateMap
 import fr.utbm.ia54.gui.TaquinFxViewerController
 import io.sarl.core.Behaviors
+import io.sarl.core.DefaultContextInteractions
+import fr.utbm.ia54.Event.EndAgent
 
 agent BootAgent {
-	uses Logging, Behaviors, InnerContextAccess, Lifecycle
+	uses Logging, Behaviors, InnerContextAccess, Lifecycle, DefaultContextInteractions
 	
 	var probSize : int
-	var exited : boolean = false
 
 	var ctrl : TaquinFxViewerController
 
@@ -35,13 +36,9 @@ agent BootAgent {
 		spawn(BoardGameAgent, #[this.probSize, ctrl])
 	}
 
-	on EndSimulation [!hasMemberAgent] {
-		info("The simulation has ended.")
+	on EndSimulation [!hasMemberAgent] { 
+		emit(new EndAgent)
 		killMe
 	}
 	
-	on EndSimulation [hasMemberAgent && !exited] {
-		exited = true
-		innerContext.defaultSpace.emit(ID, new EndSimulation)
-	}
 }

@@ -3,19 +3,14 @@
  */
 package fr.utbm.ia54.Agent
 
-import io.sarl.core.AgentKilled
-import io.sarl.core.AgentSpawned
-import io.sarl.core.ContextJoined
-import io.sarl.core.ContextLeft
-import io.sarl.core.Destroy
 import io.sarl.core.Initialize
 import io.sarl.core.Logging
-import io.sarl.core.MemberJoined
-import io.sarl.core.MemberLeft
 import fr.utbm.ia54.Event.TokenReceived
 import fr.utbm.ia54.Event.TileSet
+import fr.utbm.ia54.Event.EndAgent
 import io.sarl.core.DefaultContextInteractions
 import java.util.UUID
+import io.sarl.core.Lifecycle
 
 /** 
  * @author Norgannon
@@ -23,7 +18,7 @@ import java.util.UUID
  */
 agent EmptyTileAgent {
 	
-	uses Logging, DefaultContextInteractions
+	uses Logging, DefaultContextInteractions, Lifecycle
 
 	var isHappy = false
 	var numTile = 0
@@ -72,42 +67,7 @@ agent EmptyTileAgent {
 		// rend le token 
 	}
 
-
-
-
-
-
-	on Destroy {
-		// Event trigger when the agent is destroyed from the system.
-		// You should put all the resource releasing statements in this block of code.
-		info("The agent was stopped.")
-	}
-	
-	on AgentSpawned {
-		// A new agent has been spawned in our context.
-	}
-
-	on AgentKilled {
-		// A new agent has been killed in our context.
-	}
-
-	on ContextJoined {
-		// Event trigger when an agent of the level joins a shared context.
-		// Sent to a agent of the same level.
-	}
-
-	on ContextLeft {
-		// Event trigger when an agent of the level jleaves a shared context.
-		// Sent to a agent of the same level.
-	}
-
-	on MemberJoined {
-		// Event trigger when an agent joins one of our shared super-holons.
-		// Sent to all members of the considered super-holon.
-	}
-
-	on MemberLeft {
-		// Event trigger when an agent leaves one of our shared super-holons.
-		// Sent to all members of the considered super-holon.
+	on EndAgent {
+		killMe
 	}
 }

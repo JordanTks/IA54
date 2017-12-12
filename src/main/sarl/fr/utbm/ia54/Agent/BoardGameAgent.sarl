@@ -1,25 +1,16 @@
 package fr.utbm.ia54.Agent
 
-import io.sarl.core.AgentKilled
-import io.sarl.core.AgentSpawned
-import io.sarl.core.ContextJoined
-import io.sarl.core.ContextLeft
-import io.sarl.core.Destroy
 import io.sarl.core.Initialize
 import io.sarl.core.Logging
-import io.sarl.core.MemberJoined
-import io.sarl.core.MemberLeft
 import io.sarl.core.Lifecycle
-import fr.utbm.ia54.Event.GameSet
-import fr.utbm.ia54.Event.FrameSatisfied
 import io.sarl.core.DefaultContextInteractions
 import java.util.ArrayList
 import java.util.List
 import java.util.Collections
 import fr.utbm.ia54.Event.FrameSet
-import fr.utbm.ia54.Event.GameCompleted
 import fr.utbm.ia54.Event.TileSet
 import fr.utbm.ia54.Event.TokenReceived
+import fr.utbm.ia54.Event.EndAgent
 import io.sarl.util.Scopes
 import fr.utbm.ia54.Event.TokenReleased
 import io.sarl.core.Behaviors
@@ -28,7 +19,6 @@ import fr.utbm.taquin.events.ActionUI
 import java.util.UUID
 import fr.utbm.ia54.Class.CoordPair
 import fr.utbm.ia54.Class.InfosFrame
-import java.util.LinkedHashSet
 import io.sarl.core.Schedules
 import fr.utbm.ia54.Event.FindPathWithAstarAlgo
 
@@ -40,7 +30,7 @@ enum Position {
 	;
 }
  
-agent BoardGameAgent {
+agent BoardGameAgent { 
 	uses Logging, Lifecycle, DefaultContextInteractions, Behaviors, Schedules
 	
 	var PROBLEM_SIZE = 3
@@ -868,37 +858,8 @@ agent BoardGameAgent {
 		changeSatisfaction
 	}
 
-	on Destroy {
-		// Event trigger when the agent is destroyed from the system.
-		// You should put all the resource releasing statements in this block of code.
-		info("The agent was stopped.")
-	}
- 
-	on AgentSpawned {
-		// A new agent has been spawned in our context.
-	}
-
-	on AgentKilled {
-		// A new agent has been killed in our context.
-	}
-
-	on ContextJoined {
-		// Event trigger when an agent of the level joins a shared context.
-		// Sent to a agent of the same level.
-	}
-
-	on ContextLeft {
-		// Event trigger when an agent of the level jleaves a shared context.
-		// Sent to a agent of the same level.
-	}
-
-	on MemberJoined {
-		// Event trigger when an agent joins one of our shared super-holons.
-		// Sent to all members of the considered super-holon.
-	}
-
-	on MemberLeft {
-		// Event trigger when an agent leaves one of our shared super-holons.
-		// Sent to all members of the considered super-holon.
+	on EndAgent {
+		info("Je me sucide")
+		killMe
 	}
 }

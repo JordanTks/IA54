@@ -4,25 +4,19 @@ import fr.utbm.ia54.Agent.Position;
 import fr.utbm.ia54.Class.CoordPair;
 import fr.utbm.ia54.Event.AskNeighbourSatisfaction;
 import fr.utbm.ia54.Event.Assault;
+import fr.utbm.ia54.Event.EndAgent;
 import fr.utbm.ia54.Event.FindPathWithAstarAlgo;
 import fr.utbm.ia54.Event.FrameSet;
 import fr.utbm.ia54.Event.PathCalculation;
 import fr.utbm.ia54.Event.PathFound;
 import fr.utbm.ia54.Event.ResponseNeighbourSatisfaction;
 import fr.utbm.ia54.Event.SafetyWait;
-import io.sarl.core.AgentKilled;
-import io.sarl.core.AgentSpawned;
 import io.sarl.core.Behaviors;
-import io.sarl.core.ContextJoined;
-import io.sarl.core.ContextLeft;
 import io.sarl.core.DefaultContextInteractions;
-import io.sarl.core.Destroy;
 import io.sarl.core.Initialize;
 import io.sarl.core.InnerContextAccess;
 import io.sarl.core.Lifecycle;
 import io.sarl.core.Logging;
-import io.sarl.core.MemberJoined;
-import io.sarl.core.MemberLeft;
 import io.sarl.core.Schedules;
 import io.sarl.lang.annotation.ImportedCapacityFeature;
 import io.sarl.lang.annotation.PerceptGuardEvaluator;
@@ -464,33 +458,9 @@ public class FrameAgent extends Agent {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$Destroy$8(final Destroy occurrence) {
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was stopped.");
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$AgentSpawned$9(final AgentSpawned occurrence) {
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$AgentKilled$10(final AgentKilled occurrence) {
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$ContextJoined$11(final ContextJoined occurrence) {
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$ContextLeft$12(final ContextLeft occurrence) {
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$MemberJoined$13(final MemberJoined occurrence) {
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$MemberLeft$14(final MemberLeft occurrence) {
+  private void $behaviorUnit$EndAgent$8(final EndAgent occurrence) {
+    Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+    _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.killMe();
   }
   
   @Extension
@@ -585,10 +555,10 @@ public class FrameAgent extends Agent {
   
   @SyntheticMember
   @PerceptGuardEvaluator
-  private void $guardEvaluator$MemberLeft(final MemberLeft occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+  private void $guardEvaluator$Initialize(final Initialize occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberLeft$14(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Initialize$0(occurrence));
   }
   
   @SyntheticMember
@@ -601,18 +571,18 @@ public class FrameAgent extends Agent {
   
   @SyntheticMember
   @PerceptGuardEvaluator
-  private void $guardEvaluator$AgentSpawned(final AgentSpawned occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentSpawned$9(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
   private void $guardEvaluator$ResponseNeighbourSatisfaction(final ResponseNeighbourSatisfaction occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
     ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ResponseNeighbourSatisfaction$5(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$PathCalculation(final PathCalculation occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$PathCalculation$2(occurrence));
   }
   
   @SyntheticMember
@@ -630,54 +600,6 @@ public class FrameAgent extends Agent {
   
   @SyntheticMember
   @PerceptGuardEvaluator
-  private void $guardEvaluator$AgentKilled(final AgentKilled occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentKilled$10(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$MemberJoined(final MemberJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberJoined$13(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$Initialize(final Initialize occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Initialize$0(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$ContextLeft(final ContextLeft occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextLeft$12(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$ContextJoined(final ContextJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextJoined$11(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$PathCalculation(final PathCalculation occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$PathCalculation$2(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
   private void $guardEvaluator$AskNeighbourSatisfaction(final AskNeighbourSatisfaction occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
@@ -691,10 +613,10 @@ public class FrameAgent extends Agent {
   
   @SyntheticMember
   @PerceptGuardEvaluator
-  private void $guardEvaluator$Destroy(final Destroy occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+  private void $guardEvaluator$EndAgent(final EndAgent occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$8(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$EndAgent$8(occurrence));
   }
   
   @Override

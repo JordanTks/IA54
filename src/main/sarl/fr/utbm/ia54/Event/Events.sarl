@@ -17,19 +17,6 @@ event IsStarted
 
 event MakeTheFiestaBegin
 
-
-event StartingSimulation {
-	val nombreDePopulations : int
-	val nombreDeBoidsParPopulation : int
-	val visionBoids : int
-
-	new(nombreDePopulations : int, nombreDeBoidsParPopulation : int, visionBoids : int) {
-		this.nombreDePopulations = nombreDePopulations
-		this.nombreDeBoidsParPopulation = nombreDeBoidsParPopulation
-		this.visionBoids = visionBoids
-	}
-}
-
 event EndSimulation
 
 

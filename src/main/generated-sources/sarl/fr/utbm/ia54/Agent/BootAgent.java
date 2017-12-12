@@ -2,9 +2,11 @@ package fr.utbm.ia54.Agent;
 
 import fr.utbm.ia54.Agent.BoardGameAgent;
 import fr.utbm.ia54.Event.ConfigureSimulation;
+import fr.utbm.ia54.Event.EndAgent;
 import fr.utbm.ia54.gui.TaquinFxViewerController;
 import fr.utbm.ia54.gui.fx.EndSimulation;
 import io.sarl.core.Behaviors;
+import io.sarl.core.DefaultContextInteractions;
 import io.sarl.core.Initialize;
 import io.sarl.core.InnerContextAccess;
 import io.sarl.core.Lifecycle;
@@ -31,8 +33,6 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SuppressWarnings("all")
 public class BootAgent extends Agent {
   private int probSize;
-  
-  private boolean exited = false;
   
   private TaquinFxViewerController ctrl;
   
@@ -61,8 +61,9 @@ public class BootAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$EndSimulation$2(final EndSimulation occurrence) {
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The simulation has ended.");
+    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+    EndAgent _endAgent = new EndAgent();
+    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_endAgent);
     Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
     _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.killMe();
   }
@@ -74,20 +75,6 @@ public class BootAgent extends Agent {
     boolean _hasMemberAgent = _$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS$CALLER.hasMemberAgent();
     boolean _not = (!_hasMemberAgent);
     return _not;
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$EndSimulation$3(final EndSimulation occurrence) {
-    this.exited = true;
-    InnerContextAccess _$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS$CALLER = this.$castSkill(InnerContextAccess.class, (this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS == null || this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS = this.$getSkill(InnerContextAccess.class)) : this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS);
-    EndSimulation _endSimulation = new EndSimulation();
-    _$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS$CALLER.getInnerContext().getDefaultSpace().emit(this.getID(), _endSimulation, null);
-  }
-  
-  @SyntheticMember
-  @Pure
-  private boolean $behaviorUnitGuard$EndSimulation$3(final EndSimulation it, final EndSimulation occurrence) {
-    return (this.$castSkill(InnerContextAccess.class, (this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS == null || this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS = this.$getSkill(InnerContextAccess.class)) : this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS).hasMemberAgent() && (!this.exited));
   }
   
   @Extension
@@ -150,6 +137,21 @@ public class BootAgent extends Agent {
     return $castSkill(Lifecycle.class, this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
   }
   
+  @Extension
+  @ImportedCapacityFeature(DefaultContextInteractions.class)
+  @SyntheticMember
+  private transient ClearableReference<Skill> $CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS;
+  
+  @SyntheticMember
+  @Pure
+  @Inline(value = "$castSkill(DefaultContextInteractions.class, ($0$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || $0$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? ($0$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = $0$getSkill(DefaultContextInteractions.class)) : $0$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS)", imported = DefaultContextInteractions.class)
+  private DefaultContextInteractions $CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER() {
+    if (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) {
+      this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = $getSkill(DefaultContextInteractions.class);
+    }
+    return $castSkill(DefaultContextInteractions.class, this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+  }
+  
   @SyntheticMember
   @PerceptGuardEvaluator
   private void $guardEvaluator$Initialize(final Initialize occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
@@ -174,9 +176,6 @@ public class BootAgent extends Agent {
     if ($behaviorUnitGuard$EndSimulation$2(occurrence, occurrence)) {
       ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$EndSimulation$2(occurrence));
     }
-    if ($behaviorUnitGuard$EndSimulation$3(occurrence, occurrence)) {
-      ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$EndSimulation$3(occurrence));
-    }
   }
   
   @Override
@@ -192,8 +191,6 @@ public class BootAgent extends Agent {
     BootAgent other = (BootAgent) obj;
     if (other.probSize != this.probSize)
       return false;
-    if (other.exited != this.exited)
-      return false;
     return super.equals(obj);
   }
   
@@ -204,7 +201,6 @@ public class BootAgent extends Agent {
     int result = super.hashCode();
     final int prime = 31;
     result = prime * result + this.probSize;
-    result = prime * result + (this.exited ? 1231 : 1237);
     return result;
   }
   

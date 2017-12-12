@@ -6,6 +6,7 @@ import fr.utbm.ia54.Agent.FrameAgent;
 import fr.utbm.ia54.Agent.TileAgent;
 import fr.utbm.ia54.Class.CoordPair;
 import fr.utbm.ia54.Class.InfosFrame;
+import fr.utbm.ia54.Event.EndAgent;
 import fr.utbm.ia54.Event.FindPathWithAstarAlgo;
 import fr.utbm.ia54.Event.FrameSet;
 import fr.utbm.ia54.Event.TileSet;
@@ -13,18 +14,11 @@ import fr.utbm.ia54.Event.TokenReceived;
 import fr.utbm.ia54.Event.TokenReleased;
 import fr.utbm.ia54.gui.TaquinFxViewerController;
 import fr.utbm.taquin.events.ActionUI;
-import io.sarl.core.AgentKilled;
-import io.sarl.core.AgentSpawned;
 import io.sarl.core.Behaviors;
-import io.sarl.core.ContextJoined;
-import io.sarl.core.ContextLeft;
 import io.sarl.core.DefaultContextInteractions;
-import io.sarl.core.Destroy;
 import io.sarl.core.Initialize;
 import io.sarl.core.Lifecycle;
 import io.sarl.core.Logging;
-import io.sarl.core.MemberJoined;
-import io.sarl.core.MemberLeft;
 import io.sarl.core.Schedules;
 import io.sarl.lang.annotation.ImportedCapacityFeature;
 import io.sarl.lang.annotation.PerceptGuardEvaluator;
@@ -984,33 +978,11 @@ public class BoardGameAgent extends Agent {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$Destroy$6(final Destroy occurrence) {
+  private void $behaviorUnit$EndAgent$6(final EndAgent occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was stopped.");
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$AgentSpawned$7(final AgentSpawned occurrence) {
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$AgentKilled$8(final AgentKilled occurrence) {
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$ContextJoined$9(final ContextJoined occurrence) {
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$ContextLeft$10(final ContextLeft occurrence) {
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$MemberJoined$11(final MemberJoined occurrence) {
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$MemberLeft$12(final MemberLeft occurrence) {
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Je me sucide");
+    Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+    _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.killMe();
   }
   
   @Extension
@@ -1090,26 +1062,18 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   @PerceptGuardEvaluator
+  private void $guardEvaluator$Initialize(final Initialize occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Initialize$0(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
   private void $guardEvaluator$ActionUI(final ActionUI occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
     ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ActionUI$4(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$MemberLeft(final MemberLeft occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberLeft$12(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$AgentSpawned(final AgentSpawned occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentSpawned$7(occurrence));
   }
   
   @SyntheticMember
@@ -1122,42 +1086,10 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   @PerceptGuardEvaluator
-  private void $guardEvaluator$AgentKilled(final AgentKilled occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+  private void $guardEvaluator$EndAgent(final EndAgent occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AgentKilled$8(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$MemberJoined(final MemberJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MemberJoined$11(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$Initialize(final Initialize occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Initialize$0(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$ContextLeft(final ContextLeft occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextLeft$10(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$ContextJoined(final ContextJoined occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ContextJoined$9(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$EndAgent$6(occurrence));
   }
   
   @SyntheticMember
@@ -1166,14 +1098,6 @@ public class BoardGameAgent extends Agent {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
     ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$FindPathWithAstarAlgo$5(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$Destroy(final Destroy occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$6(occurrence));
   }
   
   @SyntheticMember
