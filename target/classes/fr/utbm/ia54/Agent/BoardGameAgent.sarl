@@ -103,7 +103,7 @@ agent BoardGameAgent {
 			// Detects error that randomly happens
 			for (f : frameList) {
 				if (f === null) {
-					info("ERROR 1 : ONE OF THE FRAME RETURNED NULL POINTER")
+					error("ERROR 1 : ONE OF THE FRAME RETURNED NULL POINTER")
 					return
 				}
 
@@ -185,7 +185,7 @@ agent BoardGameAgent {
 			{
 				if (t === null)
 				{
-					info("ERROR 2 : ONE OF THE TILE RETURNED NULL POINTER")
+					error("ERROR 2 : ONE OF THE TILE RETURNED NULL POINTER")
 					return
 				}
 

@@ -132,7 +132,7 @@ public class BoardGameAgent extends Agent {
       for (final FrameAgent f : this.frameList) {
         if ((f == null)) {
           Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("ERROR 1 : ONE OF THE FRAME RETURNED NULL POINTER");
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.error("ERROR 1 : ONE OF THE FRAME RETURNED NULL POINTER");
           return;
         }
       }
@@ -215,7 +215,7 @@ public class BoardGameAgent extends Agent {
       for (final TileAgent t : this.tileList) {
         if ((t == null)) {
           Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("ERROR 2 : ONE OF THE TILE RETURNED NULL POINTER");
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.error("ERROR 2 : ONE OF THE TILE RETURNED NULL POINTER");
           return;
         }
       }
