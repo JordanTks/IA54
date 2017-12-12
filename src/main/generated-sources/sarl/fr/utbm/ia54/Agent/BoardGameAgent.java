@@ -572,32 +572,24 @@ public class BoardGameAgent extends Agent {
     InfosFrame currentFrame = this.beginningInfosFrame;
     this.openListOfFrames.add(this.beginningInfosFrame);
     this.addInClosedList(this.beginningInfosFrame.getCoordsCurrentFrame());
-    int indexOfFrameList = (-1);
-    for (final FrameAgent ite : this.frameList) {
-      {
-        indexOfFrameList++;
-        boolean _equals = ite.getCoordPair().equals(this.beginningInfosFrame.getCoordsCurrentFrame());
-        if (_equals) {
-          break;
-        }
+    for (int indexOfFrameList = 0; (indexOfFrameList < this.frameList.size()); indexOfFrameList++) {
+      boolean _equals = this.frameList.get(indexOfFrameList).getCoordPair().equals(this.beginningInfosFrame.getCoordsCurrentFrame());
+      if (_equals) {
+        this.addNeighbourFrames(this.frameList.get(indexOfFrameList));
+        break;
       }
     }
-    this.addNeighbourFrames(this.frameList.get(indexOfFrameList));
     while (((!currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame())) && (!this.openListOfFrames.isEmpty()))) {
       {
         currentFrame = this.getBestFrame(this.openListOfFrames);
         this.addInClosedList(currentFrame.getCoordsCurrentFrame());
-        int indexOfFrameList2 = (-1);
-        for (final FrameAgent ite_1 : this.frameList) {
-          {
-            indexOfFrameList2++;
-            boolean _equals = ite_1.getCoordPair().equals(currentFrame.getCoordsCurrentFrame());
-            if (_equals) {
-              break;
-            }
+        for (int indexOfFrameList2 = 0; (indexOfFrameList2 < this.frameList.size()); indexOfFrameList2++) {
+          boolean _equals = this.frameList.get(indexOfFrameList2).getCoordPair().equals(currentFrame.getCoordsCurrentFrame());
+          if (_equals) {
+            this.addNeighbourFrames(this.frameList.get(indexOfFrameList2));
+            break;
           }
         }
-        this.addNeighbourFrames(this.frameList.get(indexOfFrameList2));
       }
     }
     boolean _equals = currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame());

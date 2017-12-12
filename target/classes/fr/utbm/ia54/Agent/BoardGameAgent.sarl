@@ -473,29 +473,26 @@ agent BoardGameAgent {
 		openListOfFrames.add(beginningInfosFrame)
 		addInClosedList(beginningInfosFrame.coordsCurrentFrame)
 		
-		// get the frame with the index of FrameList
-		var indexOfFrameList = -1
-		for(ite : frameList){
-			indexOfFrameList++
-			if (ite.coordPair.equals(beginningInfosFrame.coordsCurrentFrame))
+		// add the neighbours (of the first frame) in the openList
+		for (var indexOfFrameList = 0; indexOfFrameList < frameList.size; indexOfFrameList++){
+			if (frameList.get(indexOfFrameList).coordPair.equals(beginningInfosFrame.coordsCurrentFrame)){
+				addNeighbourFrames(frameList.get(indexOfFrameList))
 				break
+			}
 		}
-		
-		// add the neighbours in the openList
-		addNeighbourFrames(frameList.get(indexOfFrameList))
-		
+				
 		// until the destination has been reached && openList is empty
 		while(!currentFrame.coordsCurrentFrame.equals(arrivalInfosFrame.coordsCurrentFrame) && !openListOfFrames.empty){
 			currentFrame = getBestFrame(openListOfFrames)
 			addInClosedList(currentFrame.coordsCurrentFrame)
-			
-			var indexOfFrameList2 = -1
-			for(ite : frameList){
-				indexOfFrameList2++
-				if (ite.coordPair.equals(currentFrame.coordsCurrentFrame))
+
+			// add the neighbours (of the other frames) in the openList
+			for (var indexOfFrameList2 = 0; indexOfFrameList2 < frameList.size; indexOfFrameList2++){
+				if (frameList.get(indexOfFrameList2).coordPair.equals(currentFrame.coordsCurrentFrame)) {
+					addNeighbourFrames(frameList.get(indexOfFrameList2))
 					break
+				}
 			}	
-			addNeighbourFrames(frameList.get(indexOfFrameList2))
 		}
 		
 		// if destination is reached : build the path in the opposite direction of the chain of aggression
@@ -754,10 +751,8 @@ agent BoardGameAgent {
 		var tmpTILEnumFrameHost : int
 		var tmp1 : UUID 	// tile.uuidFrameHost
 		var tmp2 : int		// tile.numFrameHost
-		//var tmp3 : int		// tile.numFrameHostFromZero
 		var tmp11 : UUID	// same
 		var tmp22 : int		// same
-		//var tmp33 : int		// same
 		 
 		// browse the chain of aggression in the opposite direction 
 		for(var i=chainAggression.size-1; i>=0; i--){

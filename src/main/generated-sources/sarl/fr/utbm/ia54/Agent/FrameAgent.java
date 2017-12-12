@@ -224,7 +224,7 @@ public class FrameAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$ResponseNeighbourSatisfaction$5(final ResponseNeighbourSatisfaction occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(((("DEBUGG : ResponseNeighbourSatisfaction [frame] : direction " + occurrence.direction) + "    isSatisfied") + Boolean.valueOf(occurrence.isSatisfied)));
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(((("DEBUGG : ResponseNeighbourSatisfaction [frame] : direction " + occurrence.direction) + "    isSatisfied ") + Boolean.valueOf(occurrence.isSatisfied)));
     this.neighbourSatisfaction.put(occurrence.direction, Boolean.valueOf(occurrence.isSatisfied));
     int _size = this.neighbourSatisfaction.size();
     boolean _greaterEqualsThan = (_size >= 2);
