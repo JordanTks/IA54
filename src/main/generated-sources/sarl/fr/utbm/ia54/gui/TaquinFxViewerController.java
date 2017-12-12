@@ -212,6 +212,11 @@ public class TaquinFxViewerController extends FxViewerController {
                   boolean _equals_3 = color.equals("green");
                   if (_equals_3) {
                     t.setFill(Color.GREEN);
+                  } else {
+                    boolean _equals_4 = color.equals("purple");
+                    if (_equals_4) {
+                      t.setFill(Color.PURPLE);
+                    }
                   }
                 }
               }
@@ -226,12 +231,34 @@ public class TaquinFxViewerController extends FxViewerController {
   
   @FXML
   @Pure
-  public void swap(final int number) {
+  public void reset() {
     abstract class __TaquinFxViewerController_2 implements Runnable {
       public abstract void run();
     }
     
     __TaquinFxViewerController_2 ___TaquinFxViewerController_2 = new __TaquinFxViewerController_2() {
+      public void run() {
+        ObservableList<Node> listTiles = TaquinFxViewerController.this.gridDisplay.tilePane.getChildren();
+        for (int i = 0; (i < listTiles.size()); i++) {
+          {
+            Node _get = listTiles.get(i);
+            Text t = ((Text) _get);
+            t.setFill(Color.BLACK);
+          }
+        }
+      }
+    };
+    Platform.runLater(___TaquinFxViewerController_2);
+  }
+  
+  @FXML
+  @Pure
+  public void swap(final int number) {
+    abstract class __TaquinFxViewerController_3 implements Runnable {
+      public abstract void run();
+    }
+    
+    __TaquinFxViewerController_3 ___TaquinFxViewerController_3 = new __TaquinFxViewerController_3() {
       public void run() {
         ObservableList<Node> listTiles = TaquinFxViewerController.this.gridDisplay.tilePane.getChildren();
         Text tile1 = null;
@@ -256,7 +283,7 @@ public class TaquinFxViewerController extends FxViewerController {
         tile2.setText(c);
       }
     };
-    Platform.runLater(___TaquinFxViewerController_2);
+    Platform.runLater(___TaquinFxViewerController_3);
   }
   
   @Override

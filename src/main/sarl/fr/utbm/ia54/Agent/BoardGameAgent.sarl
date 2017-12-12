@@ -250,6 +250,23 @@ agent BoardGameAgent {
 
 	on TokenReleased {
 		
+		for (t : tokenPriorityList.get(0))
+		{
+			if (t.isHappy) {
+				for(ite: frameList){
+					if(t.uuidFrameHost === ite.ID){
+						ite.isBlocked = true
+						ctrl.setColor("purple", t.numTile)
+						break
+					}
+				}
+			}
+			else
+			{
+				break
+			}
+		}
+		
 		// Looking for the first unsatisfied tile on the first priority list
 		do {
 			for (t : tokenPriorityList.get(0))
@@ -308,7 +325,8 @@ agent BoardGameAgent {
 		var index = frameUUIDList.indexOf(neighbour)
 
 		// not satisfied AND not blocked AND not the FRAMEwithTokenTile
-		if (!frameList.get(index).isSatisfied && !frameList.get(index).isBlocked &&
+		if (//!frameList.get(index).isSatisfied && 
+			!frameList.get(index).isBlocked &&
 			(frameList.get(index).ID != uuidFRAMEwithTokenTile)) {
 
 			var coordNeighbour = listCoordPairsOfFrames.get(index) // or: var coordNeighbour = frameList.get(index).coordPair
@@ -364,21 +382,21 @@ agent BoardGameAgent {
 	
 	//add the neighbour's frames of the current frame
 	def addNeighbourFrames(currentFrame : FrameAgent) {
-		if(currentFrame.northNeighbour != null){
-			info("frame"+currentFrame.idNum+": NORTH neighbour")
-			addOneNeighbourFrame(currentFrame, currentFrame.northNeighbour)
-		}
 		if (currentFrame.southNeighbour != null) {
 			info("frame" + currentFrame.idNum + ": SOUTH neighbour")
 			addOneNeighbourFrame(currentFrame, currentFrame.southNeighbour)
 		}
-		if (currentFrame.eastNeighbour != null) {
-			info("frame" + currentFrame.idNum + ": EAST neighbour")
-			addOneNeighbourFrame(currentFrame, currentFrame.eastNeighbour)
+		if(currentFrame.northNeighbour != null){
+			info("frame"+currentFrame.idNum+": NORTH neighbour")
+			addOneNeighbourFrame(currentFrame, currentFrame.northNeighbour)
 		}
 		if (currentFrame.westNeighbour != null) {
 			info("frame" + currentFrame.idNum + ": WEST neighbour")
 			addOneNeighbourFrame(currentFrame, currentFrame.westNeighbour)
+		}
+		if (currentFrame.eastNeighbour != null) {
+			info("frame" + currentFrame.idNum + ": EAST neighbour")
+			addOneNeighbourFrame(currentFrame, currentFrame.eastNeighbour)
 		}
 	}
 	
@@ -526,7 +544,7 @@ agent BoardGameAgent {
 							ctrl.setColor("green", frameList.get(j).hostedNumTile)
 	
 							// YB
-							Thread.sleep(1000)
+							//Thread.sleep(100)
 	
 							break
 						}
@@ -546,9 +564,6 @@ agent BoardGameAgent {
 							
 							ctrl.setColor("blue", frameList.get(j).hostedNumTile)
 							
-							// YB
-							Thread.sleep(1000)
-							
 							break
 						}
 					}
@@ -557,13 +572,17 @@ agent BoardGameAgent {
 					info("ArrivalFrame= " + chainAggression.get(i).coordsCurrentFrame.toString)
 				}
 			}
+			
+			//Thread.sleep(500)
 
 			// YB
 			Collections.reverse(listSwap)
 			for (number : listSwap) {
 				ctrl.swap(number)
-				Thread.sleep(500)
+				//Thread.sleep(200)
 			}
+			
+			ctrl.swap(haveTokenFrame.hostedNumTile)
 			
 			// swap tiles in the chain of aggression (ex: 12345 --> 51234)
 			swapTilesInChainAggression(chainAggression)
@@ -571,10 +590,11 @@ agent BoardGameAgent {
 			
 			resetAllObjects
 			
-			//emit(new TokenReleased)
+			info("BLANK EST : "+ blankTile.numFrameHost)
+			emit(new TokenReleased)
 				
 		} else {
-			info("## A-star : destination IS NOT reached! ##")
+			error("## A-star : destination IS NOT reached! ##")
 		}
 			
 	}
@@ -583,6 +603,7 @@ agent BoardGameAgent {
 	def resetAllObjects {
 		openListOfFrames.clear
 		closedListOfFrames.clear
+		ctrl.reset
 	}
 	
 	// receive the event to execute the algo A*
@@ -621,9 +642,14 @@ agent BoardGameAgent {
 				in(600 * PROBLEM_SIZE)[findPath]				
 		}
 		// we just have to swap the FrameWithTokenTile and the FrameWithBlankTile because beginningFrame==arrivalFrame
-		else{
+		else {
+
+			info("############# AGGRESSION DE LA BLANK TOUTE SEULE")
+			ctrl.swap(haveTokenFrame.hostedNumTile)
 			swapTokenAndBlank
-			//info("############# FindPathWithAstarAlgo) no path ?")
+			
+			emit(new TokenReleased)
+			
 		}
 	}
 	
@@ -673,10 +699,13 @@ agent BoardGameAgent {
 		tmpBLANKtileNum = blankTile.numFrameHost
 		tokenTile.uuidFrameHost = tmpBLANKtileUuid
 		tokenTile.numFrameHost = tmpBLANKtileNum
+		tokenTile.numFrameHostFromZero = tokenTile.numFrameHost-1
 		blankTile.uuidFrameHost = tmpTOKENtileUuid
 		blankTile.numFrameHost = tmpTOKENtileNum
 		
 		// frames ---------------------------------------------------------
+		initArrivalInfosFrame(haveTokenFrame.numFrame, haveTokenFrame.ID, haveTokenFrame.coordPair) // reset arrivalInfosFrame
+		initBeginningInfosFrame(arrivalFrame.numFrame, arrivalFrame.ID, arrivalFrame.coordPair) // reset arrivalInfosFrame
 		var tmpF = haveTokenFrame
 		haveTokenFrame = arrivalFrame
 		arrivalFrame = tmpF
@@ -685,7 +714,8 @@ agent BoardGameAgent {
 		haveTokenFrame.hostedTile = arrivalFrame.hostedTile
 		haveTokenFrame.hostedNumTile = arrivalFrame.hostedNumTile
 		arrivalFrame.hostedTile = tmpHostedTile
-		arrivalFrame.hostedNumTile = tmpHostedNumTile	
+		arrivalFrame.hostedNumTile = tmpHostedNumTile
+		
 
 		// if you want to LOG
 		info(" ")
@@ -705,13 +735,25 @@ agent BoardGameAgent {
 		for (var n = 0; n < tileList.size; n++) {
 			for (ite : tileList) {
 				if (ite.numTile === n + 1) {
-					info("tile[" + (n + 1) + "]= frame: " + ite.numFrameHost + " / " + ite.uuidFrameHost)
+					info("tile[" + (n + 1) + "]= frame: " + ite.numFrameHost + " / " + ite.uuidFrameHost 
+						+" /framehostfromzero=" + ite.numFrameHostFromZero + " /numTileFromZero=" +
+						ite.numTileFromZero)
 				}
 			}
 		}
 		info("------------------------------------------------------------------") 
 				
 		changeSatisfaction
+	}
+	
+	def initArrivalInfosFrame(num: int, uuid: UUID, coord: CoordPair){
+		arrivalInfosFrame = new InfosFrame(uuid, coord)
+		arrivalInfosFrame.numFrame = num
+	}
+
+	def initBeginningInfosFrame(num : int, uuid : UUID, coord : CoordPair) {
+		beginningInfosFrame = new InfosFrame(uuid, coord)
+		beginningInfosFrame.numFrame = num
 	}
 	
 	// swap all tiles in the chain of aggression (ex: 12345 --> 51234)
@@ -722,8 +764,10 @@ agent BoardGameAgent {
 		var tmpTILEnumFrameHost : int
 		var tmp1 : UUID 	// tile.uuidFrameHost
 		var tmp2 : int		// tile.numFrameHost
+		//var tmp3 : int		// tile.numFrameHostFromZero
 		var tmp11 : UUID	// same
 		var tmp22 : int		// same
+		//var tmp33 : int		// same
 		 
 		// browse the chain of aggression in the opposite direction 
 		for(var i=chainAggression.size-1; i>=0; i--){
@@ -766,11 +810,13 @@ agent BoardGameAgent {
 											tmp22 = tileList.get(jTile).numFrameHost
 											tileList.get(jTile).uuidFrameHost = blankTile.uuidFrameHost
 											tileList.get(jTile).numFrameHost = blankTile.numFrameHost
+											tileList.get(jTile).numFrameHostFromZero = blankTile.numFrameHost-1
 										}
 										// others
 										else {
 											tileList.get(jTile).uuidFrameHost = tmp11
 											tileList.get(jTile).numFrameHost = tmp22
+											tileList.get(jTile).numFrameHostFromZero = tileList.get(jTile).numFrameHost-1
 											tmp11 = tmp1
 											tmp22 = tmp2
 										}

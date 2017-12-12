@@ -111,28 +111,28 @@ agent TileAgent {
 	  
 	def chooseTarget : boolean {
 
-		//info("DEBUGG : choose target")
+		info("DEBUGG : choose target")
 
 		// If I am on the same line or column as my desired spot, I just go in the spot direction
 		
 		// I am at the right longitude, therefore I will assault north or south
-		if (numFrameHostFromZero % problemSize === numTileFromZero % problemSize)
+		if (numFrameHostFromZero % problemSize === numTileFromZero % problemSize){
 			if (numTileFromZero < numFrameHostFromZero)
 				emit(new Assault(Position.NORTH, false), Scopes.identifiers(uuidFrameHost))
 			else
 				emit(new Assault(Position.SOUTH, false), Scopes.identifiers(uuidFrameHost))
-		
+		}
 		// I am at the right latitude, therefore I will assault east or west
-		else if (numFrameHostFromZero / problemSize === numTileFromZero / problemSize)
+		else if (numFrameHostFromZero / problemSize === numTileFromZero / problemSize){
 			if (numTileFromZero < numFrameHostFromZero)
 				emit(new Assault(Position.WEST, false), Scopes.identifiers(uuidFrameHost))
 			else
 				emit(new Assault(Position.EAST, false), Scopes.identifiers(uuidFrameHost))
-		 
+		 }
 		// If I am not on the same line or column as my desired spot, I can choose between the two directions that will bring me closer
 		else {
 
-			//info("DEBUGG : choose target between two targets")
+			info("DEBUGG : choose target between two targets")
 			
 			// Finding out these two possible directions :
 			
@@ -154,7 +154,7 @@ agent TileAgent {
 	// We had to ask for more informations to choose who to target
 	on ResponseNeighbourSatisfaction {
 
-		//info("DEBUGG : Assault one of the neighbour that responded")
+		info("DEBUGG : Assault one of the neighbour that responded")
 		
 		// The map has only two entries
 		// We get first entry of the map
@@ -164,12 +164,12 @@ agent TileAgent {
 		// If this neighbour is unhappy, therefore we can target him
 		if (entry.value === false)
 		{
-			//info ("DEBUGG : Assault first neighbour which responded")
+			info ("DEBUGG : Assault first neighbour which responded")
 			emit(new Assault(entry.key, false), Scopes.identifiers(uuidFrameHost))
 		}
 		// Wether or not the second neighbour is happy, we have to target someone anyway
 		else {
-			//info("DEBUGG : Assault second neighbour which responded")
+			info("DEBUGG : Assault second neighbour which responded")
 			entry = iter.next()
 			emit(new Assault(entry.key, false), Scopes.identifiers(uuidFrameHost))
 		}
@@ -216,6 +216,10 @@ agent TileAgent {
 	
 	def setIsHappy(happy : boolean){
 		this.isHappy = happy
+	}
+	
+	def getNumTileFromZero : int {
+		return numTileFromZero 
 	}
 	 
 	on Destroy {
