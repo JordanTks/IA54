@@ -31,7 +31,7 @@ enum Position {
 	;
 }
  
-agent BoardGameAgent { 
+agent BoardGameAgent {
 	uses Logging, Lifecycle, DefaultContextInteractions, Behaviors, Schedules
 	
 	var PROBLEM_SIZE = 3

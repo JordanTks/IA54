@@ -6,9 +6,9 @@ import fr.utbm.ia54.Class.CoordPair;
 import fr.utbm.ia54.Event.AskNeighbourSatisfaction;
 import fr.utbm.ia54.Event.Assault;
 import fr.utbm.ia54.Event.EndAgent;
-import fr.utbm.ia54.Event.FindPathWithAstarAlgo;
 import fr.utbm.ia54.Event.FrameSet;
 import fr.utbm.ia54.Event.PathCalculation;
+import fr.utbm.ia54.Event.PathCalculationTimeOut;
 import fr.utbm.ia54.Event.PathFound;
 import fr.utbm.ia54.Event.ResponseNeighbourSatisfaction;
 import fr.utbm.ia54.Event.SafetyWait;
@@ -30,6 +30,7 @@ import io.sarl.lang.core.DynamicSkillProvider;
 import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
 import io.sarl.util.Scopes;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.UUID;
@@ -46,13 +47,17 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlElementType(17)
 @SuppressWarnings("all")
 public class FrameAgent extends Agent {
-  private final int TIMEOUT = 50;
+  private final int TIMEOUT = 150;
   
   private long previousPathCalculationId;
   
   private int previousPathCalculationJumpValue;
   
   private boolean previousPathDidMoveHappyTiles;
+  
+  private ArrayList<FrameAgent> bestPath;
+  
+  private ArrayList<FrameAgent> bestForcedPath;
   
   private boolean isSatisfied = false;
   
@@ -184,12 +189,13 @@ public class FrameAgent extends Agent {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       ResponseNeighbourSatisfaction _responseNeighbourSatisfaction = new ResponseNeighbourSatisfaction(this.neighbourSatisfaction);
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_responseNeighbourSatisfaction, Scopes.identifiers(this.hostedTile));
-      this.neighbourSatisfaction.clear();
     }
   }
   
   @SyntheticMember
   private void $behaviorUnit$Assault$5(final Assault occurrence) {
+    this.bestPath = null;
+    this.bestForcedPath = null;
     if ((occurrence.direction == Position.NORTH)) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       Assault _assault = new Assault(Position.SOUTH, true);
@@ -224,11 +230,22 @@ public class FrameAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$Assault$6(final Assault occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.error(("=========================================== DEBUGG : I GOT ATTACKED ! emit FINDPATH! /hostedNumTile=" + Integer.valueOf(this.hostedNumTile)));
-    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    UUID _iD = this.getID();
-    FindPathWithAstarAlgo _findPathWithAstarAlgo = new FindPathWithAstarAlgo(_iD);
-    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_findPathWithAstarAlgo);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("DEBUGG : I GOT ATTACKED !");
+    Behaviors _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER = this.$castSkill(Behaviors.class, (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS == null || this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS = this.$getSkill(Behaviors.class)) : this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS);
+    long _currentTimeMillis = System.currentTimeMillis();
+    UUID _uUID = occurrence.getSource().getUUID();
+    long _currentTimeMillis_1 = System.currentTimeMillis();
+    ArrayList<FrameAgent> _arrayList = new ArrayList<FrameAgent>();
+    PathCalculation _pathCalculation = new PathCalculation(_currentTimeMillis, _uUID, occurrence.direction, _currentTimeMillis_1, false, 0, _arrayList);
+    _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER.wake(_pathCalculation);
+    Schedules _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER = this.$castSkill(Schedules.class, (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = this.$getSkill(Schedules.class)) : this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
+    final Procedure1<Agent> _function = (Agent it) -> {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      PathCalculationTimeOut _pathCalculationTimeOut = new PathCalculationTimeOut();
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_pathCalculationTimeOut, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(occurrence.getSource().getUUID())));
+    };
+    _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER.in(this.TIMEOUT, _function);
   }
   
   @SyntheticMember
@@ -251,11 +268,17 @@ public class FrameAgent extends Agent {
       return;
     }
     if ((this.previousPathCalculationId == occurrence.requestId)) {
-      if ((this.previousPathCalculationJumpValue > occurrence.jumpCount)) {
-        if ((Boolean.valueOf(this.previousPathDidMoveHappyTiles) == Boolean.valueOf(false))) {
+      if ((!occurrence.forcePath)) {
+        if ((!this.previousPathDidMoveHappyTiles)) {
+          if ((this.previousPathCalculationJumpValue <= occurrence.jumpCount)) {
+            return;
+          }
+        }
+      } else {
+        if ((!this.previousPathDidMoveHappyTiles)) {
           return;
         } else {
-          if ((Boolean.valueOf(occurrence.forcePath) == Boolean.valueOf(true))) {
+          if ((this.previousPathCalculationJumpValue < occurrence.jumpCount)) {
             return;
           }
         }
@@ -264,10 +287,13 @@ public class FrameAgent extends Agent {
     this.previousPathCalculationId = occurrence.requestId;
     this.previousPathCalculationJumpValue = occurrence.jumpCount;
     this.previousPathDidMoveHappyTiles = occurrence.forcePath;
-    occurrence.path.add(this);
+    ArrayList<FrameAgent> p = null;
+    Object _clone = occurrence.path.clone();
+    p = ((ArrayList<FrameAgent>) _clone);
+    p.add(this);
     if ((this.hostedNumTile == 0)) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      PathFound _pathFound = new PathFound(occurrence.requestId, occurrence.forcePath, occurrence.jumpCount, occurrence.path);
+      PathFound _pathFound = new PathFound(occurrence.requestId, occurrence.forcePath, occurrence.jumpCount, p);
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_pathFound, 
         Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(occurrence.requestOrigin)));
@@ -283,25 +309,95 @@ public class FrameAgent extends Agent {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       PathCalculation _pathCalculation = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.SOUTH, 
         occurrence.timeStamp, forcingAPath, (occurrence.jumpCount + 1), occurrence.path);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_pathCalculation);
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_pathCalculation, 
+        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3.getDefaultSpace().getAddress(this.northNeighbour)));
     }
     if (((this.eastNeighbour != null) && (occurrence.provenanceDirection != Position.EAST))) {
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       PathCalculation _pathCalculation_1 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.WEST, 
         occurrence.timeStamp, forcingAPath, (occurrence.jumpCount + 1), occurrence.path);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3.emit(_pathCalculation_1);
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_5 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4.emit(_pathCalculation_1, 
+        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_5.getDefaultSpace().getAddress(this.eastNeighbour)));
     }
     if (((this.southNeighbour != null) && (occurrence.provenanceDirection != Position.SOUTH))) {
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_6 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       PathCalculation _pathCalculation_2 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.NORTH, 
         occurrence.timeStamp, forcingAPath, (occurrence.jumpCount + 1), occurrence.path);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4.emit(_pathCalculation_2);
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_7 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_6.emit(_pathCalculation_2, 
+        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_7.getDefaultSpace().getAddress(this.southNeighbour)));
     }
     if (((this.westNeighbour != null) && (occurrence.provenanceDirection != Position.WEST))) {
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_5 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_8 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       PathCalculation _pathCalculation_3 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.EAST, 
         occurrence.timeStamp, forcingAPath, (occurrence.jumpCount + 1), occurrence.path);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_5.emit(_pathCalculation_3);
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_9 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_8.emit(_pathCalculation_3, 
+        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_9.getDefaultSpace().getAddress(this.westNeighbour)));
+    }
+  }
+  
+  @SyntheticMember
+  private void $behaviorUnit$PathFound$8(final PathFound occurrence) {
+    if ((!occurrence.forcePath)) {
+      if ((this.bestPath == null)) {
+        this.bestPath = occurrence.path;
+        return;
+      }
+      int _size = this.bestPath.size();
+      int _size_1 = occurrence.path.size();
+      boolean _greaterThan = (_size > _size_1);
+      if (_greaterThan) {
+        this.bestPath = occurrence.path;
+        return;
+      }
+    }
+    if ((this.bestPath == null)) {
+      if ((this.bestForcedPath == null)) {
+        this.bestForcedPath = occurrence.path;
+        return;
+      }
+      int _size_2 = this.bestForcedPath.size();
+      int _size_3 = occurrence.path.size();
+      boolean _greaterThan_1 = (_size_2 > _size_3);
+      if (_greaterThan_1) {
+        this.bestForcedPath = occurrence.path;
+        return;
+      }
+    }
+  }
+  
+  @SyntheticMember
+  private void $behaviorUnit$PathCalculationTimeOut$9(final PathCalculationTimeOut occurrence) {
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("DEBUGG : PathCalculationTimeOut");
+    if ((this.bestPath != null)) {
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      int _size = this.bestPath.size();
+      String _plus = ("DEBUGG : There is a good path (length : " + Integer.valueOf(_size));
+      String _plus_1 = (_plus + ")");
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(_plus_1);
+      for (final FrameAgent f : this.bestPath) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        int _numFrame = f.getNumFrame();
+        String _plus_2 = ("DEBUGG : GOOD PATH > " + Integer.valueOf(_numFrame));
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(_plus_2);
+      }
+    }
+    if ((this.bestForcedPath != null)) {
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      int _size_1 = this.bestForcedPath.size();
+      String _plus_3 = ("DEBUGG : There is a bad path (length : " + Integer.valueOf(_size_1));
+      String _plus_4 = (_plus_3 + ")");
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus_4);
+      for (final FrameAgent f_1 : this.bestForcedPath) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        int _numFrame_1 = f_1.getNumFrame();
+        String _plus_5 = ("DEBUGG : GOOD PATH > " + Integer.valueOf(_numFrame_1));
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4.info(_plus_5);
+      }
     }
   }
   
@@ -478,7 +574,7 @@ public class FrameAgent extends Agent {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$EndAgent$8(final EndAgent occurrence) {
+  private void $behaviorUnit$EndAgent$10(final EndAgent occurrence) {
     Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
     _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.killMe();
   }
@@ -591,6 +687,14 @@ public class FrameAgent extends Agent {
   
   @SyntheticMember
   @PerceptGuardEvaluator
+  private void $guardEvaluator$PathFound(final PathFound occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$PathFound$8(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
   private void $guardEvaluator$ResponseNeighbourSatisfaction(final ResponseNeighbourSatisfaction occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
@@ -636,7 +740,15 @@ public class FrameAgent extends Agent {
   private void $guardEvaluator$EndAgent(final EndAgent occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$EndAgent$8(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$EndAgent$10(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$PathCalculationTimeOut(final PathCalculationTimeOut occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$PathCalculationTimeOut$9(occurrence));
   }
   
   @Override

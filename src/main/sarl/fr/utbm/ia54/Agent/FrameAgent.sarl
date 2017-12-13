@@ -25,6 +25,7 @@ import fr.utbm.ia54.Event.FindPathWithAstarAlgo
 import io.sarl.core.Behaviors
 import fr.utbm.ia54.Event.SafetyWait
 import java.util.ArrayList
+import fr.utbm.ia54.Event.PathCalculationTimeOut
 
 /** 
  * @author Jordan
@@ -34,11 +35,14 @@ agent FrameAgent {
 	uses Logging, Lifecycle, Schedules, InnerContextAccess, DefaultContextInteractions, Behaviors
 
 	// PathCalculation
-	val TIMEOUT = 50
+	val TIMEOUT = 150
 	//var lastInitiatedAssault = 0l
 	var previousPathCalculationId : long
 	var previousPathCalculationJumpValue : int
 	var previousPathDidMoveHappyTiles : boolean
+	var bestPath : ArrayList<FrameAgent>
+	var bestForcedPath : ArrayList<FrameAgent>
+
 
 	// FrameAgent state
 	var isSatisfied = false
@@ -142,7 +146,8 @@ agent FrameAgent {
 		{
 			// We have two answers, therefore we can send back the results to the tile
 			emit(new ResponseNeighbourSatisfaction(neighbourSatisfaction), Scopes.identifiers(hostedTile))
-			neighbourSatisfaction.clear
+			// We risk clearing the list before the event is received -> null pointer exception ?
+			// neighbourSatisfaction.clear
 		}
 	}
 
@@ -150,7 +155,12 @@ agent FrameAgent {
 	on Assault [!isAttacked] {
 
 		// info("DEBUGG : I FORWARD ASSAULT !")
-		// lastInitiatedAssault = System.currentTimeMillis
+		
+		// Remove potential data from former path calculations
+		bestPath = null
+		bestForcedPath = null
+		
+		// Assault the neighbour it was asked to
 		if (occurrence.direction === Position.NORTH)
 			emit(new Assault(Position.SOUTH, true), Scopes.identifiers(northNeighbour))
 		else if (occurrence.direction === Position.SOUTH)
@@ -164,15 +174,16 @@ agent FrameAgent {
 	// The frame is being assaulted
 	on Assault [isAttacked] {
 
-		error("=========================================== DEBUGG : I GOT ATTACKED ! emit FINDPATH! /hostedNumTile=" + hostedNumTile)
+		//error("=========================================== DEBUGG : I GOT ATTACKED ! emit FINDPATH! /hostedNumTile=" + hostedNumTile)
+		info("DEBUGG : I GOT ATTACKED !")
 
 		// I have to run away by finding a path between me and the empty tile
 		
 		// if (resolution par point de vue global)
-		emit(new FindPathWithAstarAlgo(ID))
+		// emit(new FindPathWithAstarAlgo(ID))
 		// else if (resolution distribuee)
-		// emit(new PathCalculation(System.currentTimeMillis, occurrence.source.UUID, occurrence.direction, System.currentTimeMillis, false, 0, new ArrayList<FrameAgent>))
-
+		wake(new PathCalculation(System.currentTimeMillis, occurrence.source.UUID, occurrence.direction, System.currentTimeMillis, false, 0, new ArrayList<FrameAgent>))
+		in (TIMEOUT) [emit(new PathCalculationTimeOut(), Scopes.addresses(defaultSpace.getAddress(occurrence.source.UUID)))]
 	}
 	
 	// PathCalculation by spreading message
@@ -193,8 +204,41 @@ agent FrameAgent {
 		// If the previous request was for the same path calculation ...
 		if (previousPathCalculationId === occurrence.requestId)
 		{
-			// ... and the previous request had higher jump value ...
-			if (previousPathCalculationJumpValue > occurrence.jumpCount)
+			// If it is a good path ...
+			if (!occurrence.forcePath)
+			{
+				// If I already have a good path ...
+				if (!previousPathDidMoveHappyTiles)
+				{
+					// If I have a better or even path
+					if (previousPathCalculationJumpValue <= occurrence.jumpCount)
+					{
+						// ... it is useless to spread the message
+						return;	
+					}	
+				}
+			}
+			else // If it is a bad path ...
+			{
+				// If I already have a good path ...
+				if (!previousPathDidMoveHappyTiles)
+				{
+					// ... it is useless to spread the message
+					return;
+				}
+				else // If I already have a bad path ...
+				{
+					// If I have a better path
+					if (previousPathCalculationJumpValue < occurrence.jumpCount) {
+						// ... it is useless to spread the message
+						return;
+					}
+				}
+			}
+			
+			/* FORMER TESTS (SEEMS WRONG)
+			// ... and the previous request had lower jump value ...
+			if (previousPathCalculationJumpValue < occurrence.jumpCount)
 			{
 				// I check if the path we already sent was a "good" path (not moving happy tiles on the way)
 				if (previousPathDidMoveHappyTiles === false)
@@ -213,7 +257,7 @@ agent FrameAgent {
 					}
 					// else ... we do spread this message
 				}	
-			}
+			}*/
 		}
 		
 		// Setting the values for the next PathCalculation received
@@ -222,13 +266,15 @@ agent FrameAgent {
 		previousPathDidMoveHappyTiles = occurrence.forcePath
 		
 		// Adding itself to the path
-		occurrence.path.add(this)
+		var p : ArrayList<FrameAgent>
+		p = occurrence.path.clone as ArrayList <FrameAgent>
+		p.add(this)
 		
 		// If we host the blank tile ...
-		if (hostedNumTile == 0)
+		if (hostedNumTile === 0)
 		{
 			// ... we send the path that was found
-			emit(new PathFound(occurrence.requestId, occurrence.forcePath, occurrence.jumpCount, occurrence.path),
+			emit(new PathFound(occurrence.requestId, occurrence.forcePath, occurrence.jumpCount, p),
 				Scopes.addresses(defaultSpace.getAddress(occurrence.requestOrigin)))
 			// We avoid spreading more useless PathCalculation
 			return
@@ -245,20 +291,85 @@ agent FrameAgent {
 		// ... north one
 		if (northNeighbour !== null && occurrence.provenanceDirection !== Position.NORTH)
 			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.SOUTH,
-					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path))
+				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path),
+				Scopes.addresses(defaultSpace.getAddress(this.northNeighbour)))
 		// ... east one
 		if (eastNeighbour !== null && occurrence.provenanceDirection !== Position.EAST)
 			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.WEST,
-				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path))
+				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path),
+				Scopes.addresses(defaultSpace.getAddress(this.eastNeighbour)))
 		// ... south one
 		if (southNeighbour !== null && occurrence.provenanceDirection !== Position.SOUTH)
 			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.NORTH,
-				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path))
+				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path),
+				Scopes.addresses(defaultSpace.getAddress(this.southNeighbour)))
 		// ... west one
 		if (westNeighbour !== null && occurrence.provenanceDirection !== Position.WEST)
 			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.EAST,
-				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path))
+				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path),
+				Scopes.addresses(defaultSpace.getAddress(this.westNeighbour)))
 		
+	}
+	
+	// Store the path that we received
+	on PathFound {
+		
+		// If the path is a "good" path
+		if (!occurrence.forcePath)
+		{
+			// We did not store any path yet
+			if (bestPath === null)
+			{
+				bestPath = occurrence.path
+				return
+			}
+			
+			// If our stored path is longer than the new one we received
+			if (bestPath.size > occurrence.path.size)
+			{
+				bestPath = occurrence.path
+				return
+			}
+		}
+		
+		// If we do not have a "good" path yet, we bother considering a forced one (otherwise we don't)
+		if (bestPath === null)
+		{
+			// We did not store any path yet
+			if (bestForcedPath === null) {
+				bestForcedPath = occurrence.path
+				return
+			}
+
+			// If our stored path is longer than the new one we received
+			if (bestForcedPath.size > occurrence.path.size) {
+				bestForcedPath = occurrence.path
+				return
+			}
+			
+			// We could consider here, if bestForcedPath.size === occurrence.path.size
+			// and compare the last frames of the path to avoid moving frames we just gave the token to
+			// For now, we don't
+		}
+	}
+	
+	// Time is up to find new paths, we now use the best path we found
+	on PathCalculationTimeOut {
+		
+		info("DEBUGG : PathCalculationTimeOut")
+		
+		if (bestPath !== null)
+		{
+			info("DEBUGG : There is a good path (length : " + bestPath.size + ")")
+			for (f : bestPath)
+				info("DEBUGG : GOOD PATH > " + f.numFrame)
+		}
+
+		if (bestForcedPath !== null) {
+			info("DEBUGG : There is a bad path (length : " + bestForcedPath.size + ")")
+			for (f : bestForcedPath)
+				info("DEBUGG : GOOD PATH > " + f.numFrame)
+		}
 	}
 	
 	def getXRow : int{
