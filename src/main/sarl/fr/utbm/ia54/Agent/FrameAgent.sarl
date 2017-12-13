@@ -267,7 +267,9 @@ agent FrameAgent {
 		
 		// Adding itself to the path
 		var p : ArrayList<FrameAgent>
-		p = occurrence.path.clone as ArrayList <FrameAgent>
+		//p = occurrence.path.clone as ArrayList <FrameAgent>
+		p = new ArrayList<FrameAgent>
+		p.addAll(occurrence.path)
 		p.add(this)
 		
 		// If we host the blank tile ...
@@ -291,22 +293,22 @@ agent FrameAgent {
 		// ... north one
 		if (northNeighbour !== null && occurrence.provenanceDirection !== Position.NORTH)
 			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.SOUTH,
-				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path),
+				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
 				Scopes.addresses(defaultSpace.getAddress(this.northNeighbour)))
 		// ... east one
 		if (eastNeighbour !== null && occurrence.provenanceDirection !== Position.EAST)
 			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.WEST,
-				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path),
+				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
 				Scopes.addresses(defaultSpace.getAddress(this.eastNeighbour)))
 		// ... south one
 		if (southNeighbour !== null && occurrence.provenanceDirection !== Position.SOUTH)
 			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.NORTH,
-				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path),
+				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
 				Scopes.addresses(defaultSpace.getAddress(this.southNeighbour)))
 		// ... west one
 		if (westNeighbour !== null && occurrence.provenanceDirection !== Position.WEST)
 			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.EAST,
-				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path),
+				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
 				Scopes.addresses(defaultSpace.getAddress(this.westNeighbour)))
 		
 	}
