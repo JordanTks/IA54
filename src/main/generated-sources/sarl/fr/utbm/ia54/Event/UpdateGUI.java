@@ -20,6 +20,7 @@ public class UpdateGUI extends Event {
   public int numFrame;
   
   public UpdateGUI(final ArrayList<FrameAgent> list) {
+    this.frameList = list;
   }
   
   public UpdateGUI(final int numeroFrame) {

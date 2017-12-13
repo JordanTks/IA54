@@ -16,7 +16,7 @@ event UpdateGUI {
 	var numFrame : int
 	
 	new (list : ArrayList<FrameAgent>) {
-		
+		frameList = list
 	}
 	
 	new (numeroFrame : int) {

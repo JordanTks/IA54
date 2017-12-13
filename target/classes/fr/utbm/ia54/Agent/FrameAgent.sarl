@@ -69,7 +69,7 @@ agent FrameAgent {
 	// Temporary knowledge
 	var neighbourSatisfaction = new LinkedHashMap<Position, Boolean>()
 	
-	var ready = false
+	var ready = false 
 	var dimension = -1
 
 	var idNum = -1
@@ -471,7 +471,7 @@ agent FrameAgent {
 		this.hostedTile = tempID
 
 		emit(new UpdateGUI(gui))
-		emit(new UpdateGUI(path.get(0).hostedNumTile))
+		emit(new UpdateGUI(this.hostedNumTile))
 
 		emit(new UpdateProblemInformations(true, this.ID), Scopes.addresses(defaultSpace.getAddress(path.get(0).ID)))
 		wake(new UpdateProblemInformations(true, this.ID))
@@ -480,7 +480,7 @@ agent FrameAgent {
 	// Has to send informations to its tile
 	on UpdateProblemInformations [start] {
 
-		info("DEBUGG : UpdateProblemInformations : sending data to " + hostedTile)
+		//info("DEBUGG : UpdateProblemInformations : sending data to " + hostedTile)
 		emit(new UpdateProblemInformations(idNum, this.ID, occurrence.sendAckTo), Scopes.addresses(defaultSpace.getAddress(hostedTile)))
 	}
 	

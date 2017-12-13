@@ -12,6 +12,7 @@ import fr.utbm.ia54.Event.FrameSet;
 import fr.utbm.ia54.Event.TileSet;
 import fr.utbm.ia54.Event.TokenReceived;
 import fr.utbm.ia54.Event.TokenReleased;
+import fr.utbm.ia54.Event.UpdateGUI;
 import fr.utbm.ia54.gui.TaquinFxViewerController;
 import fr.utbm.taquin.events.ActionUI;
 import io.sarl.core.Behaviors;
@@ -38,6 +39,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
@@ -259,64 +261,69 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$TokenReleased$3(final TokenReleased occurrence) {
-    ArrayList<TileAgent> _get = this.tokenPriorityList.get(0);
-    for (final TileAgent t : _get) {
-      boolean _isHappy = t.getIsHappy();
-      if (_isHappy) {
-        for (final FrameAgent ite : this.frameList) {
-          UUID _uuidFrameHost = t.getUuidFrameHost();
-          UUID _iD = ite.getID();
-          boolean _tripleEquals = (_uuidFrameHost == _iD);
-          if (_tripleEquals) {
-            ite.setIsBlocked(true);
-            this.ctrl.setColor("purple", Integer.valueOf(t.getNumTile()));
-            break;
-          }
-        }
-      } else {
-        break;
-      }
-    }
-    do {
-      {
-        ArrayList<TileAgent> _get_1 = this.tokenPriorityList.get(0);
-        for (final TileAgent t_1 : _get_1) {
-          boolean _isHappy_1 = t_1.getIsHappy();
-          boolean _not = (!_isHappy_1);
-          if (_not) {
-            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-            TokenReceived _tokenReceived = new TokenReceived();
-            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-            _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReceived, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(t_1.getID())));
-            for (int i = 0; (i < this.frameList.size()); i++) {
-              UUID _hostedTile = this.frameList.get(i).getHostedTile();
-              UUID _iD_1 = t_1.getID();
-              boolean _tripleEquals_1 = (_hostedTile == _iD_1);
-              if (_tripleEquals_1) {
-                this.uuidFRAMEwithTokenTile = this.frameList.get(i).getID();
-                this.coordsFRAMEwithTokenTile = this.frameList.get(i).getCoordPair();
-                InfosFrame _infosFrame = new InfosFrame(this.uuidFRAMEwithTokenTile, this.coordsFRAMEwithTokenTile);
-                this.haveTokenInfosFrame = _infosFrame;
-                this.haveTokenFrame = this.frameList.get(i);
-                Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                int _hostedNumTile = this.haveTokenFrame.getHostedNumTile();
-                String _plus = ("on TokenReleased: hostedNumTile=" + Integer.valueOf(_hostedNumTile));
-                _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
-                break;
-              }
+    try {
+      Thread.sleep(2000);
+      ArrayList<TileAgent> _get = this.tokenPriorityList.get(0);
+      for (final TileAgent t : _get) {
+        boolean _isHappy = t.getIsHappy();
+        if (_isHappy) {
+          for (final FrameAgent ite : this.frameList) {
+            UUID _uuidFrameHost = t.getUuidFrameHost();
+            UUID _iD = ite.getID();
+            boolean _tripleEquals = (_uuidFrameHost == _iD);
+            if (_tripleEquals) {
+              ite.setIsBlocked(true);
+              this.ctrl.setColor("purple", Integer.valueOf(t.getNumTile()));
+              break;
             }
+          }
+        } else {
+          break;
+        }
+      }
+      do {
+        {
+          ArrayList<TileAgent> _get_1 = this.tokenPriorityList.get(0);
+          for (final TileAgent t_1 : _get_1) {
+            boolean _isHappy_1 = t_1.getIsHappy();
+            boolean _not = (!_isHappy_1);
+            if (_not) {
+              DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+              TokenReceived _tokenReceived = new TokenReceived();
+              DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+              _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReceived, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(t_1.getID())));
+              for (int i = 0; (i < this.frameList.size()); i++) {
+                UUID _hostedTile = this.frameList.get(i).getHostedTile();
+                UUID _iD_1 = t_1.getID();
+                boolean _tripleEquals_1 = (_hostedTile == _iD_1);
+                if (_tripleEquals_1) {
+                  this.uuidFRAMEwithTokenTile = this.frameList.get(i).getID();
+                  this.coordsFRAMEwithTokenTile = this.frameList.get(i).getCoordPair();
+                  InfosFrame _infosFrame = new InfosFrame(this.uuidFRAMEwithTokenTile, this.coordsFRAMEwithTokenTile);
+                  this.haveTokenInfosFrame = _infosFrame;
+                  this.haveTokenFrame = this.frameList.get(i);
+                  Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+                  int _hostedNumTile = this.haveTokenFrame.getHostedNumTile();
+                  String _plus = ("on TokenReleased: hostedNumTile=" + Integer.valueOf(_hostedNumTile));
+                  _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
+                  break;
+                }
+              }
+              return;
+            }
+          }
+          this.tokenPriorityList.remove(0);
+          boolean _isEmpty = this.tokenPriorityList.isEmpty();
+          if (_isEmpty) {
+            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("PUZZLE SEEMS TO BE SOLVED !");
             return;
           }
         }
-        this.tokenPriorityList.remove(0);
-        boolean _isEmpty = this.tokenPriorityList.isEmpty();
-        if (_isEmpty) {
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("PUZZLE SEEMS TO BE SOLVED !");
-          return;
-        }
-      }
-    } while((!this.tokenPriorityList.isEmpty()));
+      } while((!this.tokenPriorityList.isEmpty()));
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   @SyntheticMember
@@ -972,7 +979,39 @@ public class BoardGameAgent extends Agent {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$EndAgent$6(final EndAgent occurrence) {
+  private void $behaviorUnit$UpdateGUI$6(final UpdateGUI occurrence) {
+    for (final FrameAgent number : occurrence.frameList) {
+      {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        int _hostedNumTile = number.getHostedNumTile();
+        String _plus = ("SWAP LIST : " + Integer.valueOf(_hostedNumTile));
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
+        this.ctrl.swap(number.getHostedNumTile());
+      }
+    }
+  }
+  
+  @SyntheticMember
+  @Pure
+  private boolean $behaviorUnitGuard$UpdateGUI$6(final UpdateGUI it, final UpdateGUI occurrence) {
+    return (occurrence.frameList != null);
+  }
+  
+  @SyntheticMember
+  private void $behaviorUnit$UpdateGUI$7(final UpdateGUI occurrence) {
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(("SWAP SIMPLE : " + Integer.valueOf(occurrence.numFrame)));
+    this.ctrl.swap(occurrence.numFrame);
+  }
+  
+  @SyntheticMember
+  @Pure
+  private boolean $behaviorUnitGuard$UpdateGUI$7(final UpdateGUI it, final UpdateGUI occurrence) {
+    return (occurrence.numFrame != 0);
+  }
+  
+  @SyntheticMember
+  private void $behaviorUnit$EndAgent$8(final EndAgent occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Je me sucide");
     Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
@@ -1083,7 +1122,7 @@ public class BoardGameAgent extends Agent {
   private void $guardEvaluator$EndAgent(final EndAgent occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$EndAgent$6(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$EndAgent$8(occurrence));
   }
   
   @SyntheticMember
@@ -1108,6 +1147,19 @@ public class BoardGameAgent extends Agent {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
     ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$TileSet$2(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$UpdateGUI(final UpdateGUI occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    if ($behaviorUnitGuard$UpdateGUI$6(occurrence, occurrence)) {
+      ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$UpdateGUI$6(occurrence));
+    }
+    if ($behaviorUnitGuard$UpdateGUI$7(occurrence, occurrence)) {
+      ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$UpdateGUI$7(occurrence));
+    }
   }
   
   @Override

@@ -21,6 +21,7 @@ import fr.utbm.ia54.Class.CoordPair
 import fr.utbm.ia54.Class.InfosFrame
 import io.sarl.core.Schedules
 import fr.utbm.ia54.Event.FindPathWithAstarAlgo
+import fr.utbm.ia54.Event.UpdateGUI
 
 enum Position {
 	NORTH,
@@ -240,7 +241,7 @@ agent BoardGameAgent {
 	}
 
 	on TokenReleased {
-		
+		Thread.sleep(2000)
 		for (t : tokenPriorityList.get(0))
 		{
 			if (t.isHappy) {
@@ -855,6 +856,19 @@ agent BoardGameAgent {
 		info("------------------------------------------------------------------")*/
 		
 		changeSatisfaction
+	}
+	
+	on UpdateGUI [occurrence.frameList !== null] {
+		for (number : occurrence.frameList) {
+			info("SWAP LIST : " + number.hostedNumTile)
+			ctrl.swap(number.hostedNumTile)
+		}
+	}
+	
+	on UpdateGUI [occurrence.numFrame != 0] {
+			info("SWAP SIMPLE : "+occurrence.numFrame)
+			ctrl.swap(occurrence.numFrame)
+
 	}
 
 	on EndAgent {
