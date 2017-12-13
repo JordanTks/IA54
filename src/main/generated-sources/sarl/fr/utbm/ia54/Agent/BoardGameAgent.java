@@ -262,7 +262,7 @@ public class BoardGameAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$TokenReleased$3(final TokenReleased occurrence) {
     try {
-      Thread.sleep(2000);
+      Thread.sleep(3000);
       ArrayList<TileAgent> _get = this.tokenPriorityList.get(0);
       for (final TileAgent t : _get) {
         boolean _isHappy = t.getIsHappy();
@@ -981,37 +981,13 @@ public class BoardGameAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$UpdateGUI$6(final UpdateGUI occurrence) {
     for (final FrameAgent number : occurrence.frameList) {
-      {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        int _hostedNumTile = number.getHostedNumTile();
-        String _plus = ("SWAP LIST : " + Integer.valueOf(_hostedNumTile));
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
-        this.ctrl.swap(number.getHostedNumTile());
-      }
+      this.ctrl.swap(number.getHostedNumTile());
     }
-  }
-  
-  @SyntheticMember
-  @Pure
-  private boolean $behaviorUnitGuard$UpdateGUI$6(final UpdateGUI it, final UpdateGUI occurrence) {
-    return (occurrence.frameList != null);
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$UpdateGUI$7(final UpdateGUI occurrence) {
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(("SWAP SIMPLE : " + Integer.valueOf(occurrence.numFrame)));
     this.ctrl.swap(occurrence.numFrame);
   }
   
   @SyntheticMember
-  @Pure
-  private boolean $behaviorUnitGuard$UpdateGUI$7(final UpdateGUI it, final UpdateGUI occurrence) {
-    return (occurrence.numFrame != 0);
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$EndAgent$8(final EndAgent occurrence) {
+  private void $behaviorUnit$EndAgent$7(final EndAgent occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Je me sucide");
     Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
@@ -1122,7 +1098,7 @@ public class BoardGameAgent extends Agent {
   private void $guardEvaluator$EndAgent(final EndAgent occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$EndAgent$8(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$EndAgent$7(occurrence));
   }
   
   @SyntheticMember
@@ -1154,12 +1130,7 @@ public class BoardGameAgent extends Agent {
   private void $guardEvaluator$UpdateGUI(final UpdateGUI occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    if ($behaviorUnitGuard$UpdateGUI$6(occurrence, occurrence)) {
-      ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$UpdateGUI$6(occurrence));
-    }
-    if ($behaviorUnitGuard$UpdateGUI$7(occurrence, occurrence)) {
-      ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$UpdateGUI$7(occurrence));
-    }
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$UpdateGUI$6(occurrence));
   }
   
   @Override

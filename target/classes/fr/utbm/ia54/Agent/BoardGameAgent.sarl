@@ -241,7 +241,7 @@ agent BoardGameAgent {
 	}
 
 	on TokenReleased {
-		Thread.sleep(2000)
+		Thread.sleep(3000)
 		for (t : tokenPriorityList.get(0))
 		{
 			if (t.isHappy) {
@@ -858,21 +858,17 @@ agent BoardGameAgent {
 		changeSatisfaction
 	}
 	
-	on UpdateGUI [occurrence.frameList !== null] {
+	on UpdateGUI {
 		for (number : occurrence.frameList) {
-			info("SWAP LIST : " + number.hostedNumTile)
 			ctrl.swap(number.hostedNumTile)
 		}
-	}
-	
-	on UpdateGUI [occurrence.numFrame != 0] {
-			info("SWAP SIMPLE : "+occurrence.numFrame)
-			ctrl.swap(occurrence.numFrame)
 
+		ctrl.swap(occurrence.numFrame)
 	}
 
 	on EndAgent {
 		info("Je me sucide")
 		killMe
 	}
+	
 }

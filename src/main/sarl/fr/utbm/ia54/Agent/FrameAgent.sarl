@@ -440,10 +440,17 @@ agent FrameAgent {
 		
 		Collections.reverse(path);
 
+		/*for (p : path)
+		{
+			info("PAAAATH : " + p.hostedNumTile)
+		}*/
+
+
 		// List to send to UpdateGUI
 		var gui : ArrayList<FrameAgent>
 		gui = new ArrayList<FrameAgent>
 		gui.addAll(path)
+		//info("EHAEUIAHEAIO : " + gui.get(0).hostedNumTile)
 		gui.remove(0)
 		
 		var tempID : UUID
@@ -470,8 +477,7 @@ agent FrameAgent {
 		path.get(0).hostedTile = this.hostedTile
 		this.hostedTile = tempID
 
-		emit(new UpdateGUI(gui))
-		emit(new UpdateGUI(this.hostedNumTile))
+		emit(new UpdateGUI(gui, this.hostedNumTile))
 
 		emit(new UpdateProblemInformations(true, this.ID), Scopes.addresses(defaultSpace.getAddress(path.get(0).ID)))
 		wake(new UpdateProblemInformations(true, this.ID))

@@ -19,11 +19,8 @@ public class UpdateGUI extends Event {
   
   public int numFrame;
   
-  public UpdateGUI(final ArrayList<FrameAgent> list) {
+  public UpdateGUI(final ArrayList<FrameAgent> list, final int numeroFrame) {
     this.frameList = list;
-  }
-  
-  public UpdateGUI(final int numeroFrame) {
     this.numFrame = numeroFrame;
   }
   
@@ -66,5 +63,5 @@ public class UpdateGUI extends Event {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = -1982986322L;
+  private final static long serialVersionUID = -2452498577L;
 }
