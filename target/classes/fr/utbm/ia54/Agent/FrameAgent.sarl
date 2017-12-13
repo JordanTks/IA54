@@ -30,6 +30,7 @@ import fr.utbm.ia54.Event.TokenReleased
 import java.util.Collections
 import fr.utbm.ia54.Event.UpdateProblemInformations
 import fr.utbm.ia54.Event.AcknowledgmentDataUpdated
+import fr.utbm.ia54.Event.UpdateGUI
 
 /** 
  * @author Jordan
@@ -242,29 +243,6 @@ agent FrameAgent {
 					}
 				}
 			}
-			
-			/* FORMER TESTS (SEEMS WRONG)
-			// ... and the previous request had lower jump value ...
-			if (previousPathCalculationJumpValue < occurrence.jumpCount)
-			{
-				// I check if the path we already sent was a "good" path (not moving happy tiles on the way)
-				if (previousPathDidMoveHappyTiles === false)
-				{
-					// ... it is useless to spread the message
-					return;
-				}
-				// The previous path was not a good path
-				else
-				{
-					// If this is NOT a good path
-					if (occurrence.forcePath === true)
-					{
-						// ... it is useless to spread the message
-						return;
-					}
-					// else ... we do spread this message
-				}	
-			}*/
 		}
 		
 		// Setting the values for the next PathCalculation received
@@ -461,6 +439,12 @@ agent FrameAgent {
 		nbAck = path.size + 1 // Waiting for an answer from each frame of the list + myself
 		
 		Collections.reverse(path);
+
+		// List to send to UpdateGUI
+		var gui : ArrayList<FrameAgent>
+		gui = new ArrayList<FrameAgent>
+		gui.addAll(path)
+		gui.remove(0)
 		
 		var tempID : UUID
 		
@@ -485,6 +469,9 @@ agent FrameAgent {
 		tempID = path.get(0).hostedTile
 		path.get(0).hostedTile = this.hostedTile
 		this.hostedTile = tempID
+
+		emit(new UpdateGUI(gui))
+		emit(new UpdateGUI(path.get(0).hostedNumTile))
 
 		emit(new UpdateProblemInformations(true, this.ID), Scopes.addresses(defaultSpace.getAddress(path.get(0).ID)))
 		wake(new UpdateProblemInformations(true, this.ID))
@@ -522,7 +509,12 @@ agent FrameAgent {
 		{
 			// Information helpful to avoid getting stuck around corners
 			if (isSatisfied)
+			{
 				didMyTileMateHaveTheToken = true
+			
+				// If I am in a corner, I move the blank Tile around
+				// TODO: todo
+			}
 			
 			emit(new TokenReleased())
 		}

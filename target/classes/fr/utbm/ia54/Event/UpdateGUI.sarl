@@ -1,0 +1,26 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54.Event
+
+import java.util.ArrayList
+import fr.utbm.ia54.Agent.FrameAgent
+
+/** 
+ * @author Norgannon
+ * 
+ */
+event UpdateGUI {
+	
+	var frameList : ArrayList<FrameAgent>
+	var numFrame : int
+	
+	new (list : ArrayList<FrameAgent>) {
+		
+	}
+	
+	new (numeroFrame : int) {
+		numFrame = numeroFrame
+	}
+	
+}
