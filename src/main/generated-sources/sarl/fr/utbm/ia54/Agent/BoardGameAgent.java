@@ -311,6 +311,8 @@ public class BoardGameAgent extends Agent {
         this.tokenPriorityList.remove(0);
         boolean _isEmpty = this.tokenPriorityList.isEmpty();
         if (_isEmpty) {
+          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("PUZZLE SEEMS TO BE SOLVED !");
           return;
         }
       }

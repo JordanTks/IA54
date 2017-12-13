@@ -288,7 +288,10 @@ agent BoardGameAgent {
 			
 			// It is over
 			if (tokenPriorityList.empty)
+			{
+				info("PUZZLE SEEMS TO BE SOLVED !")
 				return
+			}
 			// Else ... get to the next list by looping
 			
 		} while (!tokenPriorityList.empty)

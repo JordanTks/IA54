@@ -32,7 +32,8 @@ agent TileAgent {
 	var uuidFrameHost : UUID
 	var problemSize : int
 	var tokenPriority : int
- 
+	//var didHaveTheToken : Boolean 
+
 	var parentAgent : UUID
 	
 	on Initialize {
@@ -50,6 +51,8 @@ agent TileAgent {
 		problemSize = occurrence.parameters.get(3) as Integer
 		
 		numFrameHost = numFrameHostFromZero + 1
+
+		//didHaveTheToken = false
 
 		// Setting tokenPriority consulted by the scheduler
 		tokenPriority = Math.min((numTile-1) / problemSize, (numTile-1) % problemSize)
@@ -75,6 +78,9 @@ agent TileAgent {
 	on TokenReceived {
 		
 		info("INFO : I received the token.")
+
+		/*// Information useful to avoid getting stuck on corners
+		didHaveTheToken = true;*/
 		
 		if (isHappy) {
 			emit(new TokenReleased())

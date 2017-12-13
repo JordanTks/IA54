@@ -53,6 +53,7 @@ agent FrameAgent {
 	// FrameAgent state
 	var isSatisfied = false
 	var isBlocked = false // the tile which with it is paired will never move
+	var didMyTileMateHaveTheToken = false
 	
 	// FrameAgent knowledge
 	var nbNeighbours : int
@@ -302,6 +303,55 @@ agent FrameAgent {
 				forcingAPath = true
 		}
 		
+		// I usually am not disturbed when this is true, EXCEPT, when a tile tries to get in a corner
+		if (didMyTileMateHaveTheToken)
+		{
+			// To help the tile get in the corner we have to behave a little bit differently
+			// We have to flee by going to the opposite side of the aggression, whenever possible
+			
+			if (occurrence.provenanceDirection === Position.NORTH && southNeighbour !== null)
+			{
+				emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.NORTH,
+					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
+					Scopes.addresses(defaultSpace.getAddress(this.southNeighbour)))
+
+				// If it is possible, then we do not try to find a path in other directions.
+				return;
+			}
+
+			if (occurrence.provenanceDirection === Position.SOUTH && northNeighbour !== null) {
+				emit(
+					new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.SOUTH,
+					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
+					Scopes.addresses(defaultSpace.getAddress(this.northNeighbour)))
+
+				// If it is possible, then we do not try to find a path in other directions.
+				return;
+			}
+
+			if (occurrence.provenanceDirection === Position.EAST && westNeighbour !== null) {
+				emit(
+					new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.EAST,
+					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
+					Scopes.addresses(defaultSpace.getAddress(this.westNeighbour)))
+
+				// If it is possible, then we do not try to find a path in other directions.
+				return;
+			}
+
+			if (occurrence.provenanceDirection === Position.WEST && eastNeighbour !== null) {
+				emit(
+					new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.WEST,
+					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
+					Scopes.addresses(defaultSpace.getAddress(this.eastNeighbour)))
+
+				// If it is possible, then we do not try to find a path in other directions.
+				return;
+			}
+			
+			// If it is not possible, we will just go wherever we can (just like we would usually do) ...
+		}
+		
 		// If we do not host the blank tile, we send the event PathCalculation to our neighbours ...
 		// ... north one
 		if (northNeighbour !== null && occurrence.provenanceDirection !== Position.NORTH)
@@ -437,8 +487,6 @@ agent FrameAgent {
 		this.hostedTile = tempID
 
 		emit(new UpdateProblemInformations(true, this.ID), Scopes.addresses(defaultSpace.getAddress(path.get(0).ID)))
-
-		//emit(new UpdateProblemInformations(true, this.ID), Scopes.addresses(defaultSpace.getAddress(this.ID)))
 		wake(new UpdateProblemInformations(true, this.ID))
 	}
 	
@@ -471,8 +519,13 @@ agent FrameAgent {
 		
 		// We received all the acknowledgments we were waiting for
 		if (nbAck === 0)
+		{
+			// Information helpful to avoid getting stuck around corners
+			if (isSatisfied)
+				didMyTileMateHaveTheToken = true
+			
 			emit(new TokenReleased())
-
+		}
 	}
 	
 	def getXRow : int{
