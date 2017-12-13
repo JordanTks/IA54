@@ -261,69 +261,64 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$TokenReleased$3(final TokenReleased occurrence) {
-    try {
-      Thread.sleep(3000);
-      ArrayList<TileAgent> _get = this.tokenPriorityList.get(0);
-      for (final TileAgent t : _get) {
-        boolean _isHappy = t.getIsHappy();
-        if (_isHappy) {
-          for (final FrameAgent ite : this.frameList) {
-            UUID _uuidFrameHost = t.getUuidFrameHost();
-            UUID _iD = ite.getID();
-            boolean _tripleEquals = (_uuidFrameHost == _iD);
-            if (_tripleEquals) {
-              ite.setIsBlocked(true);
-              this.ctrl.setColor("purple", Integer.valueOf(t.getNumTile()));
-              break;
-            }
+    ArrayList<TileAgent> _get = this.tokenPriorityList.get(0);
+    for (final TileAgent t : _get) {
+      boolean _isHappy = t.getIsHappy();
+      if (_isHappy) {
+        for (final FrameAgent ite : this.frameList) {
+          UUID _uuidFrameHost = t.getUuidFrameHost();
+          UUID _iD = ite.getID();
+          boolean _tripleEquals = (_uuidFrameHost == _iD);
+          if (_tripleEquals) {
+            ite.setIsBlocked(true);
+            this.ctrl.setColor("purple", Integer.valueOf(t.getNumTile()));
+            break;
           }
-        } else {
-          break;
         }
+      } else {
+        break;
       }
-      do {
-        {
-          ArrayList<TileAgent> _get_1 = this.tokenPriorityList.get(0);
-          for (final TileAgent t_1 : _get_1) {
-            boolean _isHappy_1 = t_1.getIsHappy();
-            boolean _not = (!_isHappy_1);
-            if (_not) {
-              DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-              TokenReceived _tokenReceived = new TokenReceived();
-              DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-              _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReceived, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(t_1.getID())));
-              for (int i = 0; (i < this.frameList.size()); i++) {
-                UUID _hostedTile = this.frameList.get(i).getHostedTile();
-                UUID _iD_1 = t_1.getID();
-                boolean _tripleEquals_1 = (_hostedTile == _iD_1);
-                if (_tripleEquals_1) {
-                  this.uuidFRAMEwithTokenTile = this.frameList.get(i).getID();
-                  this.coordsFRAMEwithTokenTile = this.frameList.get(i).getCoordPair();
-                  InfosFrame _infosFrame = new InfosFrame(this.uuidFRAMEwithTokenTile, this.coordsFRAMEwithTokenTile);
-                  this.haveTokenInfosFrame = _infosFrame;
-                  this.haveTokenFrame = this.frameList.get(i);
-                  Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                  int _hostedNumTile = this.haveTokenFrame.getHostedNumTile();
-                  String _plus = ("on TokenReleased: hostedNumTile=" + Integer.valueOf(_hostedNumTile));
-                  _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
-                  break;
-                }
+    }
+    do {
+      {
+        ArrayList<TileAgent> _get_1 = this.tokenPriorityList.get(0);
+        for (final TileAgent t_1 : _get_1) {
+          boolean _isHappy_1 = t_1.getIsHappy();
+          boolean _not = (!_isHappy_1);
+          if (_not) {
+            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+            TokenReceived _tokenReceived = new TokenReceived();
+            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+            _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReceived, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(t_1.getID())));
+            for (int i = 0; (i < this.frameList.size()); i++) {
+              UUID _hostedTile = this.frameList.get(i).getHostedTile();
+              UUID _iD_1 = t_1.getID();
+              boolean _tripleEquals_1 = (_hostedTile == _iD_1);
+              if (_tripleEquals_1) {
+                this.uuidFRAMEwithTokenTile = this.frameList.get(i).getID();
+                this.coordsFRAMEwithTokenTile = this.frameList.get(i).getCoordPair();
+                InfosFrame _infosFrame = new InfosFrame(this.uuidFRAMEwithTokenTile, this.coordsFRAMEwithTokenTile);
+                this.haveTokenInfosFrame = _infosFrame;
+                this.haveTokenFrame = this.frameList.get(i);
+                Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+                int _hostedNumTile = this.haveTokenFrame.getHostedNumTile();
+                String _plus = ("on TokenReleased: hostedNumTile=" + Integer.valueOf(_hostedNumTile));
+                _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
+                break;
               }
-              return;
             }
-          }
-          this.tokenPriorityList.remove(0);
-          boolean _isEmpty = this.tokenPriorityList.isEmpty();
-          if (_isEmpty) {
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("PUZZLE SEEMS TO BE SOLVED !");
             return;
           }
         }
-      } while((!this.tokenPriorityList.isEmpty()));
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
+        this.tokenPriorityList.remove(0);
+        boolean _isEmpty = this.tokenPriorityList.isEmpty();
+        if (_isEmpty) {
+          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("PUZZLE SEEMS TO BE SOLVED !");
+          return;
+        }
+      }
+    } while((!this.tokenPriorityList.isEmpty()));
   }
   
   @SyntheticMember
@@ -578,113 +573,122 @@ public class BoardGameAgent extends Agent {
   }
   
   protected void findPath() {
-    InfosFrame currentFrame = this.beginningInfosFrame;
-    this.openListOfFrames.add(this.beginningInfosFrame);
-    this.addInClosedList(this.beginningInfosFrame.getCoordsCurrentFrame());
-    for (int indexOfFrameList = 0; (indexOfFrameList < this.frameList.size()); indexOfFrameList++) {
-      boolean _equals = this.frameList.get(indexOfFrameList).getCoordPair().equals(this.beginningInfosFrame.getCoordsCurrentFrame());
-      if (_equals) {
-        this.addNeighbourFrames(this.frameList.get(indexOfFrameList));
-        break;
-      }
-    }
-    while (((!currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame())) && (!this.openListOfFrames.isEmpty()))) {
-      {
-        currentFrame = this.getBestFrame(this.openListOfFrames);
-        this.addInClosedList(currentFrame.getCoordsCurrentFrame());
-        for (int indexOfFrameList2 = 0; (indexOfFrameList2 < this.frameList.size()); indexOfFrameList2++) {
-          boolean _equals = this.frameList.get(indexOfFrameList2).getCoordPair().equals(currentFrame.getCoordsCurrentFrame());
-          if (_equals) {
-            this.addNeighbourFrames(this.frameList.get(indexOfFrameList2));
-            break;
-          }
+    try {
+      InfosFrame currentFrame = this.beginningInfosFrame;
+      this.openListOfFrames.add(this.beginningInfosFrame);
+      this.addInClosedList(this.beginningInfosFrame.getCoordsCurrentFrame());
+      for (int indexOfFrameList = 0; (indexOfFrameList < this.frameList.size()); indexOfFrameList++) {
+        boolean _equals = this.frameList.get(indexOfFrameList).getCoordPair().equals(this.beginningInfosFrame.getCoordsCurrentFrame());
+        if (_equals) {
+          this.addNeighbourFrames(this.frameList.get(indexOfFrameList));
+          break;
         }
       }
-    }
-    boolean _equals = currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame());
-    if (_equals) {
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("## A-star : destination IS reached! ##");
-      ArrayList<InfosFrame> tmpChainAggression = this.buildChainAggression(this.beginningInfosFrame);
-      ArrayList<InfosFrame> chainAggression = new ArrayList<InfosFrame>();
-      int _size = tmpChainAggression.size();
-      int _minus = (_size - 1);
-      InfosFrame tmpFrame = tmpChainAggression.get(_minus);
-      chainAggression.add(tmpFrame);
-      for (int i = (tmpChainAggression.size() - 2); (i >= 0); i--) {
-        UUID _uuidCurrentFrame = tmpFrame.getUuidCurrentFrame();
-        UUID _uuidCurrentFrame_1 = tmpChainAggression.get(i).getUuidCurrentFrame();
-        boolean _tripleEquals = (_uuidCurrentFrame == _uuidCurrentFrame_1);
-        boolean _not = (!_tripleEquals);
-        if (_not) {
-          tmpFrame = tmpChainAggression.get(i);
-          chainAggression.add(tmpFrame);
-        }
-      }
-      ArrayList<Integer> listSwap = new ArrayList<Integer>();
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("---- Chain of aggression below ----");
-      for (int i = 0; (i < chainAggression.size()); i++) {
-        boolean _equals_1 = chainAggression.get(i).getCoordsCurrentFrame().equals(this.beginningFrame.getCoordPair());
-        if (_equals_1) {
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          String _string = chainAggression.get(i).getCoordsCurrentFrame().toString();
-          String _plus = ("BeginningFrame= " + _string);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(_plus);
-          for (int j = 0; (j < this.frameList.size()); j++) {
-            UUID _iD = this.frameList.get(j).getID();
-            UUID _uuidCurrentFrame = chainAggression.get(i).getUuidCurrentFrame();
-            boolean _tripleEquals = (_iD == _uuidCurrentFrame);
-            if (_tripleEquals) {
-              listSwap.add(Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
-              this.ctrl.setColor("green", Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
+      while (((!currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame())) && (!this.openListOfFrames.isEmpty()))) {
+        {
+          currentFrame = this.getBestFrame(this.openListOfFrames);
+          this.addInClosedList(currentFrame.getCoordsCurrentFrame());
+          for (int indexOfFrameList2 = 0; (indexOfFrameList2 < this.frameList.size()); indexOfFrameList2++) {
+            boolean _equals = this.frameList.get(indexOfFrameList2).getCoordPair().equals(currentFrame.getCoordsCurrentFrame());
+            if (_equals) {
+              this.addNeighbourFrames(this.frameList.get(indexOfFrameList2));
               break;
             }
           }
-        } else {
-          boolean _equals_2 = chainAggression.get(i).getCoordsCurrentFrame().equals(this.arrivalFrame.getCoordPair());
-          boolean _not = (!_equals_2);
+        }
+      }
+      boolean _equals = currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame());
+      if (_equals) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("## A-star : destination IS reached! ##");
+        ArrayList<InfosFrame> tmpChainAggression = this.buildChainAggression(this.beginningInfosFrame);
+        ArrayList<InfosFrame> chainAggression = new ArrayList<InfosFrame>();
+        int _size = tmpChainAggression.size();
+        int _minus = (_size - 1);
+        InfosFrame tmpFrame = tmpChainAggression.get(_minus);
+        chainAggression.add(tmpFrame);
+        for (int i = (tmpChainAggression.size() - 2); (i >= 0); i--) {
+          UUID _uuidCurrentFrame = tmpFrame.getUuidCurrentFrame();
+          UUID _uuidCurrentFrame_1 = tmpChainAggression.get(i).getUuidCurrentFrame();
+          boolean _tripleEquals = (_uuidCurrentFrame == _uuidCurrentFrame_1);
+          boolean _not = (!_tripleEquals);
           if (_not) {
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            String _string_1 = chainAggression.get(i).getCoordsCurrentFrame().toString();
-            String _plus_1 = ((("Frame" + Integer.valueOf((i + 1))) + "= ") + _string_1);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus_1);
+            tmpFrame = tmpChainAggression.get(i);
+            chainAggression.add(tmpFrame);
+          }
+        }
+        ArrayList<Integer> listSwap = new ArrayList<Integer>();
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("---- Chain of aggression below ----");
+        for (int i = 0; (i < chainAggression.size()); i++) {
+          boolean _equals_1 = chainAggression.get(i).getCoordsCurrentFrame().equals(this.beginningFrame.getCoordPair());
+          if (_equals_1) {
+            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+            String _string = chainAggression.get(i).getCoordsCurrentFrame().toString();
+            String _plus = ("BeginningFrame= " + _string);
+            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(_plus);
             for (int j = 0; (j < this.frameList.size()); j++) {
               UUID _iD = this.frameList.get(j).getID();
               UUID _uuidCurrentFrame = chainAggression.get(i).getUuidCurrentFrame();
               boolean _tripleEquals = (_iD == _uuidCurrentFrame);
               if (_tripleEquals) {
                 listSwap.add(Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
-                this.ctrl.setColor("blue", Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
+                this.ctrl.setColor("green", Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
+                Thread.sleep(500);
                 break;
               }
             }
           } else {
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            String _string_2 = chainAggression.get(i).getCoordsCurrentFrame().toString();
-            String _plus_2 = ("ArrivalFrame= " + _string_2);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4.info(_plus_2);
+            boolean _equals_2 = chainAggression.get(i).getCoordsCurrentFrame().equals(this.arrivalFrame.getCoordPair());
+            boolean _not = (!_equals_2);
+            if (_not) {
+              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+              String _string_1 = chainAggression.get(i).getCoordsCurrentFrame().toString();
+              String _plus_1 = ((("Frame" + Integer.valueOf((i + 1))) + "= ") + _string_1);
+              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus_1);
+              for (int j = 0; (j < this.frameList.size()); j++) {
+                UUID _iD = this.frameList.get(j).getID();
+                UUID _uuidCurrentFrame = chainAggression.get(i).getUuidCurrentFrame();
+                boolean _tripleEquals = (_iD == _uuidCurrentFrame);
+                if (_tripleEquals) {
+                  listSwap.add(Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
+                  this.ctrl.setColor("blue", Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
+                  break;
+                }
+              }
+            } else {
+              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+              String _string_2 = chainAggression.get(i).getCoordsCurrentFrame().toString();
+              String _plus_2 = ("ArrivalFrame= " + _string_2);
+              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4.info(_plus_2);
+            }
           }
         }
+        Thread.sleep(500);
+        Collections.reverse(listSwap);
+        for (final Integer number : listSwap) {
+          {
+            this.ctrl.swap((number).intValue());
+            Thread.sleep(1000);
+          }
+        }
+        this.ctrl.swap(this.haveTokenFrame.getHostedNumTile());
+        this.swapTilesInChainAggression(chainAggression);
+        this.swapTokenAndBlank();
+        this.resetAllObjects();
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        int _numFrameHost = this.blankTile.getNumFrameHost();
+        String _plus = ("BLANK EST : " + Integer.valueOf(_numFrameHost));
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(_plus);
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        TokenReleased _tokenReleased = new TokenReleased();
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReleased);
+      } else {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.error("## A-star : destination IS NOT reached! ##");
       }
-      Collections.reverse(listSwap);
-      for (final Integer number : listSwap) {
-        this.ctrl.swap((number).intValue());
-      }
-      this.ctrl.swap(this.haveTokenFrame.getHostedNumTile());
-      this.swapTilesInChainAggression(chainAggression);
-      this.swapTokenAndBlank();
-      this.resetAllObjects();
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      int _numFrameHost = this.blankTile.getNumFrameHost();
-      String _plus = ("BLANK EST : " + Integer.valueOf(_numFrameHost));
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(_plus);
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      TokenReleased _tokenReleased = new TokenReleased();
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReleased);
-    } else {
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.error("## A-star : destination IS NOT reached! ##");
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
     }
   }
   
@@ -981,8 +985,16 @@ public class BoardGameAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$UpdateGUI$6(final UpdateGUI occurrence) {
     for (final FrameAgent number : occurrence.frameList) {
-      this.ctrl.swap(number.getHostedNumTile());
+      {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        int _hostedNumTile = number.getHostedNumTile();
+        String _plus = ("UpdateGUI: LIST: " + Integer.valueOf(_hostedNumTile));
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
+        this.ctrl.swap(number.getHostedNumTile());
+      }
     }
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(("UpdateGUI: SIMPLE: " + Integer.valueOf(occurrence.numFrame)));
     this.ctrl.swap(occurrence.numFrame);
   }
   

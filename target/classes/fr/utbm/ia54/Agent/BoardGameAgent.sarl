@@ -241,7 +241,7 @@ agent BoardGameAgent {
 	}
 
 	on TokenReleased {
-		Thread.sleep(3000)
+//		Thread.sleep(3000)
 		for (t : tokenPriorityList.get(0))
 		{
 			if (t.isHappy) {
@@ -536,7 +536,7 @@ agent BoardGameAgent {
 							ctrl.setColor("green", frameList.get(j).hostedNumTile)
 	
 							// YB
-							//Thread.sleep(100)
+							Thread.sleep(500)
 	
 							break
 						}
@@ -565,13 +565,13 @@ agent BoardGameAgent {
 				}
 			}
 			
-			//Thread.sleep(500)
+			Thread.sleep(500)
 
 			// YB
 			Collections.reverse(listSwap)
 			for (number : listSwap) {
 				ctrl.swap(number)
-				//Thread.sleep(200)
+				Thread.sleep(1000)
 			}
 			
 			ctrl.swap(haveTokenFrame.hostedNumTile)
@@ -860,9 +860,10 @@ agent BoardGameAgent {
 	
 	on UpdateGUI {
 		for (number : occurrence.frameList) {
+			info("UpdateGUI: LIST: "+number.hostedNumTile)
 			ctrl.swap(number.hostedNumTile)
 		}
-
+		info("UpdateGUI: SIMPLE: "+occurrence.numFrame)
 		ctrl.swap(occurrence.numFrame)
 	}
 
