@@ -24,6 +24,7 @@ import fr.utbm.ia54.Event.ResponseNeighbourSatisfaction
 import fr.utbm.ia54.Event.FindPathWithAstarAlgo
 import io.sarl.core.Behaviors
 import fr.utbm.ia54.Event.SafetyWait
+import java.util.ArrayList
 
 /** 
  * @author Jordan
@@ -34,8 +35,10 @@ agent FrameAgent {
 
 	// PathCalculation
 	val TIMEOUT = 50
+	//var lastInitiatedAssault = 0l
 	var previousPathCalculationId : long
 	var previousPathCalculationJumpValue : int
+	var previousPathDidMoveHappyTiles : boolean
 
 	// FrameAgent state
 	var isSatisfied = false
@@ -96,68 +99,11 @@ agent FrameAgent {
 	on SafetyWait {
 		emit(new FrameSet(this))
 	}
-	
-	// AK : PathCalculation by spreading message
-	on PathCalculation {
-		
-		// Discard message if timeout
-		if (System.currentTimeMillis - TIMEOUT > occurrence.timeStamp)
-			return;
-		
-		// Check already forwarded path calculations to avoid spreading useless events
-		// This implementation does NOT work if there are multiple different path calculations at once
-		// -> The following would have to be modified
-		
-		// If the previous request was for the same path calculation ...
-		if (previousPathCalculationId === occurrence.requestId)
-			// ... and the previous request had the same or lower jump value ...
-			if (previousPathCalculationJumpValue <= occurrence.jumpCount)
-				// ... it is useless to spread the message
-				return;
 
-		// Setting the values for the next PathCalculation received
-		previousPathCalculationId = occurrence.requestId
-		previousPathCalculationJumpValue = occurrence.jumpCount
-		
-		// TODO : add boolean forcePath and if forcePath = false, drop event if (isSatisfied)
-		
-		// Adding itself to the path
-		occurrence.path.add(this)
-		
-		// If we host the blank tile ...
-		if (hostedNumTile == -1) // TODO : MAYBE THIS IS NOT SET THIS WAY RIGHT NOW
-		{
-			// ... we send the path that was found
-			emit(new PathFound(occurrence.requestId, occurrence.jumpCount, occurrence.path),
-				Scopes.addresses(defaultSpace.getAddress(occurrence.requestOrigin)))
-			// We avoid spreading more useless PathCalculation
-			return
-		}
-
-		// If we do not host the blank tile, we send the event PathCalculation to our neighbours ...
-		// ... north one
-		if (northNeighbour !== null && occurrence.provenanceDirection !== 2)
-			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 0,
-					occurrence.timeStamp, occurrence.jumpCount + 1, occurrence.path))
-		// ... east one
-		if (eastNeighbour !== null && occurrence.provenanceDirection !== 3)
-			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 1,
-				occurrence.timeStamp, occurrence.jumpCount + 1, occurrence.path))
-		// ... south one
-		if (southNeighbour !== null && occurrence.provenanceDirection !== 0)
-			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 2,
-				occurrence.timeStamp, occurrence.jumpCount + 1, occurrence.path))
-		// ... west one
-		if (westNeighbour !== null && occurrence.provenanceDirection !== 1)
-			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 3,
-				occurrence.timeStamp, occurrence.jumpCount + 1, occurrence.path))
-		
-	}
-	
 	// Forwards the question to the neighbours
 	on AskNeighbourSatisfaction [!isAsked] {
 
-		//info("DEBUGG : AskNeighbourSatisfaction !isAsked")
+		// info("DEBUGG : AskNeighbourSatisfaction !isAsked")
  
 		// Clearing answers map
 		neighbourSatisfaction.clear
@@ -177,12 +123,12 @@ agent FrameAgent {
 	// Get asked and have to answer back
 	on AskNeighbourSatisfaction [isAsked] {
 
-		//info("DEBUGG : AskNeighbourSatisfaction isAsked")
+		// info("DEBUGG : AskNeighbourSatisfaction isAsked")
 		
 		// Answers back to the event transmitter
 		emit(new ResponseNeighbourSatisfaction(isSatisfied, occurrence.direction), Scopes.identifiers(occurrence.source.UUID))
 	}
-	
+
 	// Receive a response from a neighbour
 	on ResponseNeighbourSatisfaction {
 
@@ -193,8 +139,126 @@ agent FrameAgent {
 
 		// We check how much data we collected
 		if (neighbourSatisfaction.size >= 2)
+		{
 			// We have two answers, therefore we can send back the results to the tile
 			emit(new ResponseNeighbourSatisfaction(neighbourSatisfaction), Scopes.identifiers(hostedTile))
+			neighbourSatisfaction.clear
+		}
+	}
+
+	// The assault must be forwarded to the right frame
+	on Assault [!isAttacked] {
+
+		// info("DEBUGG : I FORWARD ASSAULT !")
+		// lastInitiatedAssault = System.currentTimeMillis
+		if (occurrence.direction === Position.NORTH)
+			emit(new Assault(Position.SOUTH, true), Scopes.identifiers(northNeighbour))
+		else if (occurrence.direction === Position.SOUTH)
+			emit(new Assault(Position.NORTH, true), Scopes.identifiers(southNeighbour))
+		else if (occurrence.direction === Position.WEST)
+			emit(new Assault(Position.EAST, true), Scopes.identifiers(westNeighbour))
+		else if (occurrence.direction === Position.EAST)
+			emit(new Assault(Position.WEST, true), Scopes.identifiers(eastNeighbour))
+	}
+
+	// The frame is being assaulted
+	on Assault [isAttacked] {
+
+		error("=========================================== DEBUGG : I GOT ATTACKED ! emit FINDPATH! /hostedNumTile=" + hostedNumTile)
+
+		// I have to run away by finding a path between me and the empty tile
+		
+		// if (resolution par point de vue global)
+		emit(new FindPathWithAstarAlgo(ID))
+		// else if (resolution distribuee)
+		// emit(new PathCalculation(System.currentTimeMillis, occurrence.source.UUID, occurrence.direction, System.currentTimeMillis, false, 0, new ArrayList<FrameAgent>))
+
+	}
+	
+	// PathCalculation by spreading message
+	on PathCalculation {
+		
+		// Discard message if timeout
+		if (System.currentTimeMillis - TIMEOUT > occurrence.timeStamp)
+			return;
+		
+		// Discard message if I am the one who initiated the attack
+		if (occurrence.requestOrigin == this.ID)
+			return;
+		
+		// Check already forwarded path calculations to avoid spreading useless events
+		// This implementation does NOT work if there are multiple different path calculations at once
+		// -> The following would have to be modified
+		
+		// If the previous request was for the same path calculation ...
+		if (previousPathCalculationId === occurrence.requestId)
+		{
+			// ... and the previous request had higher jump value ...
+			if (previousPathCalculationJumpValue > occurrence.jumpCount)
+			{
+				// I check if the path we already sent was a "good" path (not moving happy tiles on the way)
+				if (previousPathDidMoveHappyTiles === false)
+				{
+					// ... it is useless to spread the message
+					return;
+				}
+				// The previous path was not a good path
+				else
+				{
+					// If this is NOT a good path
+					if (occurrence.forcePath === true)
+					{
+						// ... it is useless to spread the message
+						return;
+					}
+					// else ... we do spread this message
+				}	
+			}
+		}
+		
+		// Setting the values for the next PathCalculation received
+		previousPathCalculationId = occurrence.requestId
+		previousPathCalculationJumpValue = occurrence.jumpCount
+		previousPathDidMoveHappyTiles = occurrence.forcePath
+		
+		// Adding itself to the path
+		occurrence.path.add(this)
+		
+		// If we host the blank tile ...
+		if (hostedNumTile == 0)
+		{
+			// ... we send the path that was found
+			emit(new PathFound(occurrence.requestId, occurrence.forcePath, occurrence.jumpCount, occurrence.path),
+				Scopes.addresses(defaultSpace.getAddress(occurrence.requestOrigin)))
+			// We avoid spreading more useless PathCalculation
+			return
+		}
+		
+		var forcingAPath = false
+		
+		// If we did not force a path yet, we check we are not doing it right now
+		if (!occurrence.forcePath)
+			if (!isSatisfied)
+				forcingAPath = true
+
+		// If we do not host the blank tile, we send the event PathCalculation to our neighbours ...
+		// ... north one
+		if (northNeighbour !== null && occurrence.provenanceDirection !== Position.NORTH)
+			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.SOUTH,
+					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path))
+		// ... east one
+		if (eastNeighbour !== null && occurrence.provenanceDirection !== Position.EAST)
+			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.WEST,
+				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path))
+		// ... south one
+		if (southNeighbour !== null && occurrence.provenanceDirection !== Position.SOUTH)
+			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.NORTH,
+				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path))
+		// ... west one
+		if (westNeighbour !== null && occurrence.provenanceDirection !== Position.WEST)
+			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.EAST,
+				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, occurrence.path))
+		
 	}
 	
 	def getXRow : int{
@@ -271,33 +335,6 @@ agent FrameAgent {
 	
 	def getIdNum : int {
 		return this.idNum
-	}
-	
-	// The assault must be forwarded to the right frame
-	on Assault [!isAttacked] {
-		
-		// info("DEBUGG : I FORWARD ASSAULT !")
-		
-		if (occurrence.direction === Position.NORTH)
-			emit(new Assault(Position.SOUTH, true), Scopes.identifiers(northNeighbour))
-		else if (occurrence.direction === Position.SOUTH)
-			emit(new Assault(Position.NORTH, true), Scopes.identifiers(southNeighbour))
-		else if (occurrence.direction === Position.WEST)
-			emit(new Assault(Position.EAST, true), Scopes.identifiers(westNeighbour))
-		else if (occurrence.direction === Position.EAST)
-			emit(new Assault(Position.WEST, true), Scopes.identifiers(eastNeighbour))
-	}
-
-	// The frame is being assaulted
-	on Assault [isAttacked] {
- 
-		error(
-			"=========================================== DEBUGG : I GOT ATTACKED ! emit FINDPATH! /hostedNumTile=" +hostedNumTile)
-		
-		// I have to run away by finding a path between me and the empty tile
-		emit(new FindPathWithAstarAlgo(ID))
-		// ... 
-		
 	}
 	
 	def getNumFrame : int {

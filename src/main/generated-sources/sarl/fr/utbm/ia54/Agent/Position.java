@@ -13,5 +13,7 @@ public enum Position {
   
   EAST,
   
-  WEST;
+  WEST,
+  
+  UNKNOWN;
 }

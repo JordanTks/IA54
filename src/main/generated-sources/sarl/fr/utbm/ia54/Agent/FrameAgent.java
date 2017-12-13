@@ -1,5 +1,6 @@
 package fr.utbm.ia54.Agent;
 
+import com.google.common.base.Objects;
 import fr.utbm.ia54.Agent.Position;
 import fr.utbm.ia54.Class.CoordPair;
 import fr.utbm.ia54.Event.AskNeighbourSatisfaction;
@@ -31,7 +32,6 @@ import io.sarl.lang.util.ClearableReference;
 import io.sarl.util.Scopes;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.Objects;
 import java.util.UUID;
 import javax.inject.Inject;
 import org.eclipse.xtext.xbase.lib.Extension;
@@ -51,6 +51,8 @@ public class FrameAgent extends Agent {
   private long previousPathCalculationId;
   
   private int previousPathCalculationJumpValue;
+  
+  private boolean previousPathDidMoveHappyTiles;
   
   private boolean isSatisfied = false;
   
@@ -130,57 +132,7 @@ public class FrameAgent extends Agent {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$PathCalculation$2(final PathCalculation occurrence) {
-    long _currentTimeMillis = System.currentTimeMillis();
-    long _minus = (_currentTimeMillis - this.TIMEOUT);
-    boolean _greaterThan = (_minus > occurrence.timeStamp);
-    if (_greaterThan) {
-      return;
-    }
-    if ((this.previousPathCalculationId == occurrence.requestId)) {
-      if ((this.previousPathCalculationJumpValue <= occurrence.jumpCount)) {
-        return;
-      }
-    }
-    this.previousPathCalculationId = occurrence.requestId;
-    this.previousPathCalculationJumpValue = occurrence.jumpCount;
-    occurrence.path.add(this);
-    if ((this.hostedNumTile == (-1))) {
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      PathFound _pathFound = new PathFound(occurrence.requestId, occurrence.jumpCount, occurrence.path);
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_pathFound, 
-        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(occurrence.requestOrigin)));
-      return;
-    }
-    if (((this.northNeighbour != null) && (occurrence.provenanceDirection != 2))) {
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      PathCalculation _pathCalculation = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 0, 
-        occurrence.timeStamp, (occurrence.jumpCount + 1), occurrence.path);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_pathCalculation);
-    }
-    if (((this.eastNeighbour != null) && (occurrence.provenanceDirection != 3))) {
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      PathCalculation _pathCalculation_1 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 1, 
-        occurrence.timeStamp, (occurrence.jumpCount + 1), occurrence.path);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3.emit(_pathCalculation_1);
-    }
-    if (((this.southNeighbour != null) && (occurrence.provenanceDirection != 0))) {
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      PathCalculation _pathCalculation_2 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 2, 
-        occurrence.timeStamp, (occurrence.jumpCount + 1), occurrence.path);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4.emit(_pathCalculation_2);
-    }
-    if (((this.westNeighbour != null) && (occurrence.provenanceDirection != 1))) {
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_5 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      PathCalculation _pathCalculation_3 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, 3, 
-        occurrence.timeStamp, (occurrence.jumpCount + 1), occurrence.path);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_5.emit(_pathCalculation_3);
-    }
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$AskNeighbourSatisfaction$3(final AskNeighbourSatisfaction occurrence) {
+  private void $behaviorUnit$AskNeighbourSatisfaction$2(final AskNeighbourSatisfaction occurrence) {
     this.neighbourSatisfaction.clear();
     if (occurrence.north) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
@@ -204,12 +156,12 @@ public class FrameAgent extends Agent {
   
   @SyntheticMember
   @Pure
-  private boolean $behaviorUnitGuard$AskNeighbourSatisfaction$3(final AskNeighbourSatisfaction it, final AskNeighbourSatisfaction occurrence) {
+  private boolean $behaviorUnitGuard$AskNeighbourSatisfaction$2(final AskNeighbourSatisfaction it, final AskNeighbourSatisfaction occurrence) {
     return (!it.isAsked);
   }
   
   @SyntheticMember
-  private void $behaviorUnit$AskNeighbourSatisfaction$4(final AskNeighbourSatisfaction occurrence) {
+  private void $behaviorUnit$AskNeighbourSatisfaction$3(final AskNeighbourSatisfaction occurrence) {
     DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
     ResponseNeighbourSatisfaction _responseNeighbourSatisfaction = new ResponseNeighbourSatisfaction(this.isSatisfied, occurrence.direction);
     _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_responseNeighbourSatisfaction, Scopes.identifiers(occurrence.getSource().getUUID()));
@@ -217,12 +169,12 @@ public class FrameAgent extends Agent {
   
   @SyntheticMember
   @Pure
-  private boolean $behaviorUnitGuard$AskNeighbourSatisfaction$4(final AskNeighbourSatisfaction it, final AskNeighbourSatisfaction occurrence) {
+  private boolean $behaviorUnitGuard$AskNeighbourSatisfaction$3(final AskNeighbourSatisfaction it, final AskNeighbourSatisfaction occurrence) {
     return it.isAsked;
   }
   
   @SyntheticMember
-  private void $behaviorUnit$ResponseNeighbourSatisfaction$5(final ResponseNeighbourSatisfaction occurrence) {
+  private void $behaviorUnit$ResponseNeighbourSatisfaction$4(final ResponseNeighbourSatisfaction occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(((("DEBUGG : ResponseNeighbourSatisfaction [frame] : direction " + occurrence.direction) + "    isSatisfied ") + Boolean.valueOf(occurrence.isSatisfied)));
     this.neighbourSatisfaction.put(occurrence.direction, Boolean.valueOf(occurrence.isSatisfied));
@@ -232,6 +184,124 @@ public class FrameAgent extends Agent {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       ResponseNeighbourSatisfaction _responseNeighbourSatisfaction = new ResponseNeighbourSatisfaction(this.neighbourSatisfaction);
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_responseNeighbourSatisfaction, Scopes.identifiers(this.hostedTile));
+      this.neighbourSatisfaction.clear();
+    }
+  }
+  
+  @SyntheticMember
+  private void $behaviorUnit$Assault$5(final Assault occurrence) {
+    if ((occurrence.direction == Position.NORTH)) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      Assault _assault = new Assault(Position.SOUTH, true);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_assault, Scopes.identifiers(this.northNeighbour));
+    } else {
+      if ((occurrence.direction == Position.SOUTH)) {
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        Assault _assault_1 = new Assault(Position.NORTH, true);
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_assault_1, Scopes.identifiers(this.southNeighbour));
+      } else {
+        if ((occurrence.direction == Position.WEST)) {
+          DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+          Assault _assault_2 = new Assault(Position.EAST, true);
+          _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_assault_2, Scopes.identifiers(this.westNeighbour));
+        } else {
+          if ((occurrence.direction == Position.EAST)) {
+            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+            Assault _assault_3 = new Assault(Position.WEST, true);
+            _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3.emit(_assault_3, Scopes.identifiers(this.eastNeighbour));
+          }
+        }
+      }
+    }
+  }
+  
+  @SyntheticMember
+  @Pure
+  private boolean $behaviorUnitGuard$Assault$5(final Assault it, final Assault occurrence) {
+    return (!it.isAttacked);
+  }
+  
+  @SyntheticMember
+  private void $behaviorUnit$Assault$6(final Assault occurrence) {
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.error(("=========================================== DEBUGG : I GOT ATTACKED ! emit FINDPATH! /hostedNumTile=" + Integer.valueOf(this.hostedNumTile)));
+    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+    UUID _iD = this.getID();
+    FindPathWithAstarAlgo _findPathWithAstarAlgo = new FindPathWithAstarAlgo(_iD);
+    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_findPathWithAstarAlgo);
+  }
+  
+  @SyntheticMember
+  @Pure
+  private boolean $behaviorUnitGuard$Assault$6(final Assault it, final Assault occurrence) {
+    return it.isAttacked;
+  }
+  
+  @SyntheticMember
+  private void $behaviorUnit$PathCalculation$7(final PathCalculation occurrence) {
+    long _currentTimeMillis = System.currentTimeMillis();
+    long _minus = (_currentTimeMillis - this.TIMEOUT);
+    boolean _greaterThan = (_minus > occurrence.timeStamp);
+    if (_greaterThan) {
+      return;
+    }
+    UUID _iD = this.getID();
+    boolean _equals = Objects.equal(occurrence.requestOrigin, _iD);
+    if (_equals) {
+      return;
+    }
+    if ((this.previousPathCalculationId == occurrence.requestId)) {
+      if ((this.previousPathCalculationJumpValue > occurrence.jumpCount)) {
+        if ((Boolean.valueOf(this.previousPathDidMoveHappyTiles) == Boolean.valueOf(false))) {
+          return;
+        } else {
+          if ((Boolean.valueOf(occurrence.forcePath) == Boolean.valueOf(true))) {
+            return;
+          }
+        }
+      }
+    }
+    this.previousPathCalculationId = occurrence.requestId;
+    this.previousPathCalculationJumpValue = occurrence.jumpCount;
+    this.previousPathDidMoveHappyTiles = occurrence.forcePath;
+    occurrence.path.add(this);
+    if ((this.hostedNumTile == 0)) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      PathFound _pathFound = new PathFound(occurrence.requestId, occurrence.forcePath, occurrence.jumpCount, occurrence.path);
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_pathFound, 
+        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(occurrence.requestOrigin)));
+      return;
+    }
+    boolean forcingAPath = false;
+    if ((!occurrence.forcePath)) {
+      if ((!this.isSatisfied)) {
+        forcingAPath = true;
+      }
+    }
+    if (((this.northNeighbour != null) && (occurrence.provenanceDirection != Position.NORTH))) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      PathCalculation _pathCalculation = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.SOUTH, 
+        occurrence.timeStamp, forcingAPath, (occurrence.jumpCount + 1), occurrence.path);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_pathCalculation);
+    }
+    if (((this.eastNeighbour != null) && (occurrence.provenanceDirection != Position.EAST))) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      PathCalculation _pathCalculation_1 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.WEST, 
+        occurrence.timeStamp, forcingAPath, (occurrence.jumpCount + 1), occurrence.path);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3.emit(_pathCalculation_1);
+    }
+    if (((this.southNeighbour != null) && (occurrence.provenanceDirection != Position.SOUTH))) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      PathCalculation _pathCalculation_2 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.NORTH, 
+        occurrence.timeStamp, forcingAPath, (occurrence.jumpCount + 1), occurrence.path);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4.emit(_pathCalculation_2);
+    }
+    if (((this.westNeighbour != null) && (occurrence.provenanceDirection != Position.WEST))) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_5 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      PathCalculation _pathCalculation_3 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.EAST, 
+        occurrence.timeStamp, forcingAPath, (occurrence.jumpCount + 1), occurrence.path);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_5.emit(_pathCalculation_3);
     }
   }
   
@@ -321,56 +391,6 @@ public class FrameAgent extends Agent {
   @Pure
   protected int getIdNum() {
     return this.idNum;
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$Assault$6(final Assault occurrence) {
-    if ((occurrence.direction == Position.NORTH)) {
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      Assault _assault = new Assault(Position.SOUTH, true);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_assault, Scopes.identifiers(this.northNeighbour));
-    } else {
-      if ((occurrence.direction == Position.SOUTH)) {
-        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-        Assault _assault_1 = new Assault(Position.NORTH, true);
-        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_assault_1, Scopes.identifiers(this.southNeighbour));
-      } else {
-        if ((occurrence.direction == Position.WEST)) {
-          DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-          Assault _assault_2 = new Assault(Position.EAST, true);
-          _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_assault_2, Scopes.identifiers(this.westNeighbour));
-        } else {
-          if ((occurrence.direction == Position.EAST)) {
-            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-            Assault _assault_3 = new Assault(Position.WEST, true);
-            _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3.emit(_assault_3, Scopes.identifiers(this.eastNeighbour));
-          }
-        }
-      }
-    }
-  }
-  
-  @SyntheticMember
-  @Pure
-  private boolean $behaviorUnitGuard$Assault$6(final Assault it, final Assault occurrence) {
-    return (!it.isAttacked);
-  }
-  
-  @SyntheticMember
-  private void $behaviorUnit$Assault$7(final Assault occurrence) {
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.error(
-      ("=========================================== DEBUGG : I GOT ATTACKED ! emit FINDPATH! /hostedNumTile=" + Integer.valueOf(this.hostedNumTile)));
-    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    UUID _iD = this.getID();
-    FindPathWithAstarAlgo _findPathWithAstarAlgo = new FindPathWithAstarAlgo(_iD);
-    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_findPathWithAstarAlgo);
-  }
-  
-  @SyntheticMember
-  @Pure
-  private boolean $behaviorUnitGuard$Assault$7(final Assault it, final Assault occurrence) {
-    return it.isAttacked;
   }
   
   @Pure
@@ -574,15 +594,7 @@ public class FrameAgent extends Agent {
   private void $guardEvaluator$ResponseNeighbourSatisfaction(final ResponseNeighbourSatisfaction occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ResponseNeighbourSatisfaction$5(occurrence));
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$PathCalculation(final PathCalculation occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$PathCalculation$2(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ResponseNeighbourSatisfaction$4(occurrence));
   }
   
   @SyntheticMember
@@ -590,12 +602,20 @@ public class FrameAgent extends Agent {
   private void $guardEvaluator$Assault(final Assault occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
+    if ($behaviorUnitGuard$Assault$5(occurrence, occurrence)) {
+      ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Assault$5(occurrence));
+    }
     if ($behaviorUnitGuard$Assault$6(occurrence, occurrence)) {
       ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Assault$6(occurrence));
     }
-    if ($behaviorUnitGuard$Assault$7(occurrence, occurrence)) {
-      ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Assault$7(occurrence));
-    }
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$PathCalculation(final PathCalculation occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$PathCalculation$7(occurrence));
   }
   
   @SyntheticMember
@@ -603,11 +623,11 @@ public class FrameAgent extends Agent {
   private void $guardEvaluator$AskNeighbourSatisfaction(final AskNeighbourSatisfaction occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
+    if ($behaviorUnitGuard$AskNeighbourSatisfaction$2(occurrence, occurrence)) {
+      ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AskNeighbourSatisfaction$2(occurrence));
+    }
     if ($behaviorUnitGuard$AskNeighbourSatisfaction$3(occurrence, occurrence)) {
       ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AskNeighbourSatisfaction$3(occurrence));
-    }
-    if ($behaviorUnitGuard$AskNeighbourSatisfaction$4(occurrence, occurrence)) {
-      ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$AskNeighbourSatisfaction$4(occurrence));
     }
   }
   
@@ -636,25 +656,27 @@ public class FrameAgent extends Agent {
       return false;
     if (other.previousPathCalculationJumpValue != this.previousPathCalculationJumpValue)
       return false;
+    if (other.previousPathDidMoveHappyTiles != this.previousPathDidMoveHappyTiles)
+      return false;
     if (other.isSatisfied != this.isSatisfied)
       return false;
     if (other.isBlocked != this.isBlocked)
       return false;
     if (other.nbNeighbours != this.nbNeighbours)
       return false;
-    if (!Objects.equals(this.northNeighbour, other.northNeighbour)) {
+    if (!java.util.Objects.equals(this.northNeighbour, other.northNeighbour)) {
       return false;
     }
-    if (!Objects.equals(this.eastNeighbour, other.eastNeighbour)) {
+    if (!java.util.Objects.equals(this.eastNeighbour, other.eastNeighbour)) {
       return false;
     }
-    if (!Objects.equals(this.southNeighbour, other.southNeighbour)) {
+    if (!java.util.Objects.equals(this.southNeighbour, other.southNeighbour)) {
       return false;
     }
-    if (!Objects.equals(this.westNeighbour, other.westNeighbour)) {
+    if (!java.util.Objects.equals(this.westNeighbour, other.westNeighbour)) {
       return false;
     }
-    if (!Objects.equals(this.hostedTile, other.hostedTile)) {
+    if (!java.util.Objects.equals(this.hostedTile, other.hostedTile)) {
       return false;
     }
     if (other.hostedNumTile != this.hostedNumTile)
@@ -677,7 +699,7 @@ public class FrameAgent extends Agent {
       return false;
     if (other.costF != this.costF)
       return false;
-    if (!Objects.equals(this.uuidPreviousFrame, other.uuidPreviousFrame)) {
+    if (!java.util.Objects.equals(this.uuidPreviousFrame, other.uuidPreviousFrame)) {
       return false;
     }
     return super.equals(obj);
@@ -692,14 +714,15 @@ public class FrameAgent extends Agent {
     result = prime * result + this.TIMEOUT;
     result = prime * result + (int) (this.previousPathCalculationId ^ (this.previousPathCalculationId >>> 32));
     result = prime * result + this.previousPathCalculationJumpValue;
+    result = prime * result + (this.previousPathDidMoveHappyTiles ? 1231 : 1237);
     result = prime * result + (this.isSatisfied ? 1231 : 1237);
     result = prime * result + (this.isBlocked ? 1231 : 1237);
     result = prime * result + this.nbNeighbours;
-    result = prime * result + Objects.hashCode(this.northNeighbour);
-    result = prime * result + Objects.hashCode(this.eastNeighbour);
-    result = prime * result + Objects.hashCode(this.southNeighbour);
-    result = prime * result + Objects.hashCode(this.westNeighbour);
-    result = prime * result + Objects.hashCode(this.hostedTile);
+    result = prime * result + java.util.Objects.hashCode(this.northNeighbour);
+    result = prime * result + java.util.Objects.hashCode(this.eastNeighbour);
+    result = prime * result + java.util.Objects.hashCode(this.southNeighbour);
+    result = prime * result + java.util.Objects.hashCode(this.westNeighbour);
+    result = prime * result + java.util.Objects.hashCode(this.hostedTile);
     result = prime * result + this.hostedNumTile;
     result = prime * result + (this.ready ? 1231 : 1237);
     result = prime * result + this.dimension;
@@ -710,7 +733,7 @@ public class FrameAgent extends Agent {
     result = prime * result + this.costG;
     result = prime * result + this.costH;
     result = prime * result + this.costF;
-    result = prime * result + Objects.hashCode(this.uuidPreviousFrame);
+    result = prime * result + java.util.Objects.hashCode(this.uuidPreviousFrame);
     return result;
   }
   

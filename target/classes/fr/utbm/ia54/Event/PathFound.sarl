@@ -9,17 +9,19 @@ import java.util.UUID
 
 /** 
  * Path found to the blank tile.
- * Sent directly to the agent that asked for the path calculation.
+ * Sent directly to the agent that assaulted the first tile
  * 
  */
 event PathFound
 {
 	var requestId : long
+	var forcePath : boolean
 	var jumpCount : int
 	var path = new ArrayList<FrameAgent>()
 
-	new (reqId : long, jump : int, p : ArrayList<FrameAgent>) {
+	new (reqId : long, forcingAPath : boolean, jump : int, p : ArrayList<FrameAgent>) {
 		this.requestId = reqId
+		this.forcePath = forcingAPath
 		this.jumpCount = jump
 		this.path = p
 	}
