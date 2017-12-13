@@ -3,6 +3,7 @@ package fr.utbm.ia54.Agent;
 import fr.utbm.ia54.Event.EndAgent;
 import fr.utbm.ia54.Event.TileSet;
 import fr.utbm.ia54.Event.TokenReceived;
+import fr.utbm.ia54.Event.UpdateProblemInformations;
 import io.sarl.core.DefaultContextInteractions;
 import io.sarl.core.Initialize;
 import io.sarl.core.Lifecycle;
@@ -17,6 +18,7 @@ import io.sarl.lang.core.BuiltinCapacitiesProvider;
 import io.sarl.lang.core.DynamicSkillProvider;
 import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
+import io.sarl.util.Scopes;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
@@ -53,6 +55,17 @@ public class EmptyTileAgent extends Agent {
     _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tileSet);
   }
   
+  @SyntheticMember
+  private void $behaviorUnit$UpdateProblemInformations$1(final UpdateProblemInformations occurrence) {
+    this.uuidFrameHost = occurrence.id;
+    this.numFrameHost = occurrence.num;
+    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+    UUID _iD = this.getID();
+    UpdateProblemInformations _updateProblemInformations = new UpdateProblemInformations(this.numTile, _iD, occurrence.sendAckTo);
+    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_updateProblemInformations, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(occurrence.id)));
+  }
+  
   protected void setIsHappy(final boolean happy) {
     this.isHappy = happy;
   }
@@ -81,11 +94,11 @@ public class EmptyTileAgent extends Agent {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$TokenReceived$1(final TokenReceived occurrence) {
+  private void $behaviorUnit$TokenReceived$2(final TokenReceived occurrence) {
   }
   
   @SyntheticMember
-  private void $behaviorUnit$EndAgent$2(final EndAgent occurrence) {
+  private void $behaviorUnit$EndAgent$3(final EndAgent occurrence) {
     Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
     _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.killMe();
   }
@@ -145,18 +158,26 @@ public class EmptyTileAgent extends Agent {
   
   @SyntheticMember
   @PerceptGuardEvaluator
-  private void $guardEvaluator$TokenReceived(final TokenReceived occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+  private void $guardEvaluator$EndAgent(final EndAgent occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$TokenReceived$1(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$EndAgent$3(occurrence));
   }
   
   @SyntheticMember
   @PerceptGuardEvaluator
-  private void $guardEvaluator$EndAgent(final EndAgent occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+  private void $guardEvaluator$UpdateProblemInformations(final UpdateProblemInformations occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$EndAgent$2(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$UpdateProblemInformations$1(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$TokenReceived(final TokenReceived occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$TokenReceived$2(occurrence));
   }
   
   @Override

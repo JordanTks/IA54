@@ -18,6 +18,7 @@ import io.sarl.core.Behaviors
 import io.sarl.core.Schedules
 import fr.utbm.ia54.Event.SafetyWait
 import io.sarl.core.Lifecycle
+import fr.utbm.ia54.Event.UpdateProblemInformations
 
 agent TileAgent {
 	uses Logging, DefaultContextInteractions, Behaviors, Schedules, Lifecycle 
@@ -73,7 +74,7 @@ agent TileAgent {
 	
 	on TokenReceived {
 		
-		info("I received the token.")
+		info("INFO : I received the token.")
 		
 		if (isHappy) {
 			emit(new TokenReleased())
@@ -105,7 +106,7 @@ agent TileAgent {
 	  
 	def chooseTarget : boolean {
 
-		info("DEBUGG : choose target")
+		//info("DEBUGG : choose target")
 
 		// If I am on the same line or column as my desired spot, I just go in the spot direction
 		
@@ -126,7 +127,7 @@ agent TileAgent {
 		// If I am not on the same line or column as my desired spot, I can choose between the two directions that will bring me closer
 		else {
 
-			info("DEBUGG : choose target between two targets")
+			//info("DEBUGG : choose target between two targets")
 			
 			// Finding out these two possible directions :
 			
@@ -148,7 +149,7 @@ agent TileAgent {
 	// We had to ask for more informations to choose who to target
 	on ResponseNeighbourSatisfaction {
 
-		info("DEBUGG : Assault one of the neighbour that responded")
+		//info("DEBUGG : Assault one of the neighbour that responded")
 		
 		// The map has only two entries
 		// We get first entry of the map
@@ -158,15 +159,34 @@ agent TileAgent {
 		// If this neighbour is unhappy, therefore we can target him
 		if (entry.value === false)
 		{
-			info ("DEBUGG : Assault first neighbour which responded")
+			//info ("DEBUGG : Assault first neighbour which responded")
 			emit(new Assault(entry.key, false), Scopes.identifiers(uuidFrameHost))
 		}
 		// Wether or not the second neighbour is happy, we have to target someone anyway
 		else {
-			info("DEBUGG : Assault second neighbour which responded")
+			//info("DEBUGG : Assault second neighbour which responded")
 			entry = iter.next()
 			emit(new Assault(entry.key, false), Scopes.identifiers(uuidFrameHost))
 		}
+	}
+
+	// Has to update informations from its frame host & send back data to the frame
+	on UpdateProblemInformations {
+
+		//info("DEBUGG : Updating data in TileAgent")
+		
+		uuidFrameHost = occurrence.id
+		numFrameHost = occurrence.num
+		numFrameHostFromZero = numFrameHost - 1
+
+		if (numFrameHost === numTile)
+			isHappy = true
+		else
+			isHappy = false
+		
+		//info("DEBUGG : UpdateProblemInformations [IN TILE, SENDING BACK INFO]")
+		
+		emit(new UpdateProblemInformations(numTile, this.ID, occurrence.sendAckTo), Scopes.addresses(defaultSpace.getAddress(occurrence.id)))
 	}
 	
 	on Assault {

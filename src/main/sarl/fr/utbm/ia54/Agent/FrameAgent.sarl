@@ -26,6 +26,10 @@ import io.sarl.core.Behaviors
 import fr.utbm.ia54.Event.SafetyWait
 import java.util.ArrayList
 import fr.utbm.ia54.Event.PathCalculationTimeOut
+import fr.utbm.ia54.Event.TokenReleased
+import java.util.Collections
+import fr.utbm.ia54.Event.UpdateProblemInformations
+import fr.utbm.ia54.Event.AcknowledgmentDataUpdated
 
 /** 
  * @author Jordan
@@ -43,6 +47,8 @@ agent FrameAgent {
 	var bestPath : ArrayList<FrameAgent>
 	var bestForcedPath : ArrayList<FrameAgent>
 
+	// Swapping Tiles
+	var nbAck : int
 
 	// FrameAgent state
 	var isSatisfied = false
@@ -284,11 +290,18 @@ agent FrameAgent {
 		
 		var forcingAPath = false
 		
+		// If we were forcing a path before, we have to forward this information
+		if (occurrence.forcePath)
+		{
+			forcingAPath = true
+		}
 		// If we did not force a path yet, we check we are not doing it right now
-		if (!occurrence.forcePath)
-			if (!isSatisfied)
+		else
+		{
+			if (isSatisfied)
 				forcingAPath = true
-
+		}
+		
 		// If we do not host the blank tile, we send the event PathCalculation to our neighbours ...
 		// ... north one
 		if (northNeighbour !== null && occurrence.provenanceDirection !== Position.NORTH)
@@ -358,7 +371,8 @@ agent FrameAgent {
 	// Time is up to find new paths, we now use the best path we found
 	on PathCalculationTimeOut {
 		
-		info("DEBUGG : PathCalculationTimeOut")
+		// DEBUGGING PATHFINDING
+		/*info("DEBUGG : PathCalculationTimeOut")
 		
 		if (bestPath !== null)
 		{
@@ -370,8 +384,95 @@ agent FrameAgent {
 		if (bestForcedPath !== null) {
 			info("DEBUGG : There is a bad path (length : " + bestForcedPath.size + ")")
 			for (f : bestForcedPath)
-				info("DEBUGG : GOOD PATH > " + f.numFrame)
+				info("DEBUGG : BAD PATH > " + f.numFrame)
+		}*/
+		
+		// We have a good clean path
+		if (bestPath !== null)
+		{
+			iterateMovementChain(bestPath)
 		}
+		// We have a path that will move some happy tiles on the way 
+		else if (bestForcedPath !== null)
+		{
+			iterateMovementChain(bestForcedPath)
+		}
+		// We have nothing. We will try releasing the token hopping this solves something
+		else
+		{
+			error("Error 03 : No path found in time at the end of PathCalculation spreading.")
+			emit (new TokenReleased)
+		}
+	}
+	
+	def iterateMovementChain (path : ArrayList<FrameAgent>) {
+		
+		// Setting counter to know when we can release token
+		nbAck = path.size + 1 // Waiting for an answer from each frame of the list + myself
+		
+		Collections.reverse(path);
+		
+		var tempID : UUID
+		
+		// While there are more than two elements, we have to swap informations
+		while(path.size >= 2)
+		{
+			// Swapping hosted Tile UUID
+			tempID = path.get(0).hostedTile
+			path.get(0).hostedTile = path.get(1).hostedTile
+			path.get(1).hostedTile = tempID
+			
+			//info("DEBUGG : iterateMovementChain id " + path.get(0).hostedTile)
+			
+			// Tells the frame to send its info to its new Hosted Tile & to wait for the info from the Tile afterwards
+			emit(new UpdateProblemInformations(true, this.ID), Scopes.addresses(defaultSpace.getAddress(path.get(0).ID)))
+			
+			// We remove the first element of the list
+			path.remove(0)
+		}
+
+		// Swapping hosted Tile UUID with original aggressor
+		tempID = path.get(0).hostedTile
+		path.get(0).hostedTile = this.hostedTile
+		this.hostedTile = tempID
+
+		emit(new UpdateProblemInformations(true, this.ID), Scopes.addresses(defaultSpace.getAddress(path.get(0).ID)))
+
+		//emit(new UpdateProblemInformations(true, this.ID), Scopes.addresses(defaultSpace.getAddress(this.ID)))
+		wake(new UpdateProblemInformations(true, this.ID))
+	}
+	
+	// Has to send informations to its tile
+	on UpdateProblemInformations [start] {
+
+		info("DEBUGG : UpdateProblemInformations : sending data to " + hostedTile)
+		emit(new UpdateProblemInformations(idNum, this.ID, occurrence.sendAckTo), Scopes.addresses(defaultSpace.getAddress(hostedTile)))
+	}
+	
+	// Has to update informations from its tile & tell initiator it is done
+	on UpdateProblemInformations [!start] {
+		
+		hostedNumTile = occurrence.num
+		
+		if (hostedNumTile === idNum)
+			isSatisfied = true
+		else
+			isSatisfied = false
+
+		//info("DEBUGG : UpdateProblemInformations [END, SENDING ACK]")
+		
+		emit(new AcknowledgmentDataUpdated(), Scopes.addresses(defaultSpace.getAddress(occurrence.sendAckTo)))
+	}
+	
+	on AcknowledgmentDataUpdated {
+		nbAck--
+		
+		//info("DEBUGG : AcknowledgmentDataUpdated : nbAck : " + nbAck)
+		
+		// We received all the acknowledgments we were waiting for
+		if (nbAck === 0)
+			emit(new TokenReleased())
+
 	}
 	
 	def getXRow : int{

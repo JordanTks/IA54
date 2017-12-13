@@ -1,0 +1,36 @@
+/** 
+ * 
+ */
+package fr.utbm.ia54.Event
+
+import java.util.UUID
+
+/** 
+ * @author Norgannon
+ * 
+ */
+event UpdateProblemInformations {
+	
+	var start : Boolean
+	
+	// Data sent
+	var num : int
+	var id : UUID
+	
+	var sendAckTo : UUID
+	
+	// From Frame with token to Frame that needs to update data
+	new (st : Boolean, sendResponseTo : UUID) {
+		start = st
+		sendAckTo = sendResponseTo
+	}
+	
+	// From Frame to Tile or from Tile to Frame
+	new(i : int, hostID : UUID, sendLastAckTo : UUID) {
+		start = false
+		num = i
+		id = hostID
+		sendAckTo = sendLastAckTo
+	}
+	
+}

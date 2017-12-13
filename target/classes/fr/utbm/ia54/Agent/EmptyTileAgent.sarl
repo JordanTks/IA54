@@ -11,6 +11,8 @@ import fr.utbm.ia54.Event.EndAgent
 import io.sarl.core.DefaultContextInteractions
 import java.util.UUID
 import io.sarl.core.Lifecycle
+import fr.utbm.ia54.Event.UpdateProblemInformations
+import io.sarl.util.Scopes
 
 /** 
  * @author Norgannon
@@ -34,6 +36,15 @@ agent EmptyTileAgent {
 		emit(new TileSet(null,this))
 
 		// info("DEBUGG : Agent is set up.")
+	}
+
+	// Has to update informations from its frame host & send back data to the frame
+	on UpdateProblemInformations {
+
+		uuidFrameHost = occurrence.id
+		numFrameHost = occurrence.num
+		
+		emit(new UpdateProblemInformations(numTile, this.ID, occurrence.sendAckTo), Scopes.addresses(defaultSpace.getAddress(occurrence.id)))
 	}
 	
 	def setIsHappy(happy : boolean){
