@@ -78,10 +78,6 @@ class TaquinFxViewerController extends FxViewerController {
 							t.fill = Color.GREEN
 						else if (color.equals("purple"))
 							t.fill = Color.PURPLE
-						else if (color.equals("pink"))
-							t.fill = Color.PINK
-						else if (color.equals("black"))
-							t.fill = Color.BLACK
 						return
 					}
 				}

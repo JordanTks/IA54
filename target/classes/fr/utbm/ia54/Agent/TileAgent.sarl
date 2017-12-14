@@ -114,34 +114,6 @@ agent TileAgent {
 
 		//info("DEBUGG : choose target")
 
-
-		// ATTEMP CORNER
-		
-		// corner top left
-		if ((numTileFromZero % problemSize) + 1 === numTileFromZero / problemSize)
-		{
-			if (numTileFromZero !== numFrameHostFromZero + 1)
-				numTileFromZero = numTileFromZero - 1
-		}
-		// corner bottom left
-		else if (numTileFromZero / problemSize === problemSize - 2)
-		{
-			if (numTileFromZero !== numFrameHostFromZero - problemSize)
-				numTileFromZero = numTileFromZero + problemSize
-		}
-		// corner top left
-		else if (numTileFromZero % problemSize === numTileFromZero / problemSize)
-		{
-			if (numTileFromZero !== numFrameHostFromZero - problemSize)
-				numTileFromZero = numTileFromZero + problemSize
-		}
-		// corner bottom left
-		else if (numTileFromZero / problemSize === problemSize - 1)
-		{
-			if (numTileFromZero !== numFrameHostFromZero - 1)
-				numTileFromZero = numTileFromZero + 1
-		}
-		
 		// If I am on the same line or column as my desired spot, I just go in the spot direction
 		
 		// I am at the right longitude, therefore I will assault north or south
@@ -174,25 +146,8 @@ agent TileAgent {
 		 	// I have to choose between two targets, I ask my frame to get more informations
 			emit(new AskNeighbourSatisfaction(north, west), Scopes.identifiers(uuidFrameHost))
 			
-		}
-		
-		// CORNER ISSUE
-		// corner top left
-		if ((numTileFromZero % problemSize) + 1 === numTileFromZero / problemSize)
-			numTileFromZero = numTileFromZero + 1
+		} 
 
-		// corner bottom left
-		else if (numTileFromZero / problemSize === problemSize - 2)
-			numTileFromZero = numTileFromZero - problemSize
-
-		// corner top left
-		else if (numTileFromZero % problemSize === numTileFromZero / problemSize)
-			numTileFromZero = numTileFromZero - problemSize
-
-		// corner bottom left
-		else if (numTileFromZero / problemSize === problemSize - 1)
-			numTileFromZero = numTileFromZero - 1
-			
 		// If void function, code does not compile...
 		return true
 	}

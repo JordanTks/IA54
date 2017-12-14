@@ -281,198 +281,35 @@ public class BoardGameAgent extends Agent {
         break;
       }
     }
-    ArrayList<TileAgent> _get_1 = this.tokenPriorityList.get(0);
-    for (final TileAgent t_1 : _get_1) {
-      {
-        boolean _isHappy_1 = t_1.getIsHappy();
-        boolean _not = (!_isHappy_1);
-        if (_not) {
-          boolean blocking2 = false;
-          boolean blocking11 = false;
-          boolean blocking12 = false;
-          int _numTileFromZero = t_1.getNumTileFromZero();
-          int _modulo = (_numTileFromZero % this.PROBLEM_SIZE);
-          int _plus = (_modulo + 1);
-          int _numTileFromZero_1 = t_1.getNumTileFromZero();
-          int _divide = (_numTileFromZero_1 / this.PROBLEM_SIZE);
-          boolean _tripleEquals_1 = (_plus == _divide);
-          if (_tripleEquals_1) {
-            int _numFrameHostFromZero = t_1.getNumFrameHostFromZero();
-            int _numTileFromZero_2 = t_1.getNumTileFromZero();
-            int _minus = (_numTileFromZero_2 - 1);
-            boolean _tripleEquals_2 = (_numFrameHostFromZero == _minus);
-            if (_tripleEquals_2) {
-              blocking2 = true;
-            }
-          } else {
-            int _numTileFromZero_3 = t_1.getNumTileFromZero();
-            int _divide_1 = (_numTileFromZero_3 / this.PROBLEM_SIZE);
-            boolean _tripleEquals_3 = (_divide_1 == (this.PROBLEM_SIZE - 2));
-            if (_tripleEquals_3) {
-              int _numFrameHostFromZero_1 = t_1.getNumFrameHostFromZero();
-              int _plus_1 = (_numFrameHostFromZero_1 + this.PROBLEM_SIZE);
-              int _numTileFromZero_4 = t_1.getNumTileFromZero();
-              boolean _tripleEquals_4 = (_plus_1 == _numTileFromZero_4);
-              if (_tripleEquals_4) {
-                blocking2 = true;
-              }
-            } else {
-              int _numTileFromZero_5 = t_1.getNumTileFromZero();
-              int _modulo_1 = (_numTileFromZero_5 % this.PROBLEM_SIZE);
-              int _numTileFromZero_6 = t_1.getNumTileFromZero();
-              int _divide_2 = (_numTileFromZero_6 / this.PROBLEM_SIZE);
-              boolean _tripleEquals_5 = (_modulo_1 == _divide_2);
-              if (_tripleEquals_5) {
-                int _numFrameHostFromZero_2 = t_1.getNumFrameHostFromZero();
-                int _plus_2 = (_numFrameHostFromZero_2 + this.PROBLEM_SIZE);
-                int _numTileFromZero_7 = t_1.getNumTileFromZero();
-                boolean _tripleEquals_6 = (_plus_2 == _numTileFromZero_7);
-                if (_tripleEquals_6) {
-                  blocking11 = true;
-                }
-              } else {
-                int _numTileFromZero_8 = t_1.getNumTileFromZero();
-                int _divide_3 = (_numTileFromZero_8 / this.PROBLEM_SIZE);
-                boolean _tripleEquals_7 = (_divide_3 == (this.PROBLEM_SIZE - 1));
-                if (_tripleEquals_7) {
-                  int _numFrameHostFromZero_3 = t_1.getNumFrameHostFromZero();
-                  int _plus_3 = (_numFrameHostFromZero_3 + 1);
-                  int _numTileFromZero_9 = t_1.getNumTileFromZero();
-                  boolean _tripleEquals_8 = (_plus_3 == _numTileFromZero_9);
-                  if (_tripleEquals_8) {
-                    blocking12 = true;
-                  }
-                }
-              }
-            }
-          }
-          if (((blocking2 || blocking11) || blocking12)) {
-            for (final FrameAgent ite_1 : this.frameList) {
-              UUID _uuidFrameHost_1 = t_1.getUuidFrameHost();
-              UUID _iD_1 = ite_1.getID();
-              boolean _tripleEquals_9 = (_uuidFrameHost_1 == _iD_1);
-              if (_tripleEquals_9) {
-                ite_1.setIsBlocked(true);
-                this.ctrl.setColor("pink", Integer.valueOf(t_1.getNumTile()));
-              }
-            }
-            if (blocking11) {
-              for (final FrameAgent ite_2 : this.frameList) {
-                int _numTile = t_1.getNumTile();
-                int _plus_4 = (_numTile + 1);
-                int _idNum = ite_2.getIdNum();
-                boolean _tripleEquals_10 = (_plus_4 == _idNum);
-                if (_tripleEquals_10) {
-                  ite_2.setIsBlocked(false);
-                  this.ctrl.setColor("black", Integer.valueOf(t_1.getNumTile()));
-                }
-              }
-            }
-            if (blocking12) {
-              for (final FrameAgent ite_3 : this.frameList) {
-                int _numTile_1 = t_1.getNumTile();
-                int _minus_1 = (_numTile_1 - this.PROBLEM_SIZE);
-                int _idNum_1 = ite_3.getIdNum();
-                boolean _tripleEquals_11 = (_minus_1 == _idNum_1);
-                if (_tripleEquals_11) {
-                  ite_3.setIsBlocked(false);
-                  this.ctrl.setColor("black", Integer.valueOf(t_1.getNumTile()));
-                }
-              }
-            }
-          }
-        }
-        boolean _isHappy_2 = t_1.getIsHappy();
-        if (_isHappy_2) {
-          int top = 0;
-          int _numTileFromZero_10 = t_1.getNumTileFromZero();
-          int _modulo_2 = (_numTileFromZero_10 % this.PROBLEM_SIZE);
-          int _plus_5 = (_modulo_2 + 1);
-          int _numTileFromZero_11 = t_1.getNumTileFromZero();
-          int _divide_4 = (_numTileFromZero_11 / this.PROBLEM_SIZE);
-          boolean _tripleEquals_12 = (_plus_5 == _divide_4);
-          if (_tripleEquals_12) {
-            top = 1;
-          } else {
-            int _numTileFromZero_12 = t_1.getNumTileFromZero();
-            int _divide_5 = (_numTileFromZero_12 / this.PROBLEM_SIZE);
-            boolean _tripleEquals_13 = (_divide_5 == (this.PROBLEM_SIZE - 2));
-            if (_tripleEquals_13) {
-              top = 2;
-            }
-          }
-          if ((top == 1)) {
-            for (final FrameAgent ite_4 : this.frameList) {
-              int _numTile_2 = t_1.getNumTile();
-              int _minus_2 = (_numTile_2 - 1);
-              int _idNum_2 = ite_4.getIdNum();
-              boolean _tripleEquals_14 = (_minus_2 == _idNum_2);
-              if (_tripleEquals_14) {
-                ite_4.setIsBlocked(false);
-                this.ctrl.setColor("black", Integer.valueOf(t_1.getNumTile()));
-              }
-            }
-            break;
-          }
-          if ((top == 2)) {
-            for (final FrameAgent ite_5 : this.frameList) {
-              int _numTile_3 = t_1.getNumTile();
-              int _plus_6 = (_numTile_3 + this.PROBLEM_SIZE);
-              int _idNum_3 = ite_5.getIdNum();
-              boolean _tripleEquals_15 = (_plus_6 == _idNum_3);
-              if (_tripleEquals_15) {
-                ite_5.setIsBlocked(false);
-                this.ctrl.setColor("black", Integer.valueOf(t_1.getNumTile()));
-              }
-            }
-            break;
-          }
-        }
-      }
-    }
     do {
       {
-        ArrayList<TileAgent> _get_2 = this.tokenPriorityList.get(0);
-        for (final TileAgent t_2 : _get_2) {
-          boolean _isHappy_1 = t_2.getIsHappy();
+        ArrayList<TileAgent> _get_1 = this.tokenPriorityList.get(0);
+        for (final TileAgent t_1 : _get_1) {
+          boolean _isHappy_1 = t_1.getIsHappy();
           boolean _not = (!_isHappy_1);
           if (_not) {
-            FrameAgent frame = null;
-            for (final FrameAgent ite_1 : this.frameList) {
-              UUID _iD_1 = ite_1.getID();
-              UUID _uuidFrameHost_1 = t_2.getUuidFrameHost();
-              boolean _tripleEquals_1 = (_iD_1 == _uuidFrameHost_1);
+            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+            TokenReceived _tokenReceived = new TokenReceived();
+            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+            _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReceived, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(t_1.getID())));
+            for (int i = 0; (i < this.frameList.size()); i++) {
+              UUID _hostedTile = this.frameList.get(i).getHostedTile();
+              UUID _iD_1 = t_1.getID();
+              boolean _tripleEquals_1 = (_hostedTile == _iD_1);
               if (_tripleEquals_1) {
-                frame = ite_1;
+                this.uuidFRAMEwithTokenTile = this.frameList.get(i).getID();
+                this.coordsFRAMEwithTokenTile = this.frameList.get(i).getCoordPair();
+                InfosFrame _infosFrame = new InfosFrame(this.uuidFRAMEwithTokenTile, this.coordsFRAMEwithTokenTile);
+                this.haveTokenInfosFrame = _infosFrame;
+                this.haveTokenFrame = this.frameList.get(i);
+                Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+                int _hostedNumTile = this.haveTokenFrame.getHostedNumTile();
+                String _plus = ("on TokenReleased: hostedNumTile=" + Integer.valueOf(_hostedNumTile));
+                _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
                 break;
               }
             }
-            boolean _isBlocked = frame.getIsBlocked();
-            boolean _not_1 = (!_isBlocked);
-            if (_not_1) {
-              DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-              TokenReceived _tokenReceived = new TokenReceived();
-              DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-              _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReceived, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(t_2.getID())));
-              for (int i = 0; (i < this.frameList.size()); i++) {
-                UUID _hostedTile = this.frameList.get(i).getHostedTile();
-                UUID _iD_2 = t_2.getID();
-                boolean _tripleEquals_2 = (_hostedTile == _iD_2);
-                if (_tripleEquals_2) {
-                  this.uuidFRAMEwithTokenTile = this.frameList.get(i).getID();
-                  this.coordsFRAMEwithTokenTile = this.frameList.get(i).getCoordPair();
-                  InfosFrame _infosFrame = new InfosFrame(this.uuidFRAMEwithTokenTile, this.coordsFRAMEwithTokenTile);
-                  this.haveTokenInfosFrame = _infosFrame;
-                  this.haveTokenFrame = this.frameList.get(i);
-                  Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                  int _hostedNumTile = this.haveTokenFrame.getHostedNumTile();
-                  String _plus = ("on TokenReleased: hostedNumTile=" + Integer.valueOf(_hostedNumTile));
-                  _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
-                  break;
-                }
-              }
-              return;
-            }
+            return;
           }
         }
         this.tokenPriorityList.remove(0);

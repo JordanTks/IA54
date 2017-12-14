@@ -122,29 +122,6 @@ public class TileAgent extends Agent {
   
   @Pure
   protected boolean chooseTarget() {
-    if ((((this.numTileFromZero % this.problemSize) + 1) == (this.numTileFromZero / this.problemSize))) {
-      if ((this.numTileFromZero != (this.numFrameHostFromZero + 1))) {
-        this.numTileFromZero = (this.numTileFromZero - 1);
-      }
-    } else {
-      if (((this.numTileFromZero / this.problemSize) == (this.problemSize - 2))) {
-        if ((this.numTileFromZero != (this.numFrameHostFromZero - this.problemSize))) {
-          this.numTileFromZero = (this.numTileFromZero + this.problemSize);
-        }
-      } else {
-        if (((this.numTileFromZero % this.problemSize) == (this.numTileFromZero / this.problemSize))) {
-          if ((this.numTileFromZero != (this.numFrameHostFromZero - this.problemSize))) {
-            this.numTileFromZero = (this.numTileFromZero + this.problemSize);
-          }
-        } else {
-          if (((this.numTileFromZero / this.problemSize) == (this.problemSize - 1))) {
-            if ((this.numTileFromZero != (this.numFrameHostFromZero - 1))) {
-              this.numTileFromZero = (this.numTileFromZero + 1);
-            }
-          }
-        }
-      }
-    }
     if (((this.numFrameHostFromZero % this.problemSize) == (this.numTileFromZero % this.problemSize))) {
       if ((this.numTileFromZero < this.numFrameHostFromZero)) {
         DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
@@ -172,21 +149,6 @@ public class TileAgent extends Agent {
         DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
         AskNeighbourSatisfaction _askNeighbourSatisfaction = new AskNeighbourSatisfaction(north, west);
         _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_4.emit(_askNeighbourSatisfaction, Scopes.identifiers(this.uuidFrameHost));
-      }
-    }
-    if ((((this.numTileFromZero % this.problemSize) + 1) == (this.numTileFromZero / this.problemSize))) {
-      this.numTileFromZero = (this.numTileFromZero + 1);
-    } else {
-      if (((this.numTileFromZero / this.problemSize) == (this.problemSize - 2))) {
-        this.numTileFromZero = (this.numTileFromZero - this.problemSize);
-      } else {
-        if (((this.numTileFromZero % this.problemSize) == (this.numTileFromZero / this.problemSize))) {
-          this.numTileFromZero = (this.numTileFromZero - this.problemSize);
-        } else {
-          if (((this.numTileFromZero / this.problemSize) == (this.problemSize - 1))) {
-            this.numTileFromZero = (this.numTileFromZero - 1);
-          }
-        }
       }
     }
     return true;

@@ -243,9 +243,7 @@ agent BoardGameAgent {
 	}
 
 	on TokenReleased {
-		
-		//Thread.sleep(3000)
-
+//		Thread.sleep(3000)
 		for (t : tokenPriorityList.get(0))
 		{
 			if (t.isHappy) {
@@ -262,150 +260,30 @@ agent BoardGameAgent {
 				break
 			}
 		}
-
-		// CORNER BLOCKING PROCESS STUFF
-		for (t : tokenPriorityList.get(0)) {
-			
-			if (!t.isHappy) {
-
-				var blocking2 = false
-				var blocking11 = false
-				var blocking12 = false
-				
-				if ((t.numTileFromZero % PROBLEM_SIZE) + 1 === t.numTileFromZero / PROBLEM_SIZE)
-				{	
-					if (t.numFrameHostFromZero === t.numTileFromZero - 1)
-						blocking2 = true
-
-				}
-				else if (t.numTileFromZero / PROBLEM_SIZE === PROBLEM_SIZE - 2)
-				{
-					if (t.numFrameHostFromZero + PROBLEM_SIZE === t.numTileFromZero)
-						blocking2 = true
-
-				}
-				else if (t.numTileFromZero % PROBLEM_SIZE === t.numTileFromZero / PROBLEM_SIZE)
-				{
-					if (t.numFrameHostFromZero + PROBLEM_SIZE === t.numTileFromZero)
-						blocking11 = true
-
-				}
-				else if (t.numTileFromZero / PROBLEM_SIZE === PROBLEM_SIZE - 1)
-				{
-					if (t.numFrameHostFromZero + 1 === t.numTileFromZero)
-						blocking12 = true
-				
-				}
-				
-				if (blocking2 || blocking11 || blocking12)
-				{
-					for (ite : frameList) {
-						if (t.uuidFrameHost === ite.ID) {
-							ite.isBlocked = true
-							ctrl.setColor("pink", t.numTile)
-						}
-					}
-					
-					// top left
-					if (blocking11)
-					{
-						for (ite : frameList) {
-							if (t.numTile + 1 === ite.idNum) {
-								ite.isBlocked = false
-								ctrl.setColor("black", t.numTile)
-							}
-						}
-					}
-					
-					// bottom left
-					if (blocking12)
-					{
-						for (ite : frameList) {
-							if (t.numTile - PROBLEM_SIZE === ite.idNum) {
-								ite.isBlocked = false
-								ctrl.setColor("black", t.numTile)
-							}
-						}
-					}
-					
-				}
-			}
-
-			if (t.isHappy) {
-				var top = 0
-
-				// tile 2 heureuse en haut à gauche
-				if ((t.numTileFromZero % PROBLEM_SIZE) + 1 === t.numTileFromZero / PROBLEM_SIZE) {
-					top = 1
-				} // tile 2 heureuse en bas à gauche
-				else if (t.numTileFromZero / PROBLEM_SIZE === PROBLEM_SIZE - 2) {
-					top = 2
-				}
-
-				if (top === 1) {
-
-					// top left
-					for (ite : frameList) {
-						if (t.numTile - 1 === ite.idNum) {
-							ite.isBlocked = false
-							ctrl.setColor("black", t.numTile)
-						}
-					}
-					break
-				}
-
-				if (top === 2) {
-
-					// bottom left
-					for (ite : frameList) {
-						if (t.numTile + PROBLEM_SIZE === ite.idNum) {
-							ite.isBlocked = false
-							ctrl.setColor("black", t.numTile)
-						}
-					}
-					break
-				}
-			}
-		}
-
+		
 		// Looking for the first unsatisfied tile on the first priority list
 		do {
 			for (t : tokenPriorityList.get(0))
 			{
 				if (!t.isHappy)
 				{
-					// ATTEMPT CORNER
-					var frame : FrameAgent
+					emit(new TokenReceived(), Scopes.addresses(defaultSpace.getAddress(t.ID)))
 					
-					for (ite : frameList)
-					{
-						if (ite.ID === t.uuidFrameHost)
-						{
-							frame = ite
+					// set the infosFrame for the frame on which there is the Tile with the Token
+					for(var i=0; i<frameList.size; i++){
+						if(frameList.get(i).hostedTile === t.ID){
+							uuidFRAMEwithTokenTile = frameList.get(i).ID
+							coordsFRAMEwithTokenTile = frameList.get(i).coordPair
+							haveTokenInfosFrame = new InfosFrame(uuidFRAMEwithTokenTile, coordsFRAMEwithTokenTile)
+							haveTokenFrame = frameList.get(i)
+							
+							info("on TokenReleased: hostedNumTile=" + haveTokenFrame.hostedNumTile)
 							break
 						}
 					}
 					
-					if (!frame.isBlocked)
-					{
-						emit(new TokenReceived(), Scopes.addresses(defaultSpace.getAddress(t.ID)))
-						
-						// set the infosFrame for the frame on which there is the Tile with the Token
-						for(var i=0; i<frameList.size; i++){
-							if(frameList.get(i).hostedTile === t.ID){
-								uuidFRAMEwithTokenTile = frameList.get(i).ID
-								coordsFRAMEwithTokenTile = frameList.get(i).coordPair
-								haveTokenInfosFrame = new InfosFrame(uuidFRAMEwithTokenTile, coordsFRAMEwithTokenTile)
-								haveTokenFrame = frameList.get(i)
-								
-								info("on TokenReleased: hostedNumTile=" + haveTokenFrame.hostedNumTile)
-								break
-							}
-						}
-						
-						return
-						
-					}
+					
+					return
 				}
 			}
 			
