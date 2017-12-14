@@ -216,6 +216,16 @@ public class TaquinFxViewerController extends FxViewerController {
                     boolean _equals_4 = color.equals("purple");
                     if (_equals_4) {
                       t.setFill(Color.PURPLE);
+                    } else {
+                      boolean _equals_5 = color.equals("pink");
+                      if (_equals_5) {
+                        t.setFill(Color.PINK);
+                      } else {
+                        boolean _equals_6 = color.equals("black");
+                        if (_equals_6) {
+                          t.setFill(Color.BLACK);
+                        }
+                      }
                     }
                   }
                 }
