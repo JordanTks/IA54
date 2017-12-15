@@ -45,4 +45,7 @@ public class FrameSet extends Event {
     result.append("frame  = ").append(this.frame);
     return result.toString();
   }
+  
+  @SyntheticMember
+  private final static long serialVersionUID = -2720675118L;
 }

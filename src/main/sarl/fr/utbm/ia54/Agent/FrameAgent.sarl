@@ -51,7 +51,7 @@ agent FrameAgent {
 	var bestForcedPath : ArrayList<FrameAgent>
 
 	// Swapping Tiles
-	var nbAck : int
+	var nbAck : Integer
 	var pathUpdateGUI : ArrayList<FrameAgent>
 
 	// FrameAgent state
@@ -60,7 +60,7 @@ agent FrameAgent {
 	var didMyTileMateHaveTheToken = false
 	
 	// FrameAgent knowledge
-	var nbNeighbours : int
+	var nbNeighbours : Integer
 	var northNeighbour : UUID
 	var eastNeighbour : UUID
 	var southNeighbour : UUID
@@ -422,7 +422,7 @@ agent FrameAgent {
 	on PathCalculationTimeOut {
 		
 		// DEBUGGING PATHFINDING
-		info("DEBUGG : PathCalculationTimeOut")
+		/*info("DEBUGG : PathCalculationTimeOut")
 		
 		if (bestPath !== null)
 		{
@@ -435,7 +435,7 @@ agent FrameAgent {
 			info("DEBUGG : There is a bad path (length : " + bestForcedPath.size + ")")
 			for (f : bestForcedPath)
 				info("DEBUGG : BAD PATH > " + f.numFrame)
-		}
+		}*/
 		
 		// DEBUGG
 		/*emit(new TokenReleased())
@@ -502,7 +502,7 @@ agent FrameAgent {
 	// Has to send informations to its tile
 	on UpdateProblemInformations [start] {
 
-		info("DEBUGG : UpdateProblemInformations : sending data to " + hostedTile)
+		//info("DEBUGG : UpdateProblemInformations : sending data to " + hostedTile)
 		emit(new UpdateProblemInformations(idNum, this.ID, occurrence.sendAckTo), Scopes.addresses(defaultSpace.getAddress(hostedTile)))
 	}
 	
@@ -516,13 +516,16 @@ agent FrameAgent {
 		else
 			isSatisfied = false
 
-		info("DEBUGG : UpdateProblemInformations [END, SENDING ACK]")
+		//info("DEBUGG : UpdateProblemInformations [END, SENDING ACK]")
 		
 		emit(new AcknowledgmentDataUpdated(), Scopes.addresses(defaultSpace.getAddress(occurrence.sendAckTo)))
 	}
 	
 	on AcknowledgmentDataUpdated {
-		nbAck--
+		
+		synchronized(nbAck) {
+			nbAck--
+		}
 		
 		info("DEBUGG : AcknowledgmentDataUpdated : nbAck : " + nbAck)
 		
@@ -546,6 +549,7 @@ agent FrameAgent {
 			
 			//emit(new TokenReleased())
 		}
+		
 	}
 	
 	def getXRow : int{

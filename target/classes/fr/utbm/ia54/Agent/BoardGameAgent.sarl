@@ -23,23 +23,12 @@ import io.sarl.core.Schedules
 import fr.utbm.ia54.Event.FindPathWithAstarAlgo
 import fr.utbm.ia54.Event.UpdateGUI
 
-/* NOW IN HIS OWN FILE (fr.utbm.ia54.Enum.Direction.java)
- * 
-enum Position {
-	NORTH,
-	SOUTH,
-	EAST,
-	WEST,
-	UNKNOWN
-	;
-}*/
- 
 agent BoardGameAgent {
 	uses Logging, Lifecycle, DefaultContextInteractions, Behaviors, Schedules
 	
 	var PROBLEM_SIZE = 3
-	var nbFrameSet = 0
-	var nbTileSet = 0
+	var nbFrameSet = new Integer(0)
+	var nbTileSet = new Integer(0)
 	var frameList = new ArrayList<FrameAgent>()
 	
 	var frameUUIDList = new ArrayList<UUID>()
@@ -97,8 +86,10 @@ agent BoardGameAgent {
  
 	on FrameSet {
 		
-		nbFrameSet++
-
+		synchronized (nbFrameSet) {
+			nbFrameSet++
+		}
+		
 		frameList.add(occurrence.frame)
 
 		// ouais c'est bon on est tous là !
@@ -174,7 +165,9 @@ agent BoardGameAgent {
 	
 	on TileSet {
 		
-		nbTileSet++
+		synchronized (nbTileSet) {
+			nbTileSet++
+		}
 		
 		// TileAgent spawned
 		if (occurrence.tile !== null) // DO NOT REMOVE THIS TEST
@@ -1037,7 +1030,7 @@ agent BoardGameAgent {
 	
 	on UpdateGUI {
 		for (number : occurrence.frameList) {
-			info("UpdateGUI: LIST: "+number.hostedNumTile)
+			//info("UpdateGUI: LIST: "+number.hostedNumTile)
 			ctrl.swap(number.hostedNumTile)
 			Thread.sleep(100)
 		}

@@ -45,27 +45,15 @@ import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.eclipse.xtext.xbase.lib.Pure;
 
-/**
- * NOW IN HIS OWN FILE (fr.utbm.ia54.Enum.Direction.java)
- * 
- * enum Position {
- * NORTH,
- * SOUTH,
- * EAST,
- * WEST,
- * UNKNOWN
- * ;
- * }
- */
 @SarlSpecification("0.6")
 @SarlElementType(17)
 @SuppressWarnings("all")
 public class BoardGameAgent extends Agent {
   private int PROBLEM_SIZE = 3;
   
-  private int nbFrameSet = 0;
+  private Integer nbFrameSet = new Integer(0);
   
-  private int nbTileSet = 0;
+  private Integer nbTileSet = new Integer(0);
   
   private ArrayList<FrameAgent> frameList = new ArrayList<FrameAgent>();
   
@@ -138,10 +126,12 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$FrameSet$1(final FrameSet occurrence) {
-    this.nbFrameSet++;
+    synchronized (this.nbFrameSet) {
+      this.nbFrameSet++;
+    }
     this.frameList.add(occurrence.frame);
     long _round = Math.round(Math.pow(this.PROBLEM_SIZE, 2));
-    boolean _tripleEquals = (this.nbFrameSet == _round);
+    boolean _tripleEquals = ((this.nbFrameSet).intValue() == _round);
     if (_tripleEquals) {
       Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
       _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Every single FrameAgent is set. Spawning every single TileAgent.");
@@ -217,14 +207,16 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$TileSet$2(final TileSet occurrence) {
-    this.nbTileSet++;
+    synchronized (this.nbTileSet) {
+      this.nbTileSet++;
+    }
     if ((occurrence.tile != null)) {
       this.tileList.add(occurrence.tile);
     } else {
       this.blankTile = occurrence.blank;
     }
     long _round = Math.round(Math.pow(this.PROBLEM_SIZE, 2));
-    boolean _tripleEquals = (this.nbTileSet == _round);
+    boolean _tripleEquals = ((this.nbTileSet).intValue() == _round);
     if (_tripleEquals) {
       Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
       _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Every single TileAgent is set. Setting token priority lists.");
@@ -1208,10 +1200,6 @@ public class BoardGameAgent extends Agent {
     try {
       for (final FrameAgent number : occurrence.frameList) {
         {
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          int _hostedNumTile = number.getHostedNumTile();
-          String _plus = ("UpdateGUI: LIST: " + Integer.valueOf(_hostedNumTile));
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
           this.ctrl.swap(number.getHostedNumTile());
           Thread.sleep(100);
         }
