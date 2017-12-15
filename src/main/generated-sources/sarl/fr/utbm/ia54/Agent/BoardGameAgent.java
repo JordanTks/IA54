@@ -816,6 +816,9 @@ public class BoardGameAgent extends Agent {
         String _string = currentFrame.getCoordsCurrentFrame().toString();
         String _plus = ("currentFrame=" + _string);
         _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(_plus);
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        TokenReleased _tokenReleased = new TokenReleased();
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReleased);
       }
     }
   }

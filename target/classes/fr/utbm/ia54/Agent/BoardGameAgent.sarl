@@ -646,6 +646,9 @@ agent BoardGameAgent {
 			} else {
 				error("## A-star findPath : destination IS NOT reached! ##")
 				info("currentFrame=" + currentFrame.coordsCurrentFrame.toString)
+				
+				emit (new TokenReleased())
+				
 				/*initBeginningInfosFrame(currentFrame.numFrame, currentFrame.uuidCurrentFrame, currentFrame.coordsCurrentFrame)
 				isCorner = true
 
