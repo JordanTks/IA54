@@ -1213,7 +1213,7 @@ public class BoardGameAgent extends Agent {
           String _plus = ("UpdateGUI: LIST: " + Integer.valueOf(_hostedNumTile));
           _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
           this.ctrl.swap(number.getHostedNumTile());
-          Thread.sleep(300);
+          Thread.sleep(100);
         }
       }
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);

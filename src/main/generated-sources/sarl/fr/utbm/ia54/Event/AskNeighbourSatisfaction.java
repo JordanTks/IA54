@@ -75,7 +75,4 @@ public class AskNeighbourSatisfaction extends Event {
     result.append("direction  = ").append(this.direction);
     return result.toString();
   }
-  
-  @SyntheticMember
-  private final static long serialVersionUID = 931615417L;
 }

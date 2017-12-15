@@ -300,8 +300,11 @@ agent FrameAgent {
 				forcingAPath = true
 		}
 		
+		
+		// ATTEMPT AT SOLVING CORNER PROBLEM 1
+		
 		// I usually am not disturbed when this is true, EXCEPT, when a tile tries to get in a corner
-		if (didMyTileMateHaveTheToken)
+		/*if (didMyTileMateHaveTheToken)
 		{
 			// To help the tile get in the corner we have to behave a little bit differently
 			// We have to flee by going to the opposite side of the aggression, whenever possible
@@ -347,7 +350,7 @@ agent FrameAgent {
 			}
 			
 			// If it is not possible, we will just go wherever we can (just like we would usually do) ...
-		}
+		}*/
 		
 		// If we do not host the blank tile, we send the event PathCalculation to our neighbours ...
 		// ... north one
@@ -499,7 +502,7 @@ agent FrameAgent {
 	// Has to send informations to its tile
 	on UpdateProblemInformations [start] {
 
-		//info("DEBUGG : UpdateProblemInformations : sending data to " + hostedTile)
+		info("DEBUGG : UpdateProblemInformations : sending data to " + hostedTile)
 		emit(new UpdateProblemInformations(idNum, this.ID, occurrence.sendAckTo), Scopes.addresses(defaultSpace.getAddress(hostedTile)))
 	}
 	
@@ -513,7 +516,7 @@ agent FrameAgent {
 		else
 			isSatisfied = false
 
-		//info("DEBUGG : UpdateProblemInformations [END, SENDING ACK]")
+		info("DEBUGG : UpdateProblemInformations [END, SENDING ACK]")
 		
 		emit(new AcknowledgmentDataUpdated(), Scopes.addresses(defaultSpace.getAddress(occurrence.sendAckTo)))
 	}
@@ -521,11 +524,14 @@ agent FrameAgent {
 	on AcknowledgmentDataUpdated {
 		nbAck--
 		
-		//info("DEBUGG : AcknowledgmentDataUpdated : nbAck : " + nbAck)
+		info("DEBUGG : AcknowledgmentDataUpdated : nbAck : " + nbAck)
 		
 		// We received all the acknowledgments we were waiting for
 		if (nbAck === 0)
 		{
+			// TRYING TO AVOID SYNCH ISSUES
+			nbAck = -1
+			
 			// Information helpful to avoid getting stuck around corners
 			if (isSatisfied)
 			{

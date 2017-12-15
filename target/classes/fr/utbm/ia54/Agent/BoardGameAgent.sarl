@@ -1039,7 +1039,7 @@ agent BoardGameAgent {
 		for (number : occurrence.frameList) {
 			info("UpdateGUI: LIST: "+number.hostedNumTile)
 			ctrl.swap(number.hostedNumTile)
-			Thread.sleep(300)
+			Thread.sleep(100)
 		}
 		//info("UpdateGUI: SIMPLE: "+occurrence.numFrame)
 
