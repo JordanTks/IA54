@@ -6,7 +6,7 @@ package fr.utbm.ia54.Event
 import fr.utbm.ia54.Agent.FrameAgent
 import java.util.ArrayList
 import java.util.UUID
-import fr.utbm.ia54.Agent.Position
+import fr.utbm.ia54.Enum.Direction
 
 /* infos :
 
@@ -26,14 +26,14 @@ event PathCalculation {
 	
 	var requestId : long
 	var requestOrigin : UUID
-	var provenanceDirection : Position
+	var provenanceDirection : Direction
 	var timeStamp : long
 	var forcePath : boolean
 	var jumpCount : int
 	var path = new ArrayList<FrameAgent>()
  
 	
-	new (reqId : long, origin : UUID, from : Position, time : long, forcingAPath : boolean ,jump : int, p : ArrayList<FrameAgent>) {
+	new (reqId : long, origin : UUID, from : Direction, time : long, forcingAPath : boolean, jump : int, p : ArrayList<FrameAgent>) {
 		this.requestId = reqId
 		this.provenanceDirection = from
 		this.requestOrigin = origin

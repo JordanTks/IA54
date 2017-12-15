@@ -19,6 +19,7 @@ import io.sarl.core.Schedules
 import fr.utbm.ia54.Event.SafetyWait
 import io.sarl.core.Lifecycle
 import fr.utbm.ia54.Event.UpdateProblemInformations
+import fr.utbm.ia54.Enum.Direction
 
 agent TileAgent {
 	uses Logging, DefaultContextInteractions, Behaviors, Schedules, Lifecycle 
@@ -119,16 +120,16 @@ agent TileAgent {
 		// I am at the right longitude, therefore I will assault north or south
 		if (numFrameHostFromZero % problemSize === numTileFromZero % problemSize){
 			if (numTileFromZero < numFrameHostFromZero)
-				emit(new Assault(Position.NORTH, false), Scopes.identifiers(uuidFrameHost))
+				emit(new Assault(Direction.NORTH, false), Scopes.identifiers(uuidFrameHost))
 			else
-				emit(new Assault(Position.SOUTH, false), Scopes.identifiers(uuidFrameHost))
+				emit(new Assault(Direction.SOUTH, false), Scopes.identifiers(uuidFrameHost))
 		}
 		// I am at the right latitude, therefore I will assault east or west
 		else if (numFrameHostFromZero / problemSize === numTileFromZero / problemSize){
 			if (numTileFromZero < numFrameHostFromZero)
-				emit(new Assault(Position.WEST, false), Scopes.identifiers(uuidFrameHost))
+				emit(new Assault(Direction.WEST, false), Scopes.identifiers(uuidFrameHost))
 			else
-				emit(new Assault(Position.EAST, false), Scopes.identifiers(uuidFrameHost))
+				emit(new Assault(Direction.EAST, false), Scopes.identifiers(uuidFrameHost))
 		 }
 		// If I am not on the same line or column as my desired spot, I can choose between the two directions that will bring me closer
 		else {

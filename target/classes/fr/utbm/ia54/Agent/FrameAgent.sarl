@@ -31,6 +31,7 @@ import java.util.Collections
 import fr.utbm.ia54.Event.UpdateProblemInformations
 import fr.utbm.ia54.Event.AcknowledgmentDataUpdated
 import fr.utbm.ia54.Event.UpdateGUI
+import fr.utbm.ia54.Enum.Direction
 
 /** 
  * @author Jordan
@@ -67,7 +68,7 @@ agent FrameAgent {
 	var hostedNumTile : int
 	
 	// Temporary knowledge
-	var neighbourSatisfaction = new LinkedHashMap<Position, Boolean>()
+	var neighbourSatisfaction = new LinkedHashMap<Direction, Boolean>()
 	
 	var ready = false 
 	var dimension = -1
@@ -122,14 +123,14 @@ agent FrameAgent {
 
 		// Asking satisfaction of the two neighbour frames
 		if (occurrence.north)
-			emit(new AskNeighbourSatisfaction(true, Position.NORTH), Scopes.identifiers(northNeighbour))
+			emit(new AskNeighbourSatisfaction(true, Direction.NORTH), Scopes.identifiers(northNeighbour))
 		else
-			emit(new AskNeighbourSatisfaction(true, Position.SOUTH), Scopes.identifiers(southNeighbour))
+			emit(new AskNeighbourSatisfaction(true, Direction.SOUTH), Scopes.identifiers(southNeighbour))
 
 		if (occurrence.west)
-			emit(new AskNeighbourSatisfaction(true, Position.WEST), Scopes.identifiers(westNeighbour))
+			emit(new AskNeighbourSatisfaction(true, Direction.WEST), Scopes.identifiers(westNeighbour))
 		else
-			emit(new AskNeighbourSatisfaction(true, Position.EAST), Scopes.identifiers(eastNeighbour))
+			emit(new AskNeighbourSatisfaction(true, Direction.EAST), Scopes.identifiers(eastNeighbour))
 	}
 
 	// Get asked and have to answer back
@@ -169,14 +170,14 @@ agent FrameAgent {
 		bestForcedPath = null
 		
 		// Assault the neighbour it was asked to
-		if (occurrence.direction === Position.NORTH)
-			emit(new Assault(Position.SOUTH, true), Scopes.identifiers(northNeighbour))
-		else if (occurrence.direction === Position.SOUTH)
-			emit(new Assault(Position.NORTH, true), Scopes.identifiers(southNeighbour))
-		else if (occurrence.direction === Position.WEST)
-			emit(new Assault(Position.EAST, true), Scopes.identifiers(westNeighbour))
-		else if (occurrence.direction === Position.EAST)
-			emit(new Assault(Position.WEST, true), Scopes.identifiers(eastNeighbour))
+		if (occurrence.direction === Direction.NORTH)
+			emit(new Assault(Direction.SOUTH, true), Scopes.identifiers(northNeighbour))
+		else if (occurrence.direction === Direction.SOUTH)
+			emit(new Assault(Direction.NORTH, true), Scopes.identifiers(southNeighbour))
+		else if (occurrence.direction === Direction.WEST)
+			emit(new Assault(Direction.EAST, true), Scopes.identifiers(westNeighbour))
+		else if (occurrence.direction === Direction.EAST)
+			emit(new Assault(Direction.WEST, true), Scopes.identifiers(eastNeighbour))
 	}
 
 	// The frame is being assaulted
@@ -188,10 +189,10 @@ agent FrameAgent {
 		// I have to run away by finding a path between me and the empty tile
 		
 		// if (resolution par point de vue global)
-		emit(new FindPathWithAstarAlgo(ID))
+		//emit(new FindPathWithAstarAlgo(ID))
 		// else if (resolution distribuee)
-		//wake(new PathCalculation(System.currentTimeMillis, occurrence.source.UUID, occurrence.direction, System.currentTimeMillis, false, 0, new ArrayList<FrameAgent>))
-		//in (TIMEOUT) [emit(new PathCalculationTimeOut(), Scopes.addresses(defaultSpace.getAddress(occurrence.source.UUID)))]
+		wake(new PathCalculation(System.currentTimeMillis, occurrence.source.UUID, occurrence.direction, System.currentTimeMillis, false, 0, new ArrayList<FrameAgent>))
+		in (TIMEOUT) [emit(new PathCalculationTimeOut(), Scopes.addresses(defaultSpace.getAddress(occurrence.source.UUID)))]
 	}
 	
 	// PathCalculation by spreading message
@@ -287,9 +288,9 @@ agent FrameAgent {
 			// To help the tile get in the corner we have to behave a little bit differently
 			// We have to flee by going to the opposite side of the aggression, whenever possible
 			
-			if (occurrence.provenanceDirection === Position.NORTH && southNeighbour !== null)
+			if (occurrence.provenanceDirection === Direction.NORTH && southNeighbour !== null)
 			{
-				emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.NORTH,
+				emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.NORTH,
 					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
 					Scopes.addresses(defaultSpace.getAddress(this.southNeighbour)))
 
@@ -297,9 +298,9 @@ agent FrameAgent {
 				return;
 			}
 
-			if (occurrence.provenanceDirection === Position.SOUTH && northNeighbour !== null) {
+			if (occurrence.provenanceDirection === Direction.SOUTH && northNeighbour !== null) {
 				emit(
-					new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.SOUTH,
+					new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.SOUTH,
 					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
 					Scopes.addresses(defaultSpace.getAddress(this.northNeighbour)))
 
@@ -307,9 +308,9 @@ agent FrameAgent {
 				return;
 			}
 
-			if (occurrence.provenanceDirection === Position.EAST && westNeighbour !== null) {
+			if (occurrence.provenanceDirection === Direction.EAST && westNeighbour !== null) {
 				emit(
-					new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.EAST,
+					new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.EAST,
 					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
 					Scopes.addresses(defaultSpace.getAddress(this.westNeighbour)))
 
@@ -317,9 +318,9 @@ agent FrameAgent {
 				return;
 			}
 
-			if (occurrence.provenanceDirection === Position.WEST && eastNeighbour !== null) {
+			if (occurrence.provenanceDirection === Direction.WEST && eastNeighbour !== null) {
 				emit(
-					new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.WEST,
+					new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.WEST,
 					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
 					Scopes.addresses(defaultSpace.getAddress(this.eastNeighbour)))
 
@@ -332,23 +333,23 @@ agent FrameAgent {
 		
 		// If we do not host the blank tile, we send the event PathCalculation to our neighbours ...
 		// ... north one
-		if (northNeighbour !== null && occurrence.provenanceDirection !== Position.NORTH)
-			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.SOUTH,
+		if (northNeighbour !== null && occurrence.provenanceDirection !== Direction.NORTH)
+			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.SOUTH,
 				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
 				Scopes.addresses(defaultSpace.getAddress(this.northNeighbour)))
 		// ... east one
-		if (eastNeighbour !== null && occurrence.provenanceDirection !== Position.EAST)
-			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.WEST,
+		if (eastNeighbour !== null && occurrence.provenanceDirection !== Direction.EAST)
+			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.WEST,
 				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
 				Scopes.addresses(defaultSpace.getAddress(this.eastNeighbour)))
 		// ... south one
-		if (southNeighbour !== null && occurrence.provenanceDirection !== Position.SOUTH)
-			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.NORTH,
+		if (southNeighbour !== null && occurrence.provenanceDirection !== Direction.SOUTH)
+			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.NORTH,
 				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
 				Scopes.addresses(defaultSpace.getAddress(this.southNeighbour)))
 		// ... west one
-		if (westNeighbour !== null && occurrence.provenanceDirection !== Position.WEST)
-			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Position.EAST,
+		if (westNeighbour !== null && occurrence.provenanceDirection !== Direction.WEST)
+			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.EAST,
 				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
 				Scopes.addresses(defaultSpace.getAddress(this.westNeighbour)))
 		

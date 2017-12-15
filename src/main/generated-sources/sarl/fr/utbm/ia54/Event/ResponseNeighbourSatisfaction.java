@@ -1,6 +1,6 @@
 package fr.utbm.ia54.Event;
 
-import fr.utbm.ia54.Agent.Position;
+import fr.utbm.ia54.Enum.Direction;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
@@ -17,16 +17,16 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class ResponseNeighbourSatisfaction extends Event {
   public boolean isSatisfied;
   
-  public Position direction;
+  public Direction direction;
   
-  public LinkedHashMap<Position, Boolean> neighbourSatisfaction;
+  public LinkedHashMap<Direction, Boolean> neighbourSatisfaction;
   
-  public ResponseNeighbourSatisfaction(final boolean b, final Position dir) {
+  public ResponseNeighbourSatisfaction(final boolean b, final Direction dir) {
     this.isSatisfied = b;
     this.direction = dir;
   }
   
-  public ResponseNeighbourSatisfaction(final LinkedHashMap<Position, Boolean> map) {
+  public ResponseNeighbourSatisfaction(final LinkedHashMap<Direction, Boolean> map) {
     this.neighbourSatisfaction = map;
   }
   
@@ -70,5 +70,5 @@ public class ResponseNeighbourSatisfaction extends Event {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = -3294225030L;
+  private final static long serialVersionUID = -3818633862L;
 }

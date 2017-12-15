@@ -1,7 +1,7 @@
 package fr.utbm.ia54.Event;
 
 import fr.utbm.ia54.Agent.FrameAgent;
-import fr.utbm.ia54.Agent.Position;
+import fr.utbm.ia54.Enum.Direction;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
@@ -33,7 +33,7 @@ public class PathCalculation extends Event {
   
   public UUID requestOrigin;
   
-  public Position provenanceDirection;
+  public Direction provenanceDirection;
   
   public long timeStamp;
   
@@ -43,7 +43,7 @@ public class PathCalculation extends Event {
   
   public ArrayList<FrameAgent> path = new ArrayList<FrameAgent>();
   
-  public PathCalculation(final long reqId, final UUID origin, final Position from, final long time, final boolean forcingAPath, final int jump, final ArrayList<FrameAgent> p) {
+  public PathCalculation(final long reqId, final UUID origin, final Direction from, final long time, final boolean forcingAPath, final int jump, final ArrayList<FrameAgent> p) {
     this.requestId = reqId;
     this.provenanceDirection = from;
     this.requestOrigin = origin;
@@ -108,7 +108,4 @@ public class PathCalculation extends Event {
     result.append("path  = ").append(this.path);
     return result.toString();
   }
-  
-  @SyntheticMember
-  private final static long serialVersionUID = 2977311245L;
 }

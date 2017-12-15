@@ -1,7 +1,7 @@
 package fr.utbm.ia54.Event;
 
-import fr.utbm.ia54.Agent.Position;
 import fr.utbm.ia54.Agent.TileAgent;
+import fr.utbm.ia54.Enum.Direction;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
@@ -15,16 +15,16 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class Assault extends Event {
   public ArrayList<TileAgent> path = new ArrayList<TileAgent>();
   
-  public Position direction;
+  public Direction direction;
   
   public boolean isAttacked;
   
-  public Assault(final ArrayList a, final Position b) {
+  public Assault(final ArrayList a, final Direction b) {
     this.path = a;
     this.direction = b;
   }
   
-  public Assault(final Position pos, final boolean attacked) {
+  public Assault(final Direction pos, final boolean attacked) {
     this.direction = pos;
     this.isAttacked = attacked;
   }
@@ -69,5 +69,5 @@ public class Assault extends Event {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 1205067947L;
+  private final static long serialVersionUID = -527135413L;
 }

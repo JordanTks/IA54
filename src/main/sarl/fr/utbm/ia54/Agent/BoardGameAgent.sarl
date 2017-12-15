@@ -23,6 +23,8 @@ import io.sarl.core.Schedules
 import fr.utbm.ia54.Event.FindPathWithAstarAlgo
 import fr.utbm.ia54.Event.UpdateGUI
 
+/* NOW IN HIS OWN FILE (fr.utbm.ia54.Enum.Direction.java)
+ * 
 enum Position {
 	NORTH,
 	SOUTH,
@@ -30,7 +32,7 @@ enum Position {
 	WEST,
 	UNKNOWN
 	;
-}
+}*/
  
 agent BoardGameAgent {
 	uses Logging, Lifecycle, DefaultContextInteractions, Behaviors, Schedules

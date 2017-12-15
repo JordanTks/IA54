@@ -5,7 +5,7 @@ package fr.utbm.ia54.Event
 
 import java.util.LinkedHashMap
 import java.util.UUID
-import fr.utbm.ia54.Agent.Position
+import fr.utbm.ia54.Enum.Direction
 
 /** 
  * @author Norgannon
@@ -15,19 +15,19 @@ event ResponseNeighbourSatisfaction {
 
 	// Data to return from asked frame to the frame who asked
 	var isSatisfied : boolean
-	var direction : Position
+	var direction : Direction
 
 	// Data to return from frame to tile
-	var neighbourSatisfaction : LinkedHashMap<Position, Boolean>
+	var neighbourSatisfaction : LinkedHashMap<Direction, Boolean>
 	
 	// Constructor for event to send to frame
-	new (b : boolean, dir : Position) {
+	new (b : boolean, dir : Direction) {
 		this.isSatisfied = b
 		this.direction = dir
 	}
 
 	// Constructor for event to send to tile
-	new (map : LinkedHashMap<Position, Boolean>) {
+	new (map : LinkedHashMap<Direction, Boolean>) {
 		this.neighbourSatisfaction = map
 	}
 }

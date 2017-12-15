@@ -45,6 +45,18 @@ import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.eclipse.xtext.xbase.lib.Pure;
 
+/**
+ * NOW IN HIS OWN FILE (fr.utbm.ia54.Enum.Direction.java)
+ * 
+ * enum Position {
+ * NORTH,
+ * SOUTH,
+ * EAST,
+ * WEST,
+ * UNKNOWN
+ * ;
+ * }
+ */
 @SarlSpecification("0.6")
 @SarlElementType(17)
 @SuppressWarnings("all")

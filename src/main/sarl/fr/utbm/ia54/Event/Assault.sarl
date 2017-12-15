@@ -5,7 +5,7 @@ package fr.utbm.ia54.Event
 
 import java.util.ArrayList
 import fr.utbm.ia54.Agent.TileAgent
-import fr.utbm.ia54.Agent.Position
+import fr.utbm.ia54.Enum.Direction
  
 // La première ligne de commentaire est fausse :
 
@@ -15,15 +15,15 @@ import fr.utbm.ia54.Agent.Position
  
 event Assault {
 	var path = new ArrayList<TileAgent>()
-	var direction : Position
+	var direction : Direction
 	var isAttacked : boolean
 	
-	new (a: ArrayList, b:Position) {
+	new (a : ArrayList, b : Direction) {
 		this.path = a
 		this.direction = b
 	}
 	
-	new (pos : Position, attacked : boolean) {
+	new (pos : Direction, attacked : boolean) {
 		this.direction = pos  
 		this.isAttacked = attacked
 	}

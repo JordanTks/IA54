@@ -1,6 +1,6 @@
 package fr.utbm.ia54.Event;
 
-import fr.utbm.ia54.Agent.Position;
+import fr.utbm.ia54.Enum.Direction;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
@@ -17,7 +17,7 @@ public class AskNeighbourSatisfaction extends Event {
   
   public boolean isAsked;
   
-  public Position direction;
+  public Direction direction;
   
   public AskNeighbourSatisfaction(final boolean n, final boolean w) {
     this.north = n;
@@ -25,7 +25,7 @@ public class AskNeighbourSatisfaction extends Event {
     this.isAsked = false;
   }
   
-  public AskNeighbourSatisfaction(final boolean a, final Position dir) {
+  public AskNeighbourSatisfaction(final boolean a, final Direction dir) {
     this.isAsked = true;
     this.direction = dir;
   }
@@ -77,5 +77,5 @@ public class AskNeighbourSatisfaction extends Event {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 650067641L;
+  private final static long serialVersionUID = 931615417L;
 }
