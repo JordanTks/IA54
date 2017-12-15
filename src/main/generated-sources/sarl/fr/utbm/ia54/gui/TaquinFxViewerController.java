@@ -309,11 +309,8 @@ public class TaquinFxViewerController extends FxViewerController {
         }
         rect2.setFill(Color.WHITE);
         rect1.setFill(Color.GREY);
-        String c = "";
-        c = tile1.getText();
         tile1.setText(tile2.getText());
-        tile2.setText(c);
-        tile2.setFill(Color.WHITE);
+        tile2.setText(" ");
       }
     };
     Platform.runLater(___TaquinFxViewerController_3);

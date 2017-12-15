@@ -152,11 +152,9 @@ class TaquinFxViewerController extends FxViewerController {
 					rect2.fill = Color.WHITE
 					rect1.fill = Color.GREY 
 					
-					var c = ""
-					c = tile1.text
 					tile1.text = tile2.text
-					tile2.text = c
-					tile2.fill = Color.WHITE
+					tile2.text = " "
+					//tile2.fill = Color.WHITE
 					//
 					
 
