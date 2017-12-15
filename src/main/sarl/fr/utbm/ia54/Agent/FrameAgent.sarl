@@ -33,6 +33,7 @@ import fr.utbm.ia54.Event.AcknowledgmentDataUpdated
 import fr.utbm.ia54.Event.UpdateGUI
 import fr.utbm.ia54.Enum.Direction
 import fr.utbm.ia54.Enum.Satisfaction
+import fr.utbm.ia54.Enum.PathStatus
 
 /** 
  * @author Jordan
@@ -46,9 +47,10 @@ agent FrameAgent {
 	//var lastInitiatedAssault = 0l
 	var previousPathCalculationId : long
 	var previousPathCalculationJumpValue : int
-	var previousPathDidMoveHappyTiles : boolean
-	var bestPath : ArrayList<FrameAgent>
-	var bestForcedPath : ArrayList<FrameAgent>
+	var previousPathStatus : PathStatus
+	var bestGoodPath : ArrayList<FrameAgent>
+	var bestBadPath : ArrayList<FrameAgent>
+	var bestTerriblePath : ArrayList<FrameAgent>
 
 	// Swapping Tiles
 	var nbAck : Integer
@@ -184,8 +186,9 @@ agent FrameAgent {
 		// info("DEBUGG : I FORWARD ASSAULT !")
 		
 		// Remove potential data from former path calculations
-		bestPath = null
-		bestForcedPath = null
+		bestGoodPath = null
+		bestBadPath = null
+		bestTerriblePath = null
 		
 		// Assault the neighbour it was asked to
 		if (occurrence.direction === Direction.NORTH)
@@ -209,7 +212,7 @@ agent FrameAgent {
 		// if (resolution par point de vue global)
 		//emit(new FindPathWithAstarAlgo(ID))
 		// else if (resolution distribuee)
-		wake(new PathCalculation(System.currentTimeMillis, occurrence.source.UUID, occurrence.direction, System.currentTimeMillis, false, 0, new ArrayList<FrameAgent>))
+		wake(new PathCalculation(System.currentTimeMillis, occurrence.source.UUID, occurrence.direction, System.currentTimeMillis, PathStatus.GOOD, 0, new ArrayList<FrameAgent>))
 		in (TIMEOUT) [emit(new PathCalculationTimeOut(), Scopes.addresses(defaultSpace.getAddress(occurrence.source.UUID)))]
 	}
 	
@@ -231,35 +234,29 @@ agent FrameAgent {
 		// If the previous request was for the same path calculation ...
 		if (previousPathCalculationId === occurrence.requestId)
 		{
-			// If it is a good path ...
-			if (!occurrence.forcePath)
+			// If it is a path of same status as the previous one ...
+			if (occurrence.pathStatus === previousPathStatus)
 			{
-				// If I already have a good path ...
-				if (!previousPathDidMoveHappyTiles)
+				// If I have a better path ...
+				if (previousPathCalculationJumpValue < occurrence.jumpCount)
 				{
-					// If I have a better or even path
-					if (previousPathCalculationJumpValue <= occurrence.jumpCount)
-					{
-						// ... it is useless to spread the message
-						return;	
-					}	
+					// ... it is useless to spread the message
+					return;	
 				}
 			}
-			else // If it is a bad path ...
+			else // If it is a path of different status...
 			{
-				// If I already have a good path ...
-				if (!previousPathDidMoveHappyTiles)
+				// If I sent a better status path ...
+				if (previousPathStatus === PathStatus.GOOD)
 				{
 					// ... it is useless to spread the message
 					return;
 				}
-				else // If I already have a bad path ...
+				// If I sent a better status path ...
+				else if (previousPathStatus === PathStatus.BAD && occurrence.pathStatus === PathStatus.TERRIBLE)
 				{
-					// If I have a better path
-					if (previousPathCalculationJumpValue < occurrence.jumpCount) {
-						// ... it is useless to spread the message
-						return;
-					}
+					// ... it is useless to spread the message
+					return;
 				}
 			}
 		}
@@ -267,7 +264,7 @@ agent FrameAgent {
 		// Setting the values for the next PathCalculation received
 		previousPathCalculationId = occurrence.requestId
 		previousPathCalculationJumpValue = occurrence.jumpCount
-		previousPathDidMoveHappyTiles = occurrence.forcePath
+		previousPathStatus = occurrence.pathStatus
 		
 		// Adding itself to the path
 		var p : ArrayList<FrameAgent>
@@ -280,26 +277,30 @@ agent FrameAgent {
 		if (hostedNumTile === 0)
 		{
 			// ... we send the path that was found
-			emit(new PathFound(occurrence.requestId, occurrence.forcePath, occurrence.jumpCount, p),
+			emit(new PathFound(occurrence.requestId, occurrence.pathStatus, occurrence.jumpCount, p),
 				Scopes.addresses(defaultSpace.getAddress(occurrence.requestOrigin)))
 			// We avoid spreading more useless PathCalculation
 			return
 		}
 		
-		var forcingAPath = false
+		var newPathStatus = occurrence.pathStatus
 		
-		// If we were forcing a path before, we have to forward this information
-		if (occurrence.forcePath)
+		// If the path we are forwarding is not terrible, we check we are not making things worse by coming here
+		if ((newPathStatus !== PathStatus.TERRIBLE) && isSatisfied)
 		{
-			forcingAPath = true
+			// If I had the token in the past ...
+			if (didMyTileMateHaveTheToken)
+			{
+				// ... it is a terrible path
+				newPathStatus = PathStatus.TERRIBLE
+			}
+			// If I am happy but did not have the token yet ...
+			else
+			{
+				// ... it is a bad path
+				newPathStatus = PathStatus.BAD
+			}	
 		}
-		// If we did not force a path yet, we check we are not doing it right now
-		else
-		{
-			if (isSatisfied)
-				forcingAPath = true
-		}
-		
 		
 		// ATTEMPT AT SOLVING CORNER PROBLEM 1
 		
@@ -356,22 +357,22 @@ agent FrameAgent {
 		// ... north one
 		if (northNeighbour !== null && occurrence.provenanceDirection !== Direction.NORTH)
 			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.SOUTH,
-				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
+				occurrence.timeStamp, newPathStatus, occurrence.jumpCount + 1, p),
 				Scopes.addresses(defaultSpace.getAddress(this.northNeighbour)))
 		// ... east one
 		if (eastNeighbour !== null && occurrence.provenanceDirection !== Direction.EAST)
 			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.WEST,
-				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
+				occurrence.timeStamp, newPathStatus, occurrence.jumpCount + 1, p),
 				Scopes.addresses(defaultSpace.getAddress(this.eastNeighbour)))
 		// ... south one
 		if (southNeighbour !== null && occurrence.provenanceDirection !== Direction.SOUTH)
 			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.NORTH,
-				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
+				occurrence.timeStamp, newPathStatus, occurrence.jumpCount + 1, p),
 				Scopes.addresses(defaultSpace.getAddress(this.southNeighbour)))
 		// ... west one
 		if (westNeighbour !== null && occurrence.provenanceDirection !== Direction.WEST)
 			emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.EAST,
-				occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
+				occurrence.timeStamp, newPathStatus, occurrence.jumpCount + 1, p),
 				Scopes.addresses(defaultSpace.getAddress(this.westNeighbour)))
 		
 	}
@@ -380,44 +381,76 @@ agent FrameAgent {
 	on PathFound {
 		
 		// If the path is a "good" path
-		if (!occurrence.forcePath)
+		if (occurrence.pathStatus === PathStatus.GOOD)
 		{
 			// We did not store any path yet
-			if (bestPath === null)
+			if (bestGoodPath === null)
 			{
-				bestPath = occurrence.path
+				bestGoodPath = occurrence.path
 				return
 			}
 			
 			// If our stored path is longer than the new one we received
-			if (bestPath.size > occurrence.path.size)
+			if (bestGoodPath.size > occurrence.path.size)
 			{
-				bestPath = occurrence.path
+				bestGoodPath = occurrence.path
 				return
 			}
 		}
 		
-		// If we do not have a "good" path yet, we bother considering a forced one (otherwise we don't)
-		if (bestPath === null)
+		// If we do not have a good path yet, we bother considering a bad one (otherwise we don't)
+		if (bestGoodPath === null)
 		{
-			// We did not store any path yet
-			if (bestForcedPath === null) {
-				bestForcedPath = occurrence.path
-				return
-			}
+			if (occurrence.pathStatus === PathStatus.BAD)
+			{
+				// We did not store any path yet
+				if (bestBadPath === null)
+				{
+					bestBadPath = occurrence.path
+					return
+				}
 
-			// If our stored path is longer than the new one we received
-			if (bestForcedPath.size > occurrence.path.size) {
-				bestForcedPath = occurrence.path
-				return
+				// If our stored path is longer than the new one we received
+				if (bestBadPath.size > occurrence.path.size)
+				{
+					bestBadPath = occurrence.path
+					return
+				}
+			
 			}
 			
 			// We could consider here, if bestForcedPath.size === occurrence.path.size
 			// and compare the last frames of the path to avoid moving frames we just gave the token to
 			// For now, we don't
 		}
+
+		// If we do not have any path yet, we bother considering a terrible one
+		if (bestGoodPath === null && bestBadPath === null)
+		{
+			if (occurrence.pathStatus === PathStatus.TERRIBLE)
+			{
+				// We did not store any path yet
+				if (bestTerriblePath === null)
+				{
+					bestTerriblePath = occurrence.path
+					return
+				}
+
+				// If our stored path is longer than the new one we received
+				if (bestTerriblePath.size > occurrence.path.size)
+				{
+					bestTerriblePath = occurrence.path
+					return
+				}
+
+			}
+
+			// We could consider here, if bestForcedPath.size === occurrence.path.size
+			// and compare the last frames of the path to avoid moving frames we just gave the token to
+			// For now, we don't
+		}
 	}
-	
+
 	// Time is up to find new paths, we now use the best path we found
 	on PathCalculationTimeOut {
 		
@@ -443,14 +476,18 @@ agent FrameAgent {
 			return;*/
 		
 		// We have a good clean path
-		if (bestPath !== null)
+		if (bestGoodPath !== null)
 		{
-			initiateMovementChain(bestPath)
+			initiateMovementChain(bestGoodPath)
 		}
-		// We have a path that will move some happy tiles on the way 
-		else if (bestForcedPath !== null)
+		// We have a path that will move some happy tiles on the way
+		else if (bestBadPath !== null)
 		{
-			initiateMovementChain(bestForcedPath)
+			initiateMovementChain(bestBadPath)
+		} // We have a path that will move some happy tiles on the way that had the token at some point
+		else if (bestTerriblePath !== null)
+		{
+			initiateMovementChain(bestTerriblePath)
 		}
 		// We have nothing. We will try releasing the token hopping this solves something
 		else
@@ -525,31 +562,30 @@ agent FrameAgent {
 		
 		synchronized(nbAck) {
 			nbAck--
-		}
 		
-		info("DEBUGG : AcknowledgmentDataUpdated : nbAck : " + nbAck)
-		
-		// We received all the acknowledgments we were waiting for
-		if (nbAck === 0)
-		{
-			// TRYING TO AVOID SYNCH ISSUES
-			nbAck = -1
+			info("DEBUGG : AcknowledgmentDataUpdated : nbAck : " + nbAck)
 			
-			// Information helpful to avoid getting stuck around corners
-			if (isSatisfied)
+			// We received all the acknowledgments we were waiting for
+			if (nbAck === 0)
 			{
-				didMyTileMateHaveTheToken = true
-			
-				// If I am in a corner, I move the blank Tile around
-				// TODO: todo... or not
+				// TRYING TO AVOID SYNCH ISSUES
+				nbAck = -1
+				
+				// Information helpful to avoid getting stuck around corners
+				if (isSatisfied)
+				{
+					didMyTileMateHaveTheToken = true
+				
+					// If I am in a corner, I move the blank Tile around
+					// TODO: todo... or not
+				}
+				
+				// Do graphical update
+				emit(new UpdateGUI(pathUpdateGUI))
+				
+				//emit(new TokenReleased())
 			}
-			
-			// Do graphical update
-			emit(new UpdateGUI(pathUpdateGUI))
-			
-			//emit(new TokenReleased())
 		}
-		
 	}
 	
 	def getXRow : int{

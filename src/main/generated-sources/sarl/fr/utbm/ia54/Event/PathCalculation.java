@@ -2,6 +2,7 @@ package fr.utbm.ia54.Event;
 
 import fr.utbm.ia54.Agent.FrameAgent;
 import fr.utbm.ia54.Enum.Direction;
+import fr.utbm.ia54.Enum.PathStatus;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
@@ -37,18 +38,18 @@ public class PathCalculation extends Event {
   
   public long timeStamp;
   
-  public boolean forcePath;
+  public PathStatus pathStatus;
   
   public int jumpCount;
   
   public ArrayList<FrameAgent> path = new ArrayList<FrameAgent>();
   
-  public PathCalculation(final long reqId, final UUID origin, final Direction from, final long time, final boolean forcingAPath, final int jump, final ArrayList<FrameAgent> p) {
+  public PathCalculation(final long reqId, final UUID origin, final Direction from, final long time, final PathStatus status, final int jump, final ArrayList<FrameAgent> p) {
     this.requestId = reqId;
     this.provenanceDirection = from;
     this.requestOrigin = origin;
     this.timeStamp = time;
-    this.forcePath = forcingAPath;
+    this.pathStatus = status;
     this.jumpCount = jump;
     this.path = p;
   }
@@ -71,8 +72,6 @@ public class PathCalculation extends Event {
     }
     if (other.timeStamp != this.timeStamp)
       return false;
-    if (other.forcePath != this.forcePath)
-      return false;
     if (other.jumpCount != this.jumpCount)
       return false;
     return super.equals(obj);
@@ -87,7 +86,6 @@ public class PathCalculation extends Event {
     result = prime * result + (int) (this.requestId ^ (this.requestId >>> 32));
     result = prime * result + Objects.hashCode(this.requestOrigin);
     result = prime * result + (int) (this.timeStamp ^ (this.timeStamp >>> 32));
-    result = prime * result + (this.forcePath ? 1231 : 1237);
     result = prime * result + this.jumpCount;
     return result;
   }
@@ -103,12 +101,12 @@ public class PathCalculation extends Event {
     result.append("requestOrigin  = ").append(this.requestOrigin);
     result.append("provenanceDirection  = ").append(this.provenanceDirection);
     result.append("timeStamp  = ").append(this.timeStamp);
-    result.append("forcePath  = ").append(this.forcePath);
+    result.append("pathStatus  = ").append(this.pathStatus);
     result.append("jumpCount  = ").append(this.jumpCount);
     result.append("path  = ").append(this.path);
     return result.toString();
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 1550159373L;
+  private final static long serialVersionUID = 1267138420L;
 }

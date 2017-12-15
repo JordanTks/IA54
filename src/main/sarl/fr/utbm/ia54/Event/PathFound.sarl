@@ -5,7 +5,7 @@ package fr.utbm.ia54.Event
 
 import fr.utbm.ia54.Agent.FrameAgent
 import java.util.ArrayList
-import java.util.UUID
+import fr.utbm.ia54.Enum.PathStatus
 
 /** 
  * Path found to the blank tile.
@@ -15,13 +15,13 @@ import java.util.UUID
 event PathFound
 {
 	var requestId : long
-	var forcePath : boolean
+	var pathStatus : PathStatus
 	var jumpCount : int
 	var path = new ArrayList<FrameAgent>()
 
-	new (reqId : long, forcingAPath : boolean, jump : int, p : ArrayList<FrameAgent>) {
+	new (reqId : long, status : PathStatus, jump : int, p : ArrayList<FrameAgent>) {
 		this.requestId = reqId
-		this.forcePath = forcingAPath
+		this.pathStatus = status
 		this.jumpCount = jump
 		this.path = p
 	}

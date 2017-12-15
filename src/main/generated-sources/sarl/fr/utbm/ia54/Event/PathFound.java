@@ -1,6 +1,7 @@
 package fr.utbm.ia54.Event;
 
 import fr.utbm.ia54.Agent.FrameAgent;
+import fr.utbm.ia54.Enum.PathStatus;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
@@ -18,15 +19,15 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class PathFound extends Event {
   public long requestId;
   
-  public boolean forcePath;
+  public PathStatus pathStatus;
   
   public int jumpCount;
   
   public ArrayList<FrameAgent> path = new ArrayList<FrameAgent>();
   
-  public PathFound(final long reqId, final boolean forcingAPath, final int jump, final ArrayList<FrameAgent> p) {
+  public PathFound(final long reqId, final PathStatus status, final int jump, final ArrayList<FrameAgent> p) {
     this.requestId = reqId;
-    this.forcePath = forcingAPath;
+    this.pathStatus = status;
     this.jumpCount = jump;
     this.path = p;
   }
@@ -44,8 +45,6 @@ public class PathFound extends Event {
     PathFound other = (PathFound) obj;
     if (other.requestId != this.requestId)
       return false;
-    if (other.forcePath != this.forcePath)
-      return false;
     if (other.jumpCount != this.jumpCount)
       return false;
     return super.equals(obj);
@@ -58,7 +57,6 @@ public class PathFound extends Event {
     int result = super.hashCode();
     final int prime = 31;
     result = prime * result + (int) (this.requestId ^ (this.requestId >>> 32));
-    result = prime * result + (this.forcePath ? 1231 : 1237);
     result = prime * result + this.jumpCount;
     return result;
   }
@@ -71,12 +69,12 @@ public class PathFound extends Event {
   protected String attributesToString() {
     StringBuilder result = new StringBuilder(super.attributesToString());
     result.append("requestId  = ").append(this.requestId);
-    result.append("forcePath  = ").append(this.forcePath);
+    result.append("pathStatus  = ").append(this.pathStatus);
     result.append("jumpCount  = ").append(this.jumpCount);
     result.append("path  = ").append(this.path);
     return result.toString();
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 1822777964L;
+  private final static long serialVersionUID = 1539757011L;
 }
