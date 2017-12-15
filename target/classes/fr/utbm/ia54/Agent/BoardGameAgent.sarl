@@ -1036,9 +1036,13 @@ agent BoardGameAgent {
 		for (number : occurrence.frameList) {
 			info("UpdateGUI: LIST: "+number.hostedNumTile)
 			ctrl.swap(number.hostedNumTile)
+			Thread.sleep(300)
 		}
-		info("UpdateGUI: SIMPLE: "+occurrence.numFrame)
-		ctrl.swap(occurrence.numFrame)
+		//info("UpdateGUI: SIMPLE: "+occurrence.numFrame)
+
+		// Graphical update is done, releasing token
+		emit (new TokenReleased())
+
 	}
 
 	on EndAgent {

@@ -13,11 +13,9 @@ import fr.utbm.ia54.Agent.FrameAgent
 event UpdateGUI {
 	
 	var frameList : ArrayList<FrameAgent>
-	var numFrame : int
 	
-	new (list : ArrayList<FrameAgent>, numeroFrame : int) {
+	new (list : ArrayList<FrameAgent>) {
 		frameList = list
-		numFrame = numeroFrame
 	}
 	
 }

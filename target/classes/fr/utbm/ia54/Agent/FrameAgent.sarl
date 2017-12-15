@@ -51,6 +51,7 @@ agent FrameAgent {
 
 	// Swapping Tiles
 	var nbAck : int
+	var pathUpdateGUI : ArrayList<FrameAgent>
 
 	// FrameAgent state
 	var isSatisfied = false
@@ -424,12 +425,12 @@ agent FrameAgent {
 		// We have a good clean path
 		if (bestPath !== null)
 		{
-			iterateMovementChain(bestPath)
+			initiateMovementChain(bestPath)
 		}
 		// We have a path that will move some happy tiles on the way 
 		else if (bestForcedPath !== null)
 		{
-			iterateMovementChain(bestForcedPath)
+			initiateMovementChain(bestForcedPath)
 		}
 		// We have nothing. We will try releasing the token hopping this solves something
 		else
@@ -439,33 +440,17 @@ agent FrameAgent {
 		}
 	}
 	
-	def iterateMovementChain (path : ArrayList<FrameAgent>) {
+	def initiateMovementChain (path : ArrayList<FrameAgent>) {
 		
 		// Setting counter to know when we can release token
 		nbAck = path.size + 1 // Waiting for an answer from each frame of the list + myself
 		
 		Collections.reverse(path);
 
-		/*for (p : path)
-		{
-			info("PAAAATH : " + p.hostedNumTile)
-		}*/
-
-
 		// List to send to UpdateGUI
-		var gui : ArrayList<FrameAgent>
-		gui = new ArrayList<FrameAgent>
-		gui.addAll(path)
-		//info("EHAEUIAHEAIO : " + gui.get(0).hostedNumTile)
-		gui.remove(0)
-
-		emit(new UpdateGUI(gui, this.hostedNumTile))
+		pathUpdateGUI = new ArrayList<FrameAgent>
+		pathUpdateGUI.addAll(path)
 		
-		in (2000) [iterateMovementChain2(path)]
-		
-	}
-	
-	def iterateMovementChain2 (path : ArrayList<FrameAgent>) {
 		var tempID : UUID
 
 		// While there are more than two elements, we have to swap informations
@@ -530,10 +515,13 @@ agent FrameAgent {
 				didMyTileMateHaveTheToken = true
 			
 				// If I am in a corner, I move the blank Tile around
-				// TODO: todo
+				// TODO: todo... or not
 			}
 			
-			emit(new TokenReleased())
+			// Do graphical update
+			emit(new UpdateGUI(pathUpdateGUI))
+			
+			//emit(new TokenReleased())
 		}
 	}
 	

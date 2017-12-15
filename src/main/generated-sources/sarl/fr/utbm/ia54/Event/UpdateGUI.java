@@ -17,26 +17,14 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class UpdateGUI extends Event {
   public ArrayList<FrameAgent> frameList;
   
-  public int numFrame;
-  
-  public UpdateGUI(final ArrayList<FrameAgent> list, final int numeroFrame) {
+  public UpdateGUI(final ArrayList<FrameAgent> list) {
     this.frameList = list;
-    this.numFrame = numeroFrame;
   }
   
   @Override
   @Pure
   @SyntheticMember
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    UpdateGUI other = (UpdateGUI) obj;
-    if (other.numFrame != this.numFrame)
-      return false;
     return super.equals(obj);
   }
   
@@ -45,8 +33,6 @@ public class UpdateGUI extends Event {
   @SyntheticMember
   public int hashCode() {
     int result = super.hashCode();
-    final int prime = 31;
-    result = prime * result + this.numFrame;
     return result;
   }
   
@@ -58,10 +44,9 @@ public class UpdateGUI extends Event {
   protected String attributesToString() {
     StringBuilder result = new StringBuilder(super.attributesToString());
     result.append("frameList  = ").append(this.frameList);
-    result.append("numFrame  = ").append(this.numFrame);
     return result.toString();
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = -2452498577L;
+  private final static long serialVersionUID = -74404880L;
 }

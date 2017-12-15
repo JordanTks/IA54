@@ -16,7 +16,6 @@ import fr.utbm.ia54.Event.SafetyWait;
 import fr.utbm.ia54.Event.TokenReleased;
 import fr.utbm.ia54.Event.UpdateGUI;
 import fr.utbm.ia54.Event.UpdateProblemInformations;
-import io.sarl.core.AgentTask;
 import io.sarl.core.Behaviors;
 import io.sarl.core.DefaultContextInteractions;
 import io.sarl.core.Initialize;
@@ -66,6 +65,8 @@ public class FrameAgent extends Agent {
   private ArrayList<FrameAgent> bestForcedPath;
   
   private int nbAck;
+  
+  private ArrayList<FrameAgent> pathUpdateGUI;
   
   private boolean isSatisfied = false;
   
@@ -451,10 +452,10 @@ public class FrameAgent extends Agent {
       }
     }
     if ((this.bestPath != null)) {
-      this.iterateMovementChain(this.bestPath);
+      this.initiateMovementChain(this.bestPath);
     } else {
       if ((this.bestForcedPath != null)) {
-        this.iterateMovementChain(this.bestForcedPath);
+        this.initiateMovementChain(this.bestForcedPath);
       } else {
         Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
         _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5.error("Error 03 : No path found in time at the end of PathCalculation spreading.");
@@ -465,31 +466,14 @@ public class FrameAgent extends Agent {
     }
   }
   
-  protected AgentTask iterateMovementChain(final ArrayList<FrameAgent> path) {
-    AgentTask _xblockexpression = null;
-    {
-      int _size = path.size();
-      int _plus = (_size + 1);
-      this.nbAck = _plus;
-      Collections.reverse(path);
-      ArrayList<FrameAgent> gui = null;
-      ArrayList<FrameAgent> _arrayList = new ArrayList<FrameAgent>();
-      gui = _arrayList;
-      gui.addAll(path);
-      gui.remove(0);
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      UpdateGUI _updateGUI = new UpdateGUI(gui, this.hostedNumTile);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_updateGUI);
-      Schedules _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER = this.$castSkill(Schedules.class, (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = this.$getSkill(Schedules.class)) : this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
-      final Procedure1<Agent> _function = (Agent it) -> {
-        this.iterateMovementChain2(path);
-      };
-      _xblockexpression = _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER.in(2000, _function);
-    }
-    return _xblockexpression;
-  }
-  
-  protected void iterateMovementChain2(final ArrayList<FrameAgent> path) {
+  protected void initiateMovementChain(final ArrayList<FrameAgent> path) {
+    int _size = path.size();
+    int _plus = (_size + 1);
+    this.nbAck = _plus;
+    Collections.reverse(path);
+    ArrayList<FrameAgent> _arrayList = new ArrayList<FrameAgent>();
+    this.pathUpdateGUI = _arrayList;
+    this.pathUpdateGUI.addAll(path);
     UUID tempID = null;
     while ((path.size() >= 2)) {
       {
@@ -565,8 +549,8 @@ public class FrameAgent extends Agent {
         this.didMyTileMateHaveTheToken = true;
       }
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      TokenReleased _tokenReleased = new TokenReleased();
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReleased);
+      UpdateGUI _updateGUI = new UpdateGUI(this.pathUpdateGUI);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_updateGUI);
     }
   }
   

@@ -1202,18 +1202,23 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$UpdateGUI$6(final UpdateGUI occurrence) {
-    for (final FrameAgent number : occurrence.frameList) {
-      {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        int _hostedNumTile = number.getHostedNumTile();
-        String _plus = ("UpdateGUI: LIST: " + Integer.valueOf(_hostedNumTile));
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
-        this.ctrl.swap(number.getHostedNumTile());
+    try {
+      for (final FrameAgent number : occurrence.frameList) {
+        {
+          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+          int _hostedNumTile = number.getHostedNumTile();
+          String _plus = ("UpdateGUI: LIST: " + Integer.valueOf(_hostedNumTile));
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
+          this.ctrl.swap(number.getHostedNumTile());
+          Thread.sleep(300);
+        }
       }
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      TokenReleased _tokenReleased = new TokenReleased();
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReleased);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
     }
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(("UpdateGUI: SIMPLE: " + Integer.valueOf(occurrence.numFrame)));
-    this.ctrl.swap(occurrence.numFrame);
   }
   
   @SyntheticMember

@@ -108,4 +108,7 @@ public class PathCalculation extends Event {
     result.append("path  = ").append(this.path);
     return result.toString();
   }
+  
+  @SyntheticMember
+  private final static long serialVersionUID = 1550159373L;
 }
