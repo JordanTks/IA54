@@ -862,6 +862,7 @@ public class BoardGameAgent extends Agent {
               if (_tripleEquals) {
                 listSwap.add(Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
                 this.ctrl.setColor("blue", Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
+                Thread.sleep(300);
                 break;
               }
             }

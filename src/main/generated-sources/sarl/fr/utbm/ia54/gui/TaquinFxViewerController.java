@@ -11,10 +11,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -41,9 +43,8 @@ public class TaquinFxViewerController extends FxViewerController {
     private int cpt = 0;
     
     public GridDisplay(final int nRows, final int nCols) {
-      this.tilePane.setStyle("-fx-background-color: rgba(255, 215, 0, 0.1);");
-      this.tilePane.setHgap(this.GAP);
-      this.tilePane.setVgap(this.GAP);
+      this.tilePane.setHgap(5);
+      this.tilePane.setVgap(5);
       this.setColumns(nCols);
       this.setRows(nRows);
     }
@@ -61,20 +62,36 @@ public class TaquinFxViewerController extends FxViewerController {
     public void construct(final List<Integer> a) {
       this.tilePane.getChildren().clear();
       this.cpt = 0;
+      ObservableList<Node> list = this.tilePane.getChildren();
       for (int i = 0; (i < this.nCols); i++) {
         for (int j = 0; (j < this.nRows); j++) {
           {
+            Group root = new Group();
             int _size = a.size();
             boolean _lessThan = (this.cpt < _size);
             if (_lessThan) {
               String _string = a.get(this.cpt).toString();
               Text text = new Text(_string);
-              text.prefHeight(400);
-              this.tilePane.getChildren().add(text);
+              text.setX(5);
+              text.setY(22);
+              text.setFill(Color.WHITE);
+              text.setStyle("-fx-font-size: 20px;");
+              Rectangle rect = new Rectangle(30, 30);
+              rect.setFill(Color.GREY);
+              root.getChildren().add(rect);
+              root.getChildren().add(text);
+              this.tilePane.getChildren().add(root);
             } else {
               Text text_1 = new Text(" ");
-              text_1.prefHeight(400);
-              this.tilePane.getChildren().add(text_1);
+              text_1.setX(5);
+              text_1.setY(22);
+              text_1.setFill(Color.WHITE);
+              text_1.setStyle("-fx-font-size: 20px;");
+              Rectangle rect_1 = new Rectangle(30, 30);
+              rect_1.setFill(Color.WHITE);
+              root.getChildren().add(rect_1);
+              root.getChildren().add(text_1);
+              this.tilePane.getChildren().add(root);
             }
             this.cpt++;
           }
@@ -133,9 +150,17 @@ public class TaquinFxViewerController extends FxViewerController {
   @FXML
   private TextField size;
   
+  @FXML
+  private CheckBox distribuited;
+  
   @Pure
   public int getProbSize() {
     return Integer.parseInt(this.size.getText());
+  }
+  
+  @Pure
+  public boolean getDistribuitedVal() {
+    return this.distribuited.isSelected();
   }
   
   @FXML
@@ -150,7 +175,8 @@ public class TaquinFxViewerController extends FxViewerController {
         this.pane.getChildren().add(this.gridDisplay.display);
       }
       int _probSize = this.getProbSize();
-      ConfigureSimulation event = new ConfigureSimulation(_probSize);
+      boolean _distribuitedVal = this.getDistribuitedVal();
+      ConfigureSimulation event = new ConfigureSimulation(_probSize, _distribuitedVal);
       boolean _xifexpression = false;
       if ((!this.launched)) {
         boolean _xblockexpression_1 = false;
@@ -198,24 +224,28 @@ public class TaquinFxViewerController extends FxViewerController {
         for (int i = 0; (i < listTiles.size()); i++) {
           {
             Node _get = listTiles.get(i);
-            Text t = ((Text) _get);
+            Group group = ((Group) _get);
+            Node _get_1 = group.getChildren().get(0);
+            Rectangle rect = ((Rectangle) _get_1);
+            Node _get_2 = group.getChildren().get(1);
+            Text t = ((Text) _get_2);
             boolean _equals = t.getText().equals(Integer.toString((numTile).intValue()));
             if (_equals) {
               boolean _equals_1 = color.equals("red");
               if (_equals_1) {
-                t.setFill(Color.RED);
+                rect.setFill(Color.RED);
               } else {
                 boolean _equals_2 = color.equals("blue");
                 if (_equals_2) {
-                  t.setFill(Color.BLUE);
+                  rect.setFill(Color.BLUE);
                 } else {
                   boolean _equals_3 = color.equals("green");
                   if (_equals_3) {
-                    t.setFill(Color.GREEN);
+                    rect.setFill(Color.GREEN);
                   } else {
                     boolean _equals_4 = color.equals("purple");
                     if (_equals_4) {
-                      t.setFill(Color.PURPLE);
+                      rect.setFill(Color.PURPLE);
                     }
                   }
                 }
@@ -238,14 +268,6 @@ public class TaquinFxViewerController extends FxViewerController {
     
     __TaquinFxViewerController_2 ___TaquinFxViewerController_2 = new __TaquinFxViewerController_2() {
       public void run() {
-        ObservableList<Node> listTiles = TaquinFxViewerController.this.gridDisplay.tilePane.getChildren();
-        for (int i = 0; (i < listTiles.size()); i++) {
-          {
-            Node _get = listTiles.get(i);
-            Text t = ((Text) _get);
-            t.setFill(Color.BLACK);
-          }
-        }
       }
     };
     Platform.runLater(___TaquinFxViewerController_2);
@@ -263,24 +285,35 @@ public class TaquinFxViewerController extends FxViewerController {
         ObservableList<Node> listTiles = TaquinFxViewerController.this.gridDisplay.tilePane.getChildren();
         Text tile1 = null;
         Text tile2 = null;
+        Rectangle rect1 = null;
+        Rectangle rect2 = null;
         for (int i = 0; (i < listTiles.size()); i++) {
           {
             Node _get = listTiles.get(i);
-            Text t = ((Text) _get);
+            Group group = ((Group) _get);
+            Node _get_1 = group.getChildren().get(0);
+            Rectangle rect = ((Rectangle) _get_1);
+            Node _get_2 = group.getChildren().get(1);
+            Text t = ((Text) _get_2);
             boolean _equals = t.getText().equals(" ");
             if (_equals) {
               tile1 = t;
+              rect1 = rect;
             }
             boolean _equals_1 = t.getText().equals(Integer.toString(number));
             if (_equals_1) {
               tile2 = t;
+              rect2 = rect;
             }
           }
         }
+        rect2.setFill(Color.WHITE);
+        rect1.setFill(Color.GREY);
         String c = "";
         c = tile1.getText();
         tile1.setText(tile2.getText());
         tile2.setText(c);
+        tile2.setFill(Color.WHITE);
       }
     };
     Platform.runLater(___TaquinFxViewerController_3);

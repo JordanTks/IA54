@@ -12,8 +12,11 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class ConfigureSimulation extends Event {
   public final int probSize;
   
-  public ConfigureSimulation(final int size) {
+  public final boolean distribuited;
+  
+  public ConfigureSimulation(final int size, final boolean dist) {
     this.probSize = size;
+    this.distribuited = dist;
   }
   
   @Override
@@ -29,6 +32,8 @@ public class ConfigureSimulation extends Event {
     ConfigureSimulation other = (ConfigureSimulation) obj;
     if (other.probSize != this.probSize)
       return false;
+    if (other.distribuited != this.distribuited)
+      return false;
     return super.equals(obj);
   }
   
@@ -39,6 +44,7 @@ public class ConfigureSimulation extends Event {
     int result = super.hashCode();
     final int prime = 31;
     result = prime * result + this.probSize;
+    result = prime * result + (this.distribuited ? 1231 : 1237);
     return result;
   }
   
@@ -50,9 +56,10 @@ public class ConfigureSimulation extends Event {
   protected String attributesToString() {
     StringBuilder result = new StringBuilder(super.attributesToString());
     result.append("probSize  = ").append(this.probSize);
+    result.append("distribuited  = ").append(this.distribuited);
     return result.toString();
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = -414901893L;
+  private final static long serialVersionUID = 171997137L;
 }

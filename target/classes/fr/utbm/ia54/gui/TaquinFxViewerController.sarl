@@ -15,6 +15,7 @@ import javafx.scene.text.Text
 import java.util.List
 import javafx.application.Platform
 import javafx.scene.Node
+import javafx.scene.control.CheckBox
 
 class TaquinFxViewerController extends FxViewerController { 
 
@@ -25,23 +26,31 @@ class TaquinFxViewerController extends FxViewerController {
 
 	@FXML var pane : Pane
 	@FXML var size : TextField
+	@FXML var distribuited : CheckBox
 
 
 	def getProbSize : int {
 		Integer.parseInt(size.text)
 	}
 	
+	def getDistribuitedVal : boolean {
+		return distribuited.isSelected
+	}
+	
 
 	@FXML def startSimu {
 		
+		// setters call resize 
 		gridDisplay.columns = this.probSize
 		gridDisplay.rows = this.probSize
 		
+		// If start pressed again 
 		if (!pane.children.contains(gridDisplay.display)) {
 			pane.children.add(gridDisplay.display);
 		}
 
-		var ^event = new ConfigureSimulation(this.probSize)
+		// Send event
+		var ^event = new ConfigureSimulation(this.probSize, this.distribuitedVal)
 		if (!launched) {
 			startAgentApplication() [emitToAgents(^event)]
 			launched = true
@@ -68,16 +77,22 @@ class TaquinFxViewerController extends FxViewerController {
 				var listTiles = gridDisplay.tilePane.children
 				
 				for (var i = 0; i < listTiles.size; i++) {
-					var t = listTiles.get(i) as Text
+
+					// Get Group (rect + text)
+					var group = listTiles.get(i) as Group
+
+					var rect = group.children.get(0) as Rectangle
+					var t = group.children.get(1) as Text
+					
 					if(t.text.equals(Integer.toString(numTile))){
 						if(color.equals("red"))
-							t.fill = Color.RED
+							rect.fill = Color.RED
 						else if (color.equals("blue"))
-							t.fill = Color.BLUE
+							rect.fill = Color.BLUE
 						else if (color.equals("green"))
-							t.fill = Color.GREEN
+							rect.fill = Color.GREEN
 						else if (color.equals("purple"))
-							t.fill = Color.PURPLE
+							rect.fill = Color.PURPLE
 						return
 					}
 				}
@@ -89,13 +104,13 @@ class TaquinFxViewerController extends FxViewerController {
 		Platform.runLater(
 			new Runnable() {
 				def run {
-
+/*
 					var listTiles = gridDisplay.tilePane.children
 					for (var i = 0; i < listTiles.size; i++) {
 						var t = listTiles.get(i) as Text
 						t.fill = Color.BLACK
 					}
-
+*/
 				}
 			}
 		)
@@ -110,23 +125,40 @@ class TaquinFxViewerController extends FxViewerController {
 					var listTiles = gridDisplay.tilePane.children
 					var tile1 : Text
 					var tile2 : Text
+					var rect1 : Rectangle
+					var rect2 : Rectangle
 
 					for (var i = 0; i < listTiles.size; i++) {
-						var t = listTiles.get(i) as Text
+
+						// Get Group (rect + text)
+						var group = listTiles.get(i) as Group
+
+						var rect = group.children.get(0) as Rectangle
+						var t = group.children.get(1) as Text
 
 						if (t.text.equals(" ")) {
 							tile1 = t
+							rect1 = rect
 						}
 
 						if (t.text.equals(Integer.toString(number))) {
 							tile2 = t
+							rect2 = rect
 						}
 
 					}
+					
+					// SWAP
+					rect2.fill = Color.WHITE
+					rect1.fill = Color.GREY 
+					
 					var c = ""
 					c = tile1.text
 					tile1.text = tile2.text
 					tile2.text = c
+					tile2.fill = Color.WHITE
+					//
+					
 
 				}
 			}
@@ -139,7 +171,7 @@ class TaquinFxViewerController extends FxViewerController {
 		var tilePane = new TilePane();
 		var display = new Group(tilePane);
 
-		val ELEMENT_SIZE : double = 50;
+		val ELEMENT_SIZE : double = 50; 
 		val GAP : double = ELEMENT_SIZE / 10;
 
         var nRows : int;
@@ -148,9 +180,9 @@ class TaquinFxViewerController extends FxViewerController {
         var cpt : int = 0;
 		
 		new (nRows : int, nCols : int) {
-			tilePane.setStyle("-fx-background-color: rgba(255, 215, 0, 0.1);");
-			tilePane.setHgap(GAP);
-			tilePane.setVgap(GAP);
+			//tilePane.setStyle("-fx-background-color: rgba(255, 215, 0, 0.1);");
+			tilePane.setHgap(5);
+			tilePane.setVgap(5);
 			setColumns(nCols);
 			setRows(nRows);
 		}
@@ -169,19 +201,42 @@ class TaquinFxViewerController extends FxViewerController {
 		def construct(a : List<Integer>) {
 			tilePane.getChildren().clear();
 			cpt = 0;
+
+			var list = tilePane.getChildren()
 	
-			for (var i = 0; i < nCols; i++) {
+			for (var i = 0; i < nCols; i++) { 
 				for (var j = 0; j < nRows; j++) {
+
+					var root = new Group()
 					
 					if (cpt < a.size) {
 						var text = new Text(a.get(cpt).toString)
-						text.prefHeight(400)
-						tilePane.getChildren().add(text)
+						text.x = 5
+						text.y = 22
+						text.fill = Color.WHITE
+						text.setStyle("-fx-font-size: 20px;");
+						
+						var rect = new Rectangle(30, 30)
+						rect.fill = Color.GREY
+						
+						root.children.add(rect)
+						root.children.add(text)
+						
+						tilePane.getChildren().add(root)
 
 					} else { // blank tile
 						var text = new Text(" ")
-						text.prefHeight(400)
-						tilePane.getChildren().add(text)
+						text.x = 5
+						text.y = 22
+						text.fill = Color.WHITE
+						text.setStyle("-fx-font-size: 20px;");
+						var rect = new Rectangle(30, 30)
+						rect.fill = Color.WHITE
+
+						root.children.add(rect)
+						root.children.add(text)
+						
+						tilePane.getChildren().add(root)
 					}
 					cpt++
 

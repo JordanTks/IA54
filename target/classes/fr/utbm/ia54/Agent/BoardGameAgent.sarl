@@ -729,6 +729,8 @@ agent BoardGameAgent {
 						listSwap.add(frameList.get(j).hostedNumTile)
 						
 						ctrl.setColor("blue", frameList.get(j).hostedNumTile)
+
+						Thread.sleep(300)
 						
 						break
 					}

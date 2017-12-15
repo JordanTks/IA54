@@ -4,9 +4,11 @@ import java.util.Collection
 
 event ConfigureSimulation {
 	val probSize : int
+	val distribuited : boolean
 	
-	new(size : int) {
+	new(size : int, dist : boolean) {
 		probSize = size
+		distribuited = dist
 	}
 }
 

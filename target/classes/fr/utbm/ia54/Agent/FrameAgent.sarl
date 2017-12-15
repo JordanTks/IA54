@@ -400,7 +400,7 @@ agent FrameAgent {
 	on PathCalculationTimeOut {
 		
 		// DEBUGGING PATHFINDING
-		/*info("DEBUGG : PathCalculationTimeOut")
+		info("DEBUGG : PathCalculationTimeOut")
 		
 		if (bestPath !== null)
 		{
@@ -413,7 +413,12 @@ agent FrameAgent {
 			info("DEBUGG : There is a bad path (length : " + bestForcedPath.size + ")")
 			for (f : bestForcedPath)
 				info("DEBUGG : BAD PATH > " + f.numFrame)
-		}*/
+		}
+		
+		// DEBUGG
+		/*emit(new TokenReleased())
+		if (true)
+			return;*/
 		
 		// We have a good clean path
 		if (bestPath !== null)
@@ -452,22 +457,29 @@ agent FrameAgent {
 		gui.addAll(path)
 		//info("EHAEUIAHEAIO : " + gui.get(0).hostedNumTile)
 		gui.remove(0)
+
+		emit(new UpdateGUI(gui, this.hostedNumTile))
 		
+		in (2000) [iterateMovementChain2(path)]
+		
+	}
+	
+	def iterateMovementChain2 (path : ArrayList<FrameAgent>) {
 		var tempID : UUID
-		
+
 		// While there are more than two elements, we have to swap informations
-		while(path.size >= 2)
-		{
+		while (path.size >= 2) {
 			// Swapping hosted Tile UUID
 			tempID = path.get(0).hostedTile
 			path.get(0).hostedTile = path.get(1).hostedTile
 			path.get(1).hostedTile = tempID
-			
-			//info("DEBUGG : iterateMovementChain id " + path.get(0).hostedTile)
+
+			// info("DEBUGG : iterateMovementChain id " + path.get(0).hostedTile)
 			
 			// Tells the frame to send its info to its new Hosted Tile & to wait for the info from the Tile afterwards
-			emit(new UpdateProblemInformations(true, this.ID), Scopes.addresses(defaultSpace.getAddress(path.get(0).ID)))
-			
+			emit(new UpdateProblemInformations(true, this.ID),
+				Scopes.addresses(defaultSpace.getAddress(path.get(0).ID)))
+
 			// We remove the first element of the list
 			path.remove(0)
 		}
@@ -476,8 +488,6 @@ agent FrameAgent {
 		tempID = path.get(0).hostedTile
 		path.get(0).hostedTile = this.hostedTile
 		this.hostedTile = tempID
-
-		emit(new UpdateGUI(gui, this.hostedNumTile))
 
 		emit(new UpdateProblemInformations(true, this.ID), Scopes.addresses(defaultSpace.getAddress(path.get(0).ID)))
 		wake(new UpdateProblemInformations(true, this.ID))
