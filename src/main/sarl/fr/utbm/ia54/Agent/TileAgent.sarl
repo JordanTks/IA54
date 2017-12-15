@@ -20,6 +20,7 @@ import fr.utbm.ia54.Event.SafetyWait
 import io.sarl.core.Lifecycle
 import fr.utbm.ia54.Event.UpdateProblemInformations
 import fr.utbm.ia54.Enum.Direction
+import fr.utbm.ia54.Enum.Satisfaction
 
 agent TileAgent {
 	uses Logging, DefaultContextInteractions, Behaviors, Schedules, Lifecycle 
@@ -164,16 +165,25 @@ agent TileAgent {
 		var entry = iter.next()
 
 		// If this neighbour is unhappy, therefore we can target him
-		if (entry.value === false)
+		if (entry.value === Satisfaction.UNSATISFIED)
 		{
 			//info ("DEBUGG : Assault first neighbour which responded")
 			emit(new Assault(entry.key, false), Scopes.identifiers(uuidFrameHost))
 		}
 		// Wether or not the second neighbour is happy, we have to target someone anyway
 		else {
+			
+			// Storing Direction of first neighbour for third case
+			var firstDir = entry.key
+			
 			//info("DEBUGG : Assault second neighbour which responded")
 			entry = iter.next()
-			emit(new Assault(entry.key, false), Scopes.identifiers(uuidFrameHost))
+			
+			if (entry.value !== Satisfaction.TOKEN_SATISFIED)
+				emit(new Assault(entry.key, false), Scopes.identifiers(uuidFrameHost))
+			else
+				// We rather attack the neighbour which is not TOKEN_SATISFIED. If he happens to be as well... We have to attack one anyway
+				emit(new Assault(firstDir, false), Scopes.identifiers(uuidFrameHost))
 		}
 	}
 

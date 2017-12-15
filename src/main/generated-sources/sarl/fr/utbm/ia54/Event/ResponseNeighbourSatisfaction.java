@@ -1,6 +1,7 @@
 package fr.utbm.ia54.Event;
 
 import fr.utbm.ia54.Enum.Direction;
+import fr.utbm.ia54.Enum.Satisfaction;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
@@ -15,18 +16,18 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlElementType(14)
 @SuppressWarnings("all")
 public class ResponseNeighbourSatisfaction extends Event {
-  public boolean isSatisfied;
+  public Satisfaction isSatisfied;
   
   public Direction direction;
   
-  public LinkedHashMap<Direction, Boolean> neighbourSatisfaction;
+  public LinkedHashMap<Direction, Satisfaction> neighbourSatisfaction;
   
-  public ResponseNeighbourSatisfaction(final boolean b, final Direction dir) {
-    this.isSatisfied = b;
+  public ResponseNeighbourSatisfaction(final Satisfaction s, final Direction dir) {
+    this.isSatisfied = s;
     this.direction = dir;
   }
   
-  public ResponseNeighbourSatisfaction(final LinkedHashMap<Direction, Boolean> map) {
+  public ResponseNeighbourSatisfaction(final LinkedHashMap<Direction, Satisfaction> map) {
     this.neighbourSatisfaction = map;
   }
   
@@ -34,15 +35,6 @@ public class ResponseNeighbourSatisfaction extends Event {
   @Pure
   @SyntheticMember
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    ResponseNeighbourSatisfaction other = (ResponseNeighbourSatisfaction) obj;
-    if (other.isSatisfied != this.isSatisfied)
-      return false;
     return super.equals(obj);
   }
   
@@ -51,8 +43,6 @@ public class ResponseNeighbourSatisfaction extends Event {
   @SyntheticMember
   public int hashCode() {
     int result = super.hashCode();
-    final int prime = 31;
-    result = prime * result + (this.isSatisfied ? 1231 : 1237);
     return result;
   }
   
@@ -70,5 +60,5 @@ public class ResponseNeighbourSatisfaction extends Event {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = -3818633862L;
+  private final static long serialVersionUID = -5363292878L;
 }

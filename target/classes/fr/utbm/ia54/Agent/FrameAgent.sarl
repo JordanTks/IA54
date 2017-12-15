@@ -32,6 +32,7 @@ import fr.utbm.ia54.Event.UpdateProblemInformations
 import fr.utbm.ia54.Event.AcknowledgmentDataUpdated
 import fr.utbm.ia54.Event.UpdateGUI
 import fr.utbm.ia54.Enum.Direction
+import fr.utbm.ia54.Enum.Satisfaction
 
 /** 
  * @author Jordan
@@ -69,7 +70,7 @@ agent FrameAgent {
 	var hostedNumTile : int
 	
 	// Temporary knowledge
-	var neighbourSatisfaction = new LinkedHashMap<Direction, Boolean>()
+	var neighbourSatisfaction = new LinkedHashMap<Direction, Satisfaction>()
 	
 	var ready = false 
 	var dimension = -1
@@ -140,7 +141,23 @@ agent FrameAgent {
 		// info("DEBUGG : AskNeighbourSatisfaction isAsked")
 		
 		// Answers back to the event transmitter
-		emit(new ResponseNeighbourSatisfaction(isSatisfied, occurrence.direction), Scopes.identifiers(occurrence.source.UUID))
+		if (didMyTileMateHaveTheToken)
+		{	
+			if (isSatisfied) {
+				emit(new ResponseNeighbourSatisfaction(Satisfaction.TOKEN_SATISFIED, occurrence.direction), Scopes.identifiers(occurrence.source.UUID))	
+			}
+			else {
+				emit(new ResponseNeighbourSatisfaction(Satisfaction.UNSATISFIED, occurrence.direction), Scopes.identifiers(occurrence.source.UUID))	
+			}
+		}
+		else
+		{
+			if (isSatisfied) {
+				emit(new ResponseNeighbourSatisfaction(Satisfaction.RANDOMLY_SATISFIED, occurrence.direction), Scopes.identifiers(occurrence.source.UUID))
+			} else {
+				emit(new ResponseNeighbourSatisfaction(Satisfaction.UNSATISFIED, occurrence.direction), Scopes.identifiers(occurrence.source.UUID))
+			}
+		}
 	}
 
 	// Receive a response from a neighbour

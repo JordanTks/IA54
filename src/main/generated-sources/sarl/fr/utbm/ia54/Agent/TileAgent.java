@@ -1,6 +1,7 @@
 package fr.utbm.ia54.Agent;
 
 import fr.utbm.ia54.Enum.Direction;
+import fr.utbm.ia54.Enum.Satisfaction;
 import fr.utbm.ia54.Event.AskNeighbourSatisfaction;
 import fr.utbm.ia54.Event.Assault;
 import fr.utbm.ia54.Event.EndAgent;
@@ -156,21 +157,30 @@ public class TileAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$ResponseNeighbourSatisfaction$3(final ResponseNeighbourSatisfaction occurrence) {
-    Iterator<Map.Entry<Direction, Boolean>> iter = occurrence.neighbourSatisfaction.entrySet().iterator();
-    Map.Entry<Direction, Boolean> entry = iter.next();
-    Boolean _value = entry.getValue();
-    boolean _tripleEquals = (_value == Boolean.valueOf(false));
+    Iterator<Map.Entry<Direction, Satisfaction>> iter = occurrence.neighbourSatisfaction.entrySet().iterator();
+    Map.Entry<Direction, Satisfaction> entry = iter.next();
+    Satisfaction _value = entry.getValue();
+    boolean _tripleEquals = (_value == Satisfaction.UNSATISFIED);
     if (_tripleEquals) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       Direction _key = entry.getKey();
       Assault _assault = new Assault(_key, false);
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_assault, Scopes.identifiers(this.uuidFrameHost));
     } else {
+      Direction firstDir = entry.getKey();
       entry = iter.next();
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      Direction _key_1 = entry.getKey();
-      Assault _assault_1 = new Assault(_key_1, false);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_assault_1, Scopes.identifiers(this.uuidFrameHost));
+      Satisfaction _value_1 = entry.getValue();
+      boolean _tripleNotEquals = (_value_1 != Satisfaction.TOKEN_SATISFIED);
+      if (_tripleNotEquals) {
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        Direction _key_1 = entry.getKey();
+        Assault _assault_1 = new Assault(_key_1, false);
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_assault_1, Scopes.identifiers(this.uuidFrameHost));
+      } else {
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        Assault _assault_2 = new Assault(firstDir, false);
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_assault_2, Scopes.identifiers(this.uuidFrameHost));
+      }
     }
   }
   

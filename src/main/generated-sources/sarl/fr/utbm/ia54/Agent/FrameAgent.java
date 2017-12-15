@@ -3,6 +3,7 @@ package fr.utbm.ia54.Agent;
 import com.google.common.base.Objects;
 import fr.utbm.ia54.Class.CoordPair;
 import fr.utbm.ia54.Enum.Direction;
+import fr.utbm.ia54.Enum.Satisfaction;
 import fr.utbm.ia54.Event.AcknowledgmentDataUpdated;
 import fr.utbm.ia54.Event.AskNeighbourSatisfaction;
 import fr.utbm.ia54.Event.Assault;
@@ -88,7 +89,7 @@ public class FrameAgent extends Agent {
   
   private int hostedNumTile;
   
-  private LinkedHashMap<Direction, Boolean> neighbourSatisfaction = new LinkedHashMap<Direction, Boolean>();
+  private LinkedHashMap<Direction, Satisfaction> neighbourSatisfaction = new LinkedHashMap<Direction, Satisfaction>();
   
   private boolean ready = false;
   
@@ -178,9 +179,27 @@ public class FrameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$AskNeighbourSatisfaction$3(final AskNeighbourSatisfaction occurrence) {
-    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    ResponseNeighbourSatisfaction _responseNeighbourSatisfaction = new ResponseNeighbourSatisfaction(this.isSatisfied, occurrence.direction);
-    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_responseNeighbourSatisfaction, Scopes.identifiers(occurrence.getSource().getUUID()));
+    if (this.didMyTileMateHaveTheToken) {
+      if (this.isSatisfied) {
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        ResponseNeighbourSatisfaction _responseNeighbourSatisfaction = new ResponseNeighbourSatisfaction(Satisfaction.TOKEN_SATISFIED, occurrence.direction);
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_responseNeighbourSatisfaction, Scopes.identifiers(occurrence.getSource().getUUID()));
+      } else {
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        ResponseNeighbourSatisfaction _responseNeighbourSatisfaction_1 = new ResponseNeighbourSatisfaction(Satisfaction.UNSATISFIED, occurrence.direction);
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_responseNeighbourSatisfaction_1, Scopes.identifiers(occurrence.getSource().getUUID()));
+      }
+    } else {
+      if (this.isSatisfied) {
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        ResponseNeighbourSatisfaction _responseNeighbourSatisfaction_2 = new ResponseNeighbourSatisfaction(Satisfaction.RANDOMLY_SATISFIED, occurrence.direction);
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_responseNeighbourSatisfaction_2, Scopes.identifiers(occurrence.getSource().getUUID()));
+      } else {
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        ResponseNeighbourSatisfaction _responseNeighbourSatisfaction_3 = new ResponseNeighbourSatisfaction(Satisfaction.UNSATISFIED, occurrence.direction);
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_3.emit(_responseNeighbourSatisfaction_3, Scopes.identifiers(occurrence.getSource().getUUID()));
+      }
+    }
   }
   
   @SyntheticMember
@@ -192,8 +211,8 @@ public class FrameAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$ResponseNeighbourSatisfaction$4(final ResponseNeighbourSatisfaction occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(((("DEBUGG : ResponseNeighbourSatisfaction [frame] : direction " + occurrence.direction) + "    isSatisfied ") + Boolean.valueOf(occurrence.isSatisfied)));
-    this.neighbourSatisfaction.put(occurrence.direction, Boolean.valueOf(occurrence.isSatisfied));
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(((("DEBUGG : ResponseNeighbourSatisfaction [frame] : direction " + occurrence.direction) + "    isSatisfied ") + occurrence.isSatisfied));
+    this.neighbourSatisfaction.put(occurrence.direction, occurrence.isSatisfied);
     int _size = this.neighbourSatisfaction.size();
     boolean _greaterEqualsThan = (_size >= 2);
     if (_greaterEqualsThan) {

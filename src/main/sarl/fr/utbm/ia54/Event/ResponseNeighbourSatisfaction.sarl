@@ -6,6 +6,7 @@ package fr.utbm.ia54.Event
 import java.util.LinkedHashMap
 import java.util.UUID
 import fr.utbm.ia54.Enum.Direction
+import fr.utbm.ia54.Enum.Satisfaction
 
 /** 
  * @author Norgannon
@@ -14,20 +15,20 @@ import fr.utbm.ia54.Enum.Direction
 event ResponseNeighbourSatisfaction {
 
 	// Data to return from asked frame to the frame who asked
-	var isSatisfied : boolean
+	var isSatisfied : Satisfaction
 	var direction : Direction
 
 	// Data to return from frame to tile
-	var neighbourSatisfaction : LinkedHashMap<Direction, Boolean>
+	var neighbourSatisfaction : LinkedHashMap<Direction, Satisfaction>
 	
 	// Constructor for event to send to frame
-	new (b : boolean, dir : Direction) {
-		this.isSatisfied = b
+	new (s : Satisfaction, dir : Direction) {
+		this.isSatisfied = s
 		this.direction = dir
 	}
 
 	// Constructor for event to send to tile
-	new (map : LinkedHashMap<Direction, Boolean>) {
+	new (map : LinkedHashMap<Direction, Satisfaction>) {
 		this.neighbourSatisfaction = map
 	}
 }
