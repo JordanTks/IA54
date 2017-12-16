@@ -276,7 +276,6 @@ public class BoardGameAgent extends Agent {
           UUID _iD = ite.getID();
           boolean _tripleEquals = (_uuidFrameHost == _iD);
           if (_tripleEquals) {
-            ite.setIsBlocked(true);
             this.ctrl.setColor("purple", Integer.valueOf(t.getNumTile()));
             break;
           }
@@ -306,15 +305,13 @@ public class BoardGameAgent extends Agent {
                 InfosFrame _infosFrame = new InfosFrame(this.uuidFRAMEwithTokenTile, this.coordsFRAMEwithTokenTile);
                 this.haveTokenInfosFrame = _infosFrame;
                 this.haveTokenFrame = this.frameList.get(i);
-                Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-                int _hostedNumTile = this.haveTokenFrame.getHostedNumTile();
-                String _plus = ("on TokenReleased: hostedNumTile=" + Integer.valueOf(_hostedNumTile));
-                _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(_plus);
                 break;
               }
             }
             return;
           }
+        }
+        for (final ArrayList<TileAgent> t_2 : this.tokenPriorityList) {
         }
         this.tokenPriorityList.remove(0);
         boolean _isEmpty = this.tokenPriorityList.isEmpty();
@@ -322,6 +319,26 @@ public class BoardGameAgent extends Agent {
           Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
           _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("PUZZLE SEEMS TO BE SOLVED !");
           return;
+        }
+        int _size = this.tokenPriorityList.get(0).size();
+        int _divide = (_size / 2);
+        int firstCorner = this.tokenPriorityList.get(0).get(_divide).getNumTile();
+        int _size_1 = this.tokenPriorityList.get(0).size();
+        int _minus = (_size_1 - 1);
+        int secondCorner = this.tokenPriorityList.get(0).get(_minus).getNumTile();
+        for (final FrameAgent f : this.frameList) {
+          {
+            int _idNum = f.getIdNum();
+            boolean _tripleEquals_1 = (_idNum == firstCorner);
+            if (_tripleEquals_1) {
+              f.setNbActiveNeighbours(2);
+            }
+            int _idNum_1 = f.getIdNum();
+            boolean _tripleEquals_2 = (_idNum_1 == secondCorner);
+            if (_tripleEquals_2) {
+              f.setNbActiveNeighbours(2);
+            }
+          }
         }
       }
     } while((!this.tokenPriorityList.isEmpty()));

@@ -30,17 +30,19 @@ event PathCalculation {
 	var provenanceDirection : Direction
 	var timeStamp : long
 	var pathStatus : PathStatus
+	var comesFromCorner : boolean
 	var jumpCount : int
 	var path = new ArrayList<FrameAgent>()
  
 	
-	new (reqId : long, origin : UUID, from : Direction, time : long, status : PathStatus, jump : int,
+	new (reqId : long, origin : UUID, from : Direction, time : long, status : PathStatus, corner : boolean, jump : int,
 		p : ArrayList<FrameAgent>) {
 		this.requestId = reqId
 		this.provenanceDirection = from
 		this.requestOrigin = origin
 		this.timeStamp = time
 		this.pathStatus = status
+		this.comesFromCorner = corner
 		this.jumpCount = jump
 		this.path = p
 	}

@@ -40,16 +40,19 @@ public class PathCalculation extends Event {
   
   public PathStatus pathStatus;
   
+  public boolean comesFromCorner;
+  
   public int jumpCount;
   
   public ArrayList<FrameAgent> path = new ArrayList<FrameAgent>();
   
-  public PathCalculation(final long reqId, final UUID origin, final Direction from, final long time, final PathStatus status, final int jump, final ArrayList<FrameAgent> p) {
+  public PathCalculation(final long reqId, final UUID origin, final Direction from, final long time, final PathStatus status, final boolean corner, final int jump, final ArrayList<FrameAgent> p) {
     this.requestId = reqId;
     this.provenanceDirection = from;
     this.requestOrigin = origin;
     this.timeStamp = time;
     this.pathStatus = status;
+    this.comesFromCorner = corner;
     this.jumpCount = jump;
     this.path = p;
   }
@@ -72,6 +75,8 @@ public class PathCalculation extends Event {
     }
     if (other.timeStamp != this.timeStamp)
       return false;
+    if (other.comesFromCorner != this.comesFromCorner)
+      return false;
     if (other.jumpCount != this.jumpCount)
       return false;
     return super.equals(obj);
@@ -86,6 +91,7 @@ public class PathCalculation extends Event {
     result = prime * result + (int) (this.requestId ^ (this.requestId >>> 32));
     result = prime * result + Objects.hashCode(this.requestOrigin);
     result = prime * result + (int) (this.timeStamp ^ (this.timeStamp >>> 32));
+    result = prime * result + (this.comesFromCorner ? 1231 : 1237);
     result = prime * result + this.jumpCount;
     return result;
   }
@@ -102,11 +108,12 @@ public class PathCalculation extends Event {
     result.append("provenanceDirection  = ").append(this.provenanceDirection);
     result.append("timeStamp  = ").append(this.timeStamp);
     result.append("pathStatus  = ").append(this.pathStatus);
+    result.append("comesFromCorner  = ").append(this.comesFromCorner);
     result.append("jumpCount  = ").append(this.jumpCount);
     result.append("path  = ").append(this.path);
     return result.toString();
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 1267138420L;
+  private final static long serialVersionUID = 3390067158L;
 }

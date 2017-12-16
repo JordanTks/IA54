@@ -244,7 +244,7 @@ agent BoardGameAgent {
 			if (t.isHappy) {
 				for(ite: frameList){
 					if(t.uuidFrameHost === ite.ID){
-						ite.isBlocked = true
+						//ite.isBlocked = true
 						ctrl.setColor("purple", t.numTile)
 						break
 					}
@@ -272,7 +272,7 @@ agent BoardGameAgent {
 							haveTokenInfosFrame = new InfosFrame(uuidFRAMEwithTokenTile, coordsFRAMEwithTokenTile)
 							haveTokenFrame = frameList.get(i)
 							
-							info("on TokenReleased: hostedNumTile=" + haveTokenFrame.hostedNumTile)
+							// info("on TokenReleased: hostedNumTile=" + haveTokenFrame.hostedNumTile)
 							break
 						}
 					}
@@ -282,6 +282,13 @@ agent BoardGameAgent {
 				}
 			}
 			
+			// Block all frames of the list before removing it
+			for (t : tokenPriorityList)
+			{
+				
+			}
+			
+			// Remove the list
 			tokenPriorityList.remove(0) 
 			
 			// It is over
@@ -291,6 +298,19 @@ agent BoardGameAgent {
 				return
 			}
 			// Else ... get to the next list by looping
+			
+			// Updating nbActiveNeighbours in new outside arc
+			var firstCorner = tokenPriorityList.get(0).get((tokenPriorityList.get(0).size / 2)).numTile
+			var secondCorner = tokenPriorityList.get(0).get(tokenPriorityList.get(0).size - 1).numTile
+			
+			for (f : frameList)
+			{
+				if (f.idNum === firstCorner)
+					f.nbActiveNeighbours = 2
+
+				if (f.idNum === secondCorner)
+					f.nbActiveNeighbours = 2
+			}
 			
 		} while (!tokenPriorityList.empty)
 	}
