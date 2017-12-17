@@ -283,9 +283,16 @@ agent BoardGameAgent {
 			}
 			
 			// Block all frames of the list before removing it
-			for (t : tokenPriorityList)
+			for (t : tokenPriorityList.get(0))
 			{
-				
+				for (f : frameList)
+				{
+					if (t.numTile === f.idNum)
+					{
+						f.isBlocked = true
+						break
+					}	
+				}
 			}
 			
 			// Remove the list

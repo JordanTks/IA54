@@ -311,7 +311,17 @@ public class BoardGameAgent extends Agent {
             return;
           }
         }
-        for (final ArrayList<TileAgent> t_2 : this.tokenPriorityList) {
+        ArrayList<TileAgent> _get_2 = this.tokenPriorityList.get(0);
+        for (final TileAgent t_2 : _get_2) {
+          for (final FrameAgent f : this.frameList) {
+            int _numTile = t_2.getNumTile();
+            int _idNum = f.getIdNum();
+            boolean _tripleEquals_1 = (_numTile == _idNum);
+            if (_tripleEquals_1) {
+              f.setIsBlocked(true);
+              break;
+            }
+          }
         }
         this.tokenPriorityList.remove(0);
         boolean _isEmpty = this.tokenPriorityList.isEmpty();
@@ -326,17 +336,17 @@ public class BoardGameAgent extends Agent {
         int _size_1 = this.tokenPriorityList.get(0).size();
         int _minus = (_size_1 - 1);
         int secondCorner = this.tokenPriorityList.get(0).get(_minus).getNumTile();
-        for (final FrameAgent f : this.frameList) {
+        for (final FrameAgent f_1 : this.frameList) {
           {
-            int _idNum = f.getIdNum();
-            boolean _tripleEquals_1 = (_idNum == firstCorner);
-            if (_tripleEquals_1) {
-              f.setNbActiveNeighbours(2);
-            }
-            int _idNum_1 = f.getIdNum();
-            boolean _tripleEquals_2 = (_idNum_1 == secondCorner);
+            int _idNum_1 = f_1.getIdNum();
+            boolean _tripleEquals_2 = (_idNum_1 == firstCorner);
             if (_tripleEquals_2) {
-              f.setNbActiveNeighbours(2);
+              f_1.setNbActiveNeighbours(2);
+            }
+            int _idNum_2 = f_1.getIdNum();
+            boolean _tripleEquals_3 = (_idNum_2 == secondCorner);
+            if (_tripleEquals_3) {
+              f_1.setNbActiveNeighbours(2);
             }
           }
         }
