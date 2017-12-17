@@ -171,16 +171,19 @@ agent FrameAgent {
 
 		//info("DEBUGG : ResponseNeighbourSatisfaction [frame] : direction " + occurrence.direction + "    isSatisfied " + occurrence.isSatisfied)
 
-		// Store answer in map
-		neighbourSatisfaction.put(occurrence.direction, occurrence.isSatisfied)
+		synchronized (neighbourSatisfaction) {
 
-		// We check how much data we collected
-		if (neighbourSatisfaction.size >= 2)
-		{
-			// We have two answers, therefore we can send back the results to the tile
-			emit(new ResponseNeighbourSatisfaction(neighbourSatisfaction), Scopes.identifiers(hostedTile))
-			// We risk clearing the list before the event is received -> null pointer exception ?
-			// neighbourSatisfaction.clear
+			// Store answer in map
+			neighbourSatisfaction.put(occurrence.direction, occurrence.isSatisfied)
+	
+			// We check how much data we collected
+			if (neighbourSatisfaction.size >= 2)
+			{
+				// We have two answers, therefore we can send back the results to the tile
+				emit(new ResponseNeighbourSatisfaction(neighbourSatisfaction), Scopes.identifiers(hostedTile))
+				// We risk clearing the list before the event is received -> null pointer exception ?
+				// neighbourSatisfaction.clear
+			}	
 		}
 	}
 
@@ -325,27 +328,30 @@ agent FrameAgent {
 		// If we receive PathCalculation from a corner we forward PathCalculation to the opposite direction only
 		if (occurrence.comesFromCorner)
 		{
-			if (occurrence.provenanceDirection === Direction.SOUTH)
+			if (isSatisfied)
 			{
-				if (northNeighbour !== null)
+				if (occurrence.provenanceDirection === Direction.SOUTH)
 				{
-					emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.SOUTH,
-						occurrence.timeStamp, newPathStatus, isACorner, occurrence.jumpCount + 1, p),
-						Scopes.addresses(defaultSpace.getAddress(this.northNeighbour)))
-						
-					return
+					if (northNeighbour !== null)
+					{
+						emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.SOUTH,
+							occurrence.timeStamp, newPathStatus, isACorner, occurrence.jumpCount + 1, p),
+							Scopes.addresses(defaultSpace.getAddress(this.northNeighbour)))
+							
+						return
+					}
 				}
-			}
-			
-			if (occurrence.provenanceDirection === Direction.WEST)
-			{
-				if (eastNeighbour !== null)
+				
+				if (occurrence.provenanceDirection === Direction.WEST)
 				{
-					emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.WEST,
-						occurrence.timeStamp, newPathStatus, isACorner, occurrence.jumpCount + 1, p),
-						Scopes.addresses(defaultSpace.getAddress(this.eastNeighbour)))
-						
-					return
+					if (eastNeighbour !== null)
+					{
+						emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.WEST,
+							occurrence.timeStamp, newPathStatus, isACorner, occurrence.jumpCount + 1, p),
+							Scopes.addresses(defaultSpace.getAddress(this.eastNeighbour)))
+							
+						return
+					}
 				}
 			}
 		}

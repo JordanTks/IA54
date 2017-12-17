@@ -88,78 +88,78 @@ agent BoardGameAgent {
 		
 		synchronized (nbFrameSet) {
 			nbFrameSet++
-		}
 		
-		frameList.add(occurrence.frame)
-
-		// ouais c'est bon on est tous là !
-		if (nbFrameSet === Math.round(Math.pow(PROBLEM_SIZE, 2)))
-		{
-			info("Every single FrameAgent is set. Spawning every single TileAgent.")
-
-			// Detects error that randomly happens
-			for (f : frameList) {
-				if (f === null) {
-					error("ERROR 1 : ONE OF THE FRAME RETURNED NULL POINTER")
-					return
+			frameList.add(occurrence.frame)
+	
+			// ouais c'est bon on est tous là !
+			if (nbFrameSet === Math.round(Math.pow(PROBLEM_SIZE, 2)))
+			{
+				info("Every single FrameAgent is set. Spawning every single TileAgent.")
+	
+				// Detects error that randomly happens
+				for (f : frameList) {
+					if (f === null) {
+						error("ERROR 1 : ONE OF THE FRAME RETURNED NULL POINTER")
+						return
+					}
+	
 				}
-
-			}
-			
-			// Ordering initial list of frame in order to set neighbours
-			Collections.sort(frameList)[a, b|a.numFrame - b.numFrame]
-			
-			// Setting neighbours
-			var c = 0
-			for (f : frameList)
-			{
-				if (c % PROBLEM_SIZE != 0) // when true, the frame does have a west neighbour
-					f.setWestNeighbour(frameList.get(c - 1).ID)
-
-				if (c / PROBLEM_SIZE != 0) // when true, the frame does have a north neighbour
-					f.setNorthNeighbour(frameList.get(c - PROBLEM_SIZE).ID)
-
-				if (c + PROBLEM_SIZE < (PROBLEM_SIZE * PROBLEM_SIZE)) // when true, the frame does have a south neighbour
-					f.setSouthNeighbour(frameList.get(c + PROBLEM_SIZE).ID)
-
-				if (c % PROBLEM_SIZE != (PROBLEM_SIZE - 1)) // when true, the frame does have a east neighbour
-					f.setEastNeighbour(frameList.get(c + 1).ID)
 				
-				c++
+				// Ordering initial list of frame in order to set neighbours
+				Collections.sort(frameList)[a, b|a.numFrame - b.numFrame]
+				
+				// Setting neighbours
+				var c = 0
+				for (f : frameList)
+				{
+					if (c % PROBLEM_SIZE != 0) // when true, the frame does have a west neighbour
+						f.setWestNeighbour(frameList.get(c - 1).ID)
+	
+					if (c / PROBLEM_SIZE != 0) // when true, the frame does have a north neighbour
+						f.setNorthNeighbour(frameList.get(c - PROBLEM_SIZE).ID)
+	
+					if (c + PROBLEM_SIZE < (PROBLEM_SIZE * PROBLEM_SIZE)) // when true, the frame does have a south neighbour
+						f.setSouthNeighbour(frameList.get(c + PROBLEM_SIZE).ID)
+	
+					if (c % PROBLEM_SIZE != (PROBLEM_SIZE - 1)) // when true, the frame does have a east neighbour
+						f.setEastNeighbour(frameList.get(c + 1).ID)
+					
+					c++
+				}
+				
+				// Shuffle tile positions
+				var startingTiles : List<Integer> = new ArrayList
+				
+				for (var i = 1; i < Math.pow(PROBLEM_SIZE, 2); i++)
+					startingTiles.add(i)
+	
+				Collections.shuffle(startingTiles)
+	
+				info("Starting positions " + startingTiles)
+	
+				// COMMUNICATION AVEC UI
+				// emit(new InitDone(startingTiles))
+				ctrl.monTest(startingTiles);
+				
+				// Spawn tile agents (num tile/UUID frame/num frame/ problem size)
+				for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++)
+				{
+					var id = spawn(TileAgent, #[startingTiles.get(i), frameList.get(i).ID, i, PROBLEM_SIZE])
+					frameList.get(i).hostedTile = id
+					frameList.get(i).hostedNumTile = startingTiles.get(i)
+					frameList.get(i).isSatisfied = (startingTiles.get(i) === frameList.get(i).numFrame)
+				}
+				
+				// Spawn blank tile
+				var id = spawn(EmptyTileAgent,#[frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1).ID, PROBLEM_SIZE * PROBLEM_SIZE])
+				frameList.get(PROBLEM_SIZE*PROBLEM_SIZE - 1).hostedTile = id
+				
+				uuidFRAMEwithBlankTile = frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1).ID
+				coordsFRAMEwithBlankTile = frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1).coordPair
+				arrivalInfosFrame = new InfosFrame(uuidFRAMEwithBlankTile, coordsFRAMEwithBlankTile)
+				arrivalFrame = frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1)
+				arrivalFrame.hostedNumTile = 0
 			}
-			
-			// Shuffle tile positions
-			var startingTiles : List<Integer> = new ArrayList
-			
-			for (var i = 1; i < Math.pow(PROBLEM_SIZE, 2); i++)
-				startingTiles.add(i)
-
-			Collections.shuffle(startingTiles)
-
-			info("Starting positions " + startingTiles)
-
-			// COMMUNICATION AVEC UI
-			// emit(new InitDone(startingTiles))
-			ctrl.monTest(startingTiles);
-			
-			// Spawn tile agents (num tile/UUID frame/num frame/ problem size)
-			for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++)
-			{
-				var id = spawn(TileAgent, #[startingTiles.get(i), frameList.get(i).ID, i, PROBLEM_SIZE])
-				frameList.get(i).hostedTile = id
-				frameList.get(i).hostedNumTile = startingTiles.get(i)
-				frameList.get(i).isSatisfied = (startingTiles.get(i) === frameList.get(i).numFrame)
-			}
-			
-			// Spawn blank tile
-			var id = spawn(EmptyTileAgent,#[frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1).ID, PROBLEM_SIZE * PROBLEM_SIZE])
-			frameList.get(PROBLEM_SIZE*PROBLEM_SIZE - 1).hostedTile = id
-			
-			uuidFRAMEwithBlankTile = frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1).ID
-			coordsFRAMEwithBlankTile = frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1).coordPair
-			arrivalInfosFrame = new InfosFrame(uuidFRAMEwithBlankTile, coordsFRAMEwithBlankTile)
-			arrivalFrame = frameList.get(PROBLEM_SIZE * PROBLEM_SIZE - 1)
-			arrivalFrame.hostedNumTile = 0
 		}
 	}
 	
@@ -167,73 +167,74 @@ agent BoardGameAgent {
 		
 		synchronized (nbTileSet) {
 			nbTileSet++
-		}
-		
-		// TileAgent spawned
-		if (occurrence.tile !== null) // DO NOT REMOVE THIS TEST
-			tileList.add(occurrence.tile)
-		// EmptyTileAgent (blankTile) spawned
-		else
-			blankTile = occurrence.blank
-
-		if (nbTileSet === Math.round(Math.pow(PROBLEM_SIZE, 2))) {
-			info("Every single TileAgent is set. Setting token priority lists.")
-
-			// Detects error that randomly happens
-			for (t : tileList)
-			{
-				if (t === null)
+			
+			// TileAgent spawned
+			if (occurrence.tile !== null) // DO NOT REMOVE THIS TEST
+				tileList.add(occurrence.tile)
+			// EmptyTileAgent (blankTile) spawned
+			else
+				blankTile = occurrence.blank
+	
+			if (nbTileSet === Math.round(Math.pow(PROBLEM_SIZE, 2))) {
+				info("Every single TileAgent is set. Setting token priority lists.")
+	
+				// Detects error that randomly happens
+				for (t : tileList)
 				{
-					error("ERROR 2 : ONE OF THE TILE RETURNED NULL POINTER")
-					return
+					if (t === null)
+					{
+						error("ERROR 2 : ONE OF THE TILE RETURNED NULL POINTER")
+						return
+					}
+	
 				}
-
-			}
-
-			// Ordering initial list by numTile to avoid later more complicated computation
-			Collections.sort(tileList)[a, b|a.numTile - b.numTile]
+	
+				// Ordering initial list by numTile to avoid later more complicated computation
+				Collections.sort(tileList)[a, b|a.numTile - b.numTile]
+						
+				var tempList = new ArrayList<TileAgent>()
+								
+				// Setting token priority lists
+				for (var i = 1; i < PROBLEM_SIZE; i++)
+					tokenPriorityList.add(new ArrayList())
+				
+				// Put the tile in the right tokenPriority list
+				for (t : tileList)
+					tokenPriorityList.get(t.getTokenPriority).add(t)
+	
+				// Modify the sorting of each list
+				for (l : tokenPriorityList)		
+				{
+					for (var tilesToSwitch = (l.size / 2) + 1; tilesToSwitch > 0 ; tilesToSwitch--)
+					{
+						tempList.add(l.get(0))
+						l.remove(0)
+					}
 					
-			var tempList = new ArrayList<TileAgent>()
-							
-			// Setting token priority lists
-			for (var i = 1; i < PROBLEM_SIZE; i++)
-				tokenPriorityList.add(new ArrayList())
-			
-			// Put the tile in the right tokenPriority list
-			for (t : tileList)
-				tokenPriorityList.get(t.getTokenPriority).add(t)
-
-			// Modify the sorting of each list
-			for (l : tokenPriorityList)		
-			{
-				for (var tilesToSwitch = (l.size / 2) + 1; tilesToSwitch > 0 ; tilesToSwitch--)
-				{
-					tempList.add(l.get(0))
-					l.remove(0)
+					while (!tempList.empty)
+					{
+						l.add(0, tempList.get(0))
+						tempList.remove(0)
+					}
+					
+					//for (t : l)
+					//	info(t.numTile)
 				}
+	
+				info("TokenPriorityList data set up.")
 				
-				while (!tempList.empty)
-				{
-					l.add(0, tempList.get(0))
-					tempList.remove(0)
-				}
-				
-				//for (t : l)
-				//	info(t.numTile)
+				// Sending the token
+				wake(new TokenReleased)
+	
+				// Wait until every agent is spawned - TODO: NOT PRECISE AT ALL : more delay if bigger size
+	//			info("- Begin A-star algorithm -")
+	//			
+	//			if(PROBLEM_SIZE<10)
+	//				in(500 * PROBLEM_SIZE)[findPath]
+	//			else
+	//				in(700 * PROBLEM_SIZE)[findPath]
 			}
-
-			info("TokenPriorityList data set up.")
-			
-			// Sending the token
-			wake(new TokenReleased)
-
-			// Wait until every agent is spawned - TODO: NOT PRECISE AT ALL : more delay if bigger size
-//			info("- Begin A-star algorithm -")
-//			
-//			if(PROBLEM_SIZE<10)
-//				in(500 * PROBLEM_SIZE)[findPath]
-//			else
-//				in(700 * PROBLEM_SIZE)[findPath]
+		
 		}
 	}
 
@@ -262,9 +263,7 @@ agent BoardGameAgent {
 			for (t : tokenPriorityList.get(0))
 			{
 				if (!t.isHappy)
-				{
-					emit(new TokenReceived(), Scopes.addresses(defaultSpace.getAddress(t.ID)))
-					
+				{	
 					// set the infosFrame for the frame on which there is the Tile with the Token
 					for(var i=0; i<frameList.size; i++){
 						if(frameList.get(i).hostedTile === t.ID){
@@ -277,7 +276,8 @@ agent BoardGameAgent {
 							break
 						}
 					}
-					
+
+					emit(new TokenReceived(), Scopes.addresses(defaultSpace.getAddress(t.ID)))
 					
 					return
 				}

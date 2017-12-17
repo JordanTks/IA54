@@ -128,80 +128,80 @@ public class BoardGameAgent extends Agent {
   private void $behaviorUnit$FrameSet$1(final FrameSet occurrence) {
     synchronized (this.nbFrameSet) {
       this.nbFrameSet++;
-    }
-    this.frameList.add(occurrence.frame);
-    long _round = Math.round(Math.pow(this.PROBLEM_SIZE, 2));
-    boolean _tripleEquals = ((this.nbFrameSet).intValue() == _round);
-    if (_tripleEquals) {
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Every single FrameAgent is set. Spawning every single TileAgent.");
-      for (final FrameAgent f : this.frameList) {
-        if ((f == null)) {
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.error("ERROR 1 : ONE OF THE FRAME RETURNED NULL POINTER");
-          return;
+      this.frameList.add(occurrence.frame);
+      long _round = Math.round(Math.pow(this.PROBLEM_SIZE, 2));
+      boolean _tripleEquals = ((this.nbFrameSet).intValue() == _round);
+      if (_tripleEquals) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Every single FrameAgent is set. Spawning every single TileAgent.");
+        for (final FrameAgent f : this.frameList) {
+          if ((f == null)) {
+            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.error("ERROR 1 : ONE OF THE FRAME RETURNED NULL POINTER");
+            return;
+          }
         }
-      }
-      final Comparator<FrameAgent> _function = (FrameAgent a, FrameAgent b) -> {
-        int _numFrame = a.getNumFrame();
-        int _numFrame_1 = b.getNumFrame();
-        return (_numFrame - _numFrame_1);
-      };
-      Collections.<FrameAgent>sort(this.frameList, _function);
-      int c = 0;
-      for (final FrameAgent f_1 : this.frameList) {
-        {
-          if (((c % this.PROBLEM_SIZE) != 0)) {
-            f_1.setWestNeighbour(this.frameList.get((c - 1)).getID());
+        final Comparator<FrameAgent> _function = (FrameAgent a, FrameAgent b) -> {
+          int _numFrame = a.getNumFrame();
+          int _numFrame_1 = b.getNumFrame();
+          return (_numFrame - _numFrame_1);
+        };
+        Collections.<FrameAgent>sort(this.frameList, _function);
+        int c = 0;
+        for (final FrameAgent f_1 : this.frameList) {
+          {
+            if (((c % this.PROBLEM_SIZE) != 0)) {
+              f_1.setWestNeighbour(this.frameList.get((c - 1)).getID());
+            }
+            if (((c / this.PROBLEM_SIZE) != 0)) {
+              f_1.setNorthNeighbour(this.frameList.get((c - this.PROBLEM_SIZE)).getID());
+            }
+            if (((c + this.PROBLEM_SIZE) < (this.PROBLEM_SIZE * this.PROBLEM_SIZE))) {
+              f_1.setSouthNeighbour(this.frameList.get((c + this.PROBLEM_SIZE)).getID());
+            }
+            if (((c % this.PROBLEM_SIZE) != (this.PROBLEM_SIZE - 1))) {
+              f_1.setEastNeighbour(this.frameList.get((c + 1)).getID());
+            }
+            c++;
           }
-          if (((c / this.PROBLEM_SIZE) != 0)) {
-            f_1.setNorthNeighbour(this.frameList.get((c - this.PROBLEM_SIZE)).getID());
-          }
-          if (((c + this.PROBLEM_SIZE) < (this.PROBLEM_SIZE * this.PROBLEM_SIZE))) {
-            f_1.setSouthNeighbour(this.frameList.get((c + this.PROBLEM_SIZE)).getID());
-          }
-          if (((c % this.PROBLEM_SIZE) != (this.PROBLEM_SIZE - 1))) {
-            f_1.setEastNeighbour(this.frameList.get((c + 1)).getID());
-          }
-          c++;
         }
-      }
-      List<Integer> startingTiles = new ArrayList<Integer>();
-      for (int i = 1; (i < Math.pow(this.PROBLEM_SIZE, 2)); i++) {
-        startingTiles.add(Integer.valueOf(i));
-      }
-      Collections.shuffle(startingTiles);
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(("Starting positions " + startingTiles));
-      this.ctrl.monTest(startingTiles);
-      for (int i = 0; (i < (Math.pow(this.PROBLEM_SIZE, 2) - 1)); i++) {
-        {
-          Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
-          Integer _get = startingTiles.get(i);
-          UUID _iD = this.frameList.get(i).getID();
-          UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(TileAgent.class, new Object[] { _get, _iD, Integer.valueOf(i), Integer.valueOf(this.PROBLEM_SIZE) });
-          FrameAgent _get_1 = this.frameList.get(i);
-          _get_1.setHostedTile(id);
-          FrameAgent _get_2 = this.frameList.get(i);
-          _get_2.setHostedNumTile((startingTiles.get(i)).intValue());
-          FrameAgent _get_3 = this.frameList.get(i);
-          Integer _get_4 = startingTiles.get(i);
-          int _numFrame = this.frameList.get(i).getNumFrame();
-          boolean _tripleEquals_1 = ((_get_4).intValue() == _numFrame);
-          _get_3.setIsSatisfied(_tripleEquals_1);
+        List<Integer> startingTiles = new ArrayList<Integer>();
+        for (int i = 1; (i < Math.pow(this.PROBLEM_SIZE, 2)); i++) {
+          startingTiles.add(Integer.valueOf(i));
         }
+        Collections.shuffle(startingTiles);
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(("Starting positions " + startingTiles));
+        this.ctrl.monTest(startingTiles);
+        for (int i = 0; (i < (Math.pow(this.PROBLEM_SIZE, 2) - 1)); i++) {
+          {
+            Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+            Integer _get = startingTiles.get(i);
+            UUID _iD = this.frameList.get(i).getID();
+            UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(TileAgent.class, new Object[] { _get, _iD, Integer.valueOf(i), Integer.valueOf(this.PROBLEM_SIZE) });
+            FrameAgent _get_1 = this.frameList.get(i);
+            _get_1.setHostedTile(id);
+            FrameAgent _get_2 = this.frameList.get(i);
+            _get_2.setHostedNumTile((startingTiles.get(i)).intValue());
+            FrameAgent _get_3 = this.frameList.get(i);
+            Integer _get_4 = startingTiles.get(i);
+            int _numFrame = this.frameList.get(i).getNumFrame();
+            boolean _tripleEquals_1 = ((_get_4).intValue() == _numFrame);
+            _get_3.setIsSatisfied(_tripleEquals_1);
+          }
+        }
+        Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+        UUID _iD = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1)).getID();
+        UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(EmptyTileAgent.class, new Object[] { _iD, Integer.valueOf((this.PROBLEM_SIZE * this.PROBLEM_SIZE)) });
+        FrameAgent _get = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1));
+        _get.setHostedTile(id);
+        this.uuidFRAMEwithBlankTile = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1)).getID();
+        this.coordsFRAMEwithBlankTile = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1)).getCoordPair();
+        InfosFrame _infosFrame = new InfosFrame(this.uuidFRAMEwithBlankTile, this.coordsFRAMEwithBlankTile);
+        this.arrivalInfosFrame = _infosFrame;
+        this.arrivalFrame = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1));
+        this.arrivalFrame.setHostedNumTile(0);
       }
-      Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
-      UUID _iD = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1)).getID();
-      UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(EmptyTileAgent.class, new Object[] { _iD, Integer.valueOf((this.PROBLEM_SIZE * this.PROBLEM_SIZE)) });
-      FrameAgent _get = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1));
-      _get.setHostedTile(id);
-      this.uuidFRAMEwithBlankTile = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1)).getID();
-      this.coordsFRAMEwithBlankTile = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1)).getCoordPair();
-      InfosFrame _infosFrame = new InfosFrame(this.uuidFRAMEwithBlankTile, this.coordsFRAMEwithBlankTile);
-      this.arrivalInfosFrame = _infosFrame;
-      this.arrivalFrame = this.frameList.get(((this.PROBLEM_SIZE * this.PROBLEM_SIZE) - 1));
-      this.arrivalFrame.setHostedNumTile(0);
     }
   }
   
@@ -209,59 +209,59 @@ public class BoardGameAgent extends Agent {
   private void $behaviorUnit$TileSet$2(final TileSet occurrence) {
     synchronized (this.nbTileSet) {
       this.nbTileSet++;
-    }
-    if ((occurrence.tile != null)) {
-      this.tileList.add(occurrence.tile);
-    } else {
-      this.blankTile = occurrence.blank;
-    }
-    long _round = Math.round(Math.pow(this.PROBLEM_SIZE, 2));
-    boolean _tripleEquals = ((this.nbTileSet).intValue() == _round);
-    if (_tripleEquals) {
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Every single TileAgent is set. Setting token priority lists.");
-      for (final TileAgent t : this.tileList) {
-        if ((t == null)) {
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.error("ERROR 2 : ONE OF THE TILE RETURNED NULL POINTER");
-          return;
-        }
+      if ((occurrence.tile != null)) {
+        this.tileList.add(occurrence.tile);
+      } else {
+        this.blankTile = occurrence.blank;
       }
-      final Comparator<TileAgent> _function = (TileAgent a, TileAgent b) -> {
-        int _numTile = a.getNumTile();
-        int _numTile_1 = b.getNumTile();
-        return (_numTile - _numTile_1);
-      };
-      Collections.<TileAgent>sort(this.tileList, _function);
-      ArrayList<TileAgent> tempList = new ArrayList<TileAgent>();
-      for (int i = 1; (i < this.PROBLEM_SIZE); i++) {
-        ArrayList<TileAgent> _arrayList = new ArrayList<TileAgent>();
-        this.tokenPriorityList.add(_arrayList);
-      }
-      for (final TileAgent t_1 : this.tileList) {
-        this.tokenPriorityList.get(t_1.getTokenPriority()).add(t_1);
-      }
-      for (final ArrayList<TileAgent> l : this.tokenPriorityList) {
-        {
-          for (int tilesToSwitch = ((l.size() / 2) + 1); (tilesToSwitch > 0); tilesToSwitch--) {
-            {
-              tempList.add(l.get(0));
-              l.remove(0);
-            }
-          }
-          while ((!tempList.isEmpty())) {
-            {
-              l.add(0, tempList.get(0));
-              tempList.remove(0);
-            }
+      long _round = Math.round(Math.pow(this.PROBLEM_SIZE, 2));
+      boolean _tripleEquals = ((this.nbTileSet).intValue() == _round);
+      if (_tripleEquals) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("Every single TileAgent is set. Setting token priority lists.");
+        for (final TileAgent t : this.tileList) {
+          if ((t == null)) {
+            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.error("ERROR 2 : ONE OF THE TILE RETURNED NULL POINTER");
+            return;
           }
         }
+        final Comparator<TileAgent> _function = (TileAgent a, TileAgent b) -> {
+          int _numTile = a.getNumTile();
+          int _numTile_1 = b.getNumTile();
+          return (_numTile - _numTile_1);
+        };
+        Collections.<TileAgent>sort(this.tileList, _function);
+        ArrayList<TileAgent> tempList = new ArrayList<TileAgent>();
+        for (int i = 1; (i < this.PROBLEM_SIZE); i++) {
+          ArrayList<TileAgent> _arrayList = new ArrayList<TileAgent>();
+          this.tokenPriorityList.add(_arrayList);
+        }
+        for (final TileAgent t_1 : this.tileList) {
+          this.tokenPriorityList.get(t_1.getTokenPriority()).add(t_1);
+        }
+        for (final ArrayList<TileAgent> l : this.tokenPriorityList) {
+          {
+            for (int tilesToSwitch = ((l.size() / 2) + 1); (tilesToSwitch > 0); tilesToSwitch--) {
+              {
+                tempList.add(l.get(0));
+                l.remove(0);
+              }
+            }
+            while ((!tempList.isEmpty())) {
+              {
+                l.add(0, tempList.get(0));
+                tempList.remove(0);
+              }
+            }
+          }
+        }
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info("TokenPriorityList data set up.");
+        Behaviors _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER = this.$castSkill(Behaviors.class, (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS == null || this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS = this.$getSkill(Behaviors.class)) : this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS);
+        TokenReleased _tokenReleased = new TokenReleased();
+        _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER.wake(_tokenReleased);
       }
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info("TokenPriorityList data set up.");
-      Behaviors _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER = this.$castSkill(Behaviors.class, (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS == null || this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS = this.$getSkill(Behaviors.class)) : this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS);
-      TokenReleased _tokenReleased = new TokenReleased();
-      _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER.wake(_tokenReleased);
     }
   }
   
@@ -292,10 +292,6 @@ public class BoardGameAgent extends Agent {
           boolean _isHappy_1 = t_1.getIsHappy();
           boolean _not = (!_isHappy_1);
           if (_not) {
-            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-            TokenReceived _tokenReceived = new TokenReceived();
-            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-            _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReceived, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(t_1.getID())));
             for (int i = 0; (i < this.frameList.size()); i++) {
               UUID _hostedTile = this.frameList.get(i).getHostedTile();
               UUID _iD_1 = t_1.getID();
@@ -309,6 +305,10 @@ public class BoardGameAgent extends Agent {
                 break;
               }
             }
+            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+            TokenReceived _tokenReceived = new TokenReceived();
+            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+            _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReceived, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(t_1.getID())));
             return;
           }
         }

@@ -87,7 +87,7 @@ agent TileAgent {
 		if (isHappy) {
 			emit(new TokenReleased())
 		
-		} else { 
+		} else {
   
 //			info("JE VAIS CHANGER COULEUR : je suis "+ID)
 			emit(new ActionUI("red", numTile), Scopes.addresses(defaultSpace.getAddress(parentAgent)))
