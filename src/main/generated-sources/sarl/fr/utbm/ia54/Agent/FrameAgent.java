@@ -96,7 +96,7 @@ public class FrameAgent extends Agent {
   
   private boolean ready = false;
   
-  private int dimension = (-1);
+  private int problemSize = (-1);
   
   private int idNum = (-1);
   
@@ -118,16 +118,21 @@ public class FrameAgent extends Agent {
   
   private CoordPair coordsXYPreviousFrame;
   
+  private int nbTimesBothered;
+  
   @SyntheticMember
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     Object _get = occurrence.parameters[0];
     this.idNum = (((Integer) _get)).intValue();
+    this.idNumFromZero = (this.idNum - 1);
     Object _get_1 = occurrence.parameters[1];
     this.xRow = (((Integer) _get_1)).intValue();
     Object _get_2 = occurrence.parameters[2];
     this.yCol = (((Integer) _get_2)).intValue();
     CoordPair _coordPair = new CoordPair(this.xRow, this.yCol);
     this.coordPair = _coordPair;
+    Object _get_3 = occurrence.parameters[3];
+    this.problemSize = (((Integer) _get_3)).intValue();
     this.nbActiveNeighbours = 0;
     this.northNeighbour = null;
     this.eastNeighbour = null;
@@ -369,37 +374,55 @@ public class FrameAgent extends Agent {
         }
       }
     }
-    if (((this.northNeighbour != null) && (occurrence.provenanceDirection != Direction.NORTH))) {
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_6 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      PathCalculation _pathCalculation_2 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.SOUTH, 
-        occurrence.timeStamp, newPathStatus, isACorner, (occurrence.jumpCount + 1), p);
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_7 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_6.emit(_pathCalculation_2, 
-        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_7.getDefaultSpace().getAddress(this.northNeighbour)));
+    if ((occurrence.provenanceDirection == Direction.EAST)) {
+      if (((this.idNumFromZero / this.problemSize) == (this.problemSize - 3))) {
+        if (((this.idNumFromZero % this.problemSize) == (this.problemSize - 2))) {
+          if (this.didMyTileMateHaveTheToken) {
+            this.nbTimesBothered++;
+            if (((this.nbTimesBothered % 2) == 0)) {
+              DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_6 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+              PathCalculation _pathCalculation_2 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.EAST, 
+                occurrence.timeStamp, newPathStatus, isACorner, (occurrence.jumpCount + 1), p);
+              DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_7 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+              _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_6.emit(_pathCalculation_2, 
+                Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_7.getDefaultSpace().getAddress(this.westNeighbour)));
+              return;
+            }
+          }
+        }
+      }
     }
-    if (((this.eastNeighbour != null) && (occurrence.provenanceDirection != Direction.EAST))) {
+    if (((this.northNeighbour != null) && (occurrence.provenanceDirection != Direction.NORTH))) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_8 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      PathCalculation _pathCalculation_3 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.WEST, 
+      PathCalculation _pathCalculation_3 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.SOUTH, 
         occurrence.timeStamp, newPathStatus, isACorner, (occurrence.jumpCount + 1), p);
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_9 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_8.emit(_pathCalculation_3, 
-        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_9.getDefaultSpace().getAddress(this.eastNeighbour)));
+        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_9.getDefaultSpace().getAddress(this.northNeighbour)));
     }
-    if (((this.southNeighbour != null) && (occurrence.provenanceDirection != Direction.SOUTH))) {
+    if (((this.eastNeighbour != null) && (occurrence.provenanceDirection != Direction.EAST))) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_10 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      PathCalculation _pathCalculation_4 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.NORTH, 
+      PathCalculation _pathCalculation_4 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.WEST, 
         occurrence.timeStamp, newPathStatus, isACorner, (occurrence.jumpCount + 1), p);
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_11 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_10.emit(_pathCalculation_4, 
-        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_11.getDefaultSpace().getAddress(this.southNeighbour)));
+        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_11.getDefaultSpace().getAddress(this.eastNeighbour)));
     }
-    if (((this.westNeighbour != null) && (occurrence.provenanceDirection != Direction.WEST))) {
+    if (((this.southNeighbour != null) && (occurrence.provenanceDirection != Direction.SOUTH))) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_12 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      PathCalculation _pathCalculation_5 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.EAST, 
+      PathCalculation _pathCalculation_5 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.NORTH, 
         occurrence.timeStamp, newPathStatus, isACorner, (occurrence.jumpCount + 1), p);
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_13 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_12.emit(_pathCalculation_5, 
-        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_13.getDefaultSpace().getAddress(this.westNeighbour)));
+        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_13.getDefaultSpace().getAddress(this.southNeighbour)));
+    }
+    if (((this.westNeighbour != null) && (occurrence.provenanceDirection != Direction.WEST))) {
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_14 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      PathCalculation _pathCalculation_6 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.EAST, 
+        occurrence.timeStamp, newPathStatus, isACorner, (occurrence.jumpCount + 1), p);
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_15 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_14.emit(_pathCalculation_6, 
+        Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_15.getDefaultSpace().getAddress(this.westNeighbour)));
     }
   }
   
@@ -452,47 +475,6 @@ public class FrameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$PathCalculationTimeOut$9(final PathCalculationTimeOut occurrence) {
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("DEBUGG : PathCalculationTimeOut");
-    if ((this.bestGoodPath != null)) {
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      int _size = this.bestGoodPath.size();
-      String _plus = ("DEBUGG : There is a good path (length : " + Integer.valueOf(_size));
-      String _plus_1 = (_plus + ")");
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(_plus_1);
-      for (final FrameAgent f : this.bestGoodPath) {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        int _numFrame = f.getNumFrame();
-        String _plus_2 = ("DEBUGG : GOOD PATH > " + Integer.valueOf(_numFrame));
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(_plus_2);
-      }
-    }
-    if ((this.bestBadPath != null)) {
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      int _size_1 = this.bestBadPath.size();
-      String _plus_3 = ("DEBUGG : There is a bad path (length : " + Integer.valueOf(_size_1));
-      String _plus_4 = (_plus_3 + ")");
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus_4);
-      for (final FrameAgent f_1 : this.bestBadPath) {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        int _numFrame_1 = f_1.getNumFrame();
-        String _plus_5 = ("DEBUGG : BAD PATH > " + Integer.valueOf(_numFrame_1));
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4.info(_plus_5);
-      }
-    }
-    if ((this.bestTerriblePath != null)) {
-      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-      int _size_2 = this.bestTerriblePath.size();
-      String _plus_6 = ("DEBUGG : There is a bad path (length : " + Integer.valueOf(_size_2));
-      String _plus_7 = (_plus_6 + ")");
-      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5.info(_plus_7);
-      for (final FrameAgent f_2 : this.bestTerriblePath) {
-        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_6 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-        int _numFrame_2 = f_2.getNumFrame();
-        String _plus_8 = ("DEBUGG : TERRIBLE PATH > " + Integer.valueOf(_numFrame_2));
-        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_6.info(_plus_8);
-      }
-    }
     if ((this.bestGoodPath != null)) {
       this.initiateMovementChain(this.bestGoodPath);
     } else {
@@ -502,8 +484,8 @@ public class FrameAgent extends Agent {
         if ((this.bestTerriblePath != null)) {
           this.initiateMovementChain(this.bestTerriblePath);
         } else {
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7.error("Error 03 : No path found in time at the end of PathCalculation spreading.");
+          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.error("Error 03 : No path found in time at the end of PathCalculation spreading.");
           DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
           TokenReleased _tokenReleased = new TokenReleased();
           _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReleased);
@@ -1025,7 +1007,7 @@ public class FrameAgent extends Agent {
       return false;
     if (other.ready != this.ready)
       return false;
-    if (other.dimension != this.dimension)
+    if (other.problemSize != this.problemSize)
       return false;
     if (other.idNum != this.idNum)
       return false;
@@ -1044,6 +1026,8 @@ public class FrameAgent extends Agent {
     if (!java.util.Objects.equals(this.uuidPreviousFrame, other.uuidPreviousFrame)) {
       return false;
     }
+    if (other.nbTimesBothered != this.nbTimesBothered)
+      return false;
     return super.equals(obj);
   }
   
@@ -1068,7 +1052,7 @@ public class FrameAgent extends Agent {
     result = prime * result + java.util.Objects.hashCode(this.hostedTile);
     result = prime * result + this.hostedNumTile;
     result = prime * result + (this.ready ? 1231 : 1237);
-    result = prime * result + this.dimension;
+    result = prime * result + this.problemSize;
     result = prime * result + this.idNum;
     result = prime * result + this.idNumFromZero;
     result = prime * result + this.xRow;
@@ -1077,6 +1061,7 @@ public class FrameAgent extends Agent {
     result = prime * result + this.costH;
     result = prime * result + this.costF;
     result = prime * result + java.util.Objects.hashCode(this.uuidPreviousFrame);
+    result = prime * result + this.nbTimesBothered;
     return result;
   }
   

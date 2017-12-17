@@ -75,7 +75,7 @@ agent FrameAgent {
 	var neighbourSatisfaction = new LinkedHashMap<Direction, Satisfaction>()
 	
 	var ready = false 
-	var dimension = -1
+	var problemSize = -1
 
 	var idNum = -1
   	var idNumFromZero : int
@@ -89,14 +89,18 @@ agent FrameAgent {
 	var uuidPreviousFrame : UUID
 	var coordsXYPreviousFrame : CoordPair
 
+	var nbTimesBothered : int
+
 	on Initialize { 
 		
 		idNum = occurrence.parameters.get(0) as Integer
-		//idNumFromZero = idNum - 1
+		idNumFromZero = idNum - 1
 
 		xRow = occurrence.parameters.get(1) as Integer
 		yCol = occurrence.parameters.get(2) as Integer
 		coordPair = new CoordPair(xRow,yCol)
+		
+		problemSize = occurrence.parameters.get(3) as Integer
 		
 		nbActiveNeighbours = 0
 		northNeighbour = null
@@ -312,59 +316,6 @@ agent FrameAgent {
 			info("path : " + a.numFrame)
 		}*/
 		
-		// ATTEMPT AT SOLVING CORNER PROBLEM 1
-		
-		// I usually am not disturbed when this is true, EXCEPT, when a tile tries to get in a corner
-		/*if (didMyTileMateHaveTheToken)
-		{
-			// To help the tile get in the corner we have to behave a little bit differently
-			// We have to flee by going to the opposite side of the aggression, whenever possible
-			
-			if (occurrence.provenanceDirection === Direction.NORTH && southNeighbour !== null)
-			{
-				emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.NORTH,
-					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
-					Scopes.addresses(defaultSpace.getAddress(this.southNeighbour)))
-
-				// If it is possible, then we do not try to find a path in other directions.
-				return;
-			}
-
-			if (occurrence.provenanceDirection === Direction.SOUTH && northNeighbour !== null) {
-				emit(
-					new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.SOUTH,
-					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
-					Scopes.addresses(defaultSpace.getAddress(this.northNeighbour)))
-
-				// If it is possible, then we do not try to find a path in other directions.
-				return;
-			}
-
-			if (occurrence.provenanceDirection === Direction.EAST && westNeighbour !== null) {
-				emit(
-					new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.EAST,
-					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
-					Scopes.addresses(defaultSpace.getAddress(this.westNeighbour)))
-
-				// If it is possible, then we do not try to find a path in other directions.
-				return;
-			}
-
-			if (occurrence.provenanceDirection === Direction.WEST && eastNeighbour !== null) {
-				emit(
-					new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.WEST,
-					occurrence.timeStamp, forcingAPath, occurrence.jumpCount + 1, p),
-					Scopes.addresses(defaultSpace.getAddress(this.eastNeighbour)))
-
-				// If it is possible, then we do not try to find a path in other directions.
-				return;
-			}
-			
-			// If it is not possible, we will just go wherever we can (just like we would usually do) ...
-		}*/
-		
-		// ATTEMPT 2
-		
 		// If we are a corner, we forward the PathCalculation with the info it comes from a corner
 		var isACorner = false
 
@@ -396,6 +347,35 @@ agent FrameAgent {
 						
 					return
 				}
+			}
+		}
+		
+		// If I am at a unique spot on the board, I have to behave differently in order to solve the last 3x3 problem
+		// Path from the east
+		if (occurrence.provenanceDirection === Direction.EAST)
+		{
+			// 3rd to last line
+			if (idNumFromZero / problemSize === problemSize - 3)
+			{
+				// 2nd to last column
+				if (idNumFromZero % problemSize === problemSize - 2)
+				{
+					if (didMyTileMateHaveTheToken)
+					{
+						// Helps to avoid getting stuck on a routine
+						nbTimesBothered++
+						
+						if (nbTimesBothered % 2 === 0)
+						{
+							// Forward only to opposite direction (west)
+							emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.EAST,
+								occurrence.timeStamp, newPathStatus, isACorner, occurrence.jumpCount + 1, p),
+								Scopes.addresses(defaultSpace.getAddress(this.westNeighbour)))
+							
+							return
+						}
+					}
+				}	
 			}
 		}
 		
@@ -501,9 +481,9 @@ agent FrameAgent {
 	on PathCalculationTimeOut {
 		
 		// DEBUGGING PATHFINDING
-		info("DEBUGG : PathCalculationTimeOut")
+		//info("DEBUGG : PathCalculationTimeOut")
 		
-		if (bestGoodPath !== null)
+		/*if (bestGoodPath !== null)
 		{
 			info("DEBUGG : There is a good path (length : " + bestGoodPath.size + ")")
 			for (f : bestGoodPath)
@@ -520,7 +500,7 @@ agent FrameAgent {
 			info("DEBUGG : There is a bad path (length : " + bestTerriblePath.size + ")")
 			for (f : bestTerriblePath)
 				info("DEBUGG : TERRIBLE PATH > " + f.numFrame)
-		}
+		}*/
 		
 		// DEBUGG
 		/*emit(new TokenReleased())
