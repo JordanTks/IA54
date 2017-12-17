@@ -245,6 +245,7 @@ agent BoardGameAgent {
 				for(ite: frameList){
 					if(t.uuidFrameHost === ite.ID){
 						//ite.isBlocked = true
+						ite.didMyTileMateHaveTheToken = true
 						ctrl.setColor("purple", t.numTile)
 						break
 					}
@@ -290,6 +291,7 @@ agent BoardGameAgent {
 					if (t.numTile === f.idNum)
 					{
 						f.isBlocked = true
+						ctrl.setColor("orange", t.numTile)
 						break
 					}	
 				}

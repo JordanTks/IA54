@@ -43,7 +43,7 @@ agent FrameAgent {
 	uses Logging, Lifecycle, Schedules, InnerContextAccess, DefaultContextInteractions, Behaviors
 
 	// PathCalculation
-	val TIMEOUT = 150
+	val TIMEOUT = 300
 	//var lastInitiatedAssault = 0l
 	var previousPathCalculationId : long
 	var previousPathCalculationJumpValue : int
@@ -305,6 +305,12 @@ agent FrameAgent {
 				newPathStatus = PathStatus.BAD
 			}	
 		}
+
+		//info("PathCalculation DEBUGG : status : " + newPathStatus)
+		/*info("PathCalculation DEBUGG : previous status : " + occurrence.pathStatus)
+		for (a : occurrence.path) {
+			info("path : " + a.numFrame)
+		}*/
 		
 		// ATTEMPT AT SOLVING CORNER PROBLEM 1
 		
@@ -495,20 +501,26 @@ agent FrameAgent {
 	on PathCalculationTimeOut {
 		
 		// DEBUGGING PATHFINDING
-		/*info("DEBUGG : PathCalculationTimeOut")
+		info("DEBUGG : PathCalculationTimeOut")
 		
-		if (bestPath !== null)
+		if (bestGoodPath !== null)
 		{
-			info("DEBUGG : There is a good path (length : " + bestPath.size + ")")
-			for (f : bestPath)
+			info("DEBUGG : There is a good path (length : " + bestGoodPath.size + ")")
+			for (f : bestGoodPath)
 				info("DEBUGG : GOOD PATH > " + f.numFrame)
 		}
 
-		if (bestForcedPath !== null) {
-			info("DEBUGG : There is a bad path (length : " + bestForcedPath.size + ")")
-			for (f : bestForcedPath)
+		if (bestBadPath !== null) {
+			info("DEBUGG : There is a bad path (length : " + bestBadPath.size + ")")
+			for (f : bestBadPath)
 				info("DEBUGG : BAD PATH > " + f.numFrame)
-		}*/
+		}
+
+		if (bestTerriblePath !== null) {
+			info("DEBUGG : There is a bad path (length : " + bestTerriblePath.size + ")")
+			for (f : bestTerriblePath)
+				info("DEBUGG : TERRIBLE PATH > " + f.numFrame)
+		}
 		
 		// DEBUGG
 		/*emit(new TokenReleased())
@@ -610,15 +622,6 @@ agent FrameAgent {
 			{
 				// TRYING TO AVOID SYNCH ISSUES
 				nbAck = -1
-				
-				// Information helpful to avoid getting stuck around corners
-				if (isSatisfied)
-				{
-					didMyTileMateHaveTheToken = true
-				
-					// If I am in a corner, I move the blank Tile around
-					// TODO: todo... or not
-				}
 				
 				// Do graphical update
 				emit(new UpdateGUI(pathUpdateGUI))
@@ -766,6 +769,10 @@ agent FrameAgent {
 
 	def setNbActiveNeighbours (nb : int) {
 		this.nbActiveNeighbours = nb
+	}
+	
+	def setDidMyTileMateHaveTheToken (b : boolean) {
+		didMyTileMateHaveTheToken = b
 	}
 
 	on EndAgent {

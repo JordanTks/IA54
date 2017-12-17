@@ -54,7 +54,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlElementType(17)
 @SuppressWarnings("all")
 public class FrameAgent extends Agent {
-  private final int TIMEOUT = 150;
+  private final int TIMEOUT = 300;
   
   private long previousPathCalculationId;
   
@@ -452,6 +452,47 @@ public class FrameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$PathCalculationTimeOut$9(final PathCalculationTimeOut occurrence) {
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("DEBUGG : PathCalculationTimeOut");
+    if ((this.bestGoodPath != null)) {
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      int _size = this.bestGoodPath.size();
+      String _plus = ("DEBUGG : There is a good path (length : " + Integer.valueOf(_size));
+      String _plus_1 = (_plus + ")");
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(_plus_1);
+      for (final FrameAgent f : this.bestGoodPath) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        int _numFrame = f.getNumFrame();
+        String _plus_2 = ("DEBUGG : GOOD PATH > " + Integer.valueOf(_numFrame));
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(_plus_2);
+      }
+    }
+    if ((this.bestBadPath != null)) {
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      int _size_1 = this.bestBadPath.size();
+      String _plus_3 = ("DEBUGG : There is a bad path (length : " + Integer.valueOf(_size_1));
+      String _plus_4 = (_plus_3 + ")");
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_3.info(_plus_4);
+      for (final FrameAgent f_1 : this.bestBadPath) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        int _numFrame_1 = f_1.getNumFrame();
+        String _plus_5 = ("DEBUGG : BAD PATH > " + Integer.valueOf(_numFrame_1));
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_4.info(_plus_5);
+      }
+    }
+    if ((this.bestTerriblePath != null)) {
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      int _size_2 = this.bestTerriblePath.size();
+      String _plus_6 = ("DEBUGG : There is a bad path (length : " + Integer.valueOf(_size_2));
+      String _plus_7 = (_plus_6 + ")");
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_5.info(_plus_7);
+      for (final FrameAgent f_2 : this.bestTerriblePath) {
+        Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_6 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+        int _numFrame_2 = f_2.getNumFrame();
+        String _plus_8 = ("DEBUGG : TERRIBLE PATH > " + Integer.valueOf(_numFrame_2));
+        _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_6.info(_plus_8);
+      }
+    }
     if ((this.bestGoodPath != null)) {
       this.initiateMovementChain(this.bestGoodPath);
     } else {
@@ -461,8 +502,8 @@ public class FrameAgent extends Agent {
         if ((this.bestTerriblePath != null)) {
           this.initiateMovementChain(this.bestTerriblePath);
         } else {
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.error("Error 03 : No path found in time at the end of PathCalculation spreading.");
+          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_7.error("Error 03 : No path found in time at the end of PathCalculation spreading.");
           DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
           TokenReleased _tokenReleased = new TokenReleased();
           _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReleased);
@@ -552,9 +593,6 @@ public class FrameAgent extends Agent {
       this.nbAck--;
       if (((this.nbAck).intValue() == 0)) {
         this.nbAck = Integer.valueOf((-1));
-        if (this.isSatisfied) {
-          this.didMyTileMateHaveTheToken = true;
-        }
         DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
         UpdateGUI _updateGUI = new UpdateGUI(this.pathUpdateGUI);
         _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_updateGUI);
@@ -736,6 +774,10 @@ public class FrameAgent extends Agent {
   
   protected void setNbActiveNeighbours(final int nb) {
     this.nbActiveNeighbours = nb;
+  }
+  
+  protected void setDidMyTileMateHaveTheToken(final boolean b) {
+    this.didMyTileMateHaveTheToken = b;
   }
   
   @SyntheticMember

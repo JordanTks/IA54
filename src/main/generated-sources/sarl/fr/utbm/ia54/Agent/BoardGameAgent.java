@@ -276,6 +276,7 @@ public class BoardGameAgent extends Agent {
           UUID _iD = ite.getID();
           boolean _tripleEquals = (_uuidFrameHost == _iD);
           if (_tripleEquals) {
+            ite.setDidMyTileMateHaveTheToken(true);
             this.ctrl.setColor("purple", Integer.valueOf(t.getNumTile()));
             break;
           }
@@ -319,6 +320,7 @@ public class BoardGameAgent extends Agent {
             boolean _tripleEquals_1 = (_numTile == _idNum);
             if (_tripleEquals_1) {
               f.setIsBlocked(true);
+              this.ctrl.setColor("orange", Integer.valueOf(t_2.getNumTile()));
               break;
             }
           }
