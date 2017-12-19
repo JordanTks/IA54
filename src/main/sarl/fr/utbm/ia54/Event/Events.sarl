@@ -2,15 +2,7 @@ package fr.utbm.ia54.Event
 
 import java.util.Collection
 
-event ConfigureSimulation {
-	val probSize : int
-	val distribuited : boolean
-	
-	new(size : int, dist : boolean) {
-		probSize = size
-		distribuited = dist
-	}
-}
+event ConfigureSimulation 
 
 event CreateMap
 /* event pour prévenir l'environnement que le Boids est lancé

@@ -34,6 +34,7 @@ import fr.utbm.ia54.Event.UpdateGUI
 import fr.utbm.ia54.Enum.Direction
 import fr.utbm.ia54.Enum.Satisfaction
 import fr.utbm.ia54.Enum.PathStatus
+import fr.utbm.ia54.Class.StaticVars
 
 /** 
  * @author Jordan
@@ -100,7 +101,7 @@ agent FrameAgent {
 		yCol = occurrence.parameters.get(2) as Integer
 		coordPair = new CoordPair(xRow,yCol)
 		
-		problemSize = occurrence.parameters.get(3) as Integer
+		problemSize = StaticVars.problemSize
 		
 		nbActiveNeighbours = 0
 		northNeighbour = null
@@ -216,11 +217,13 @@ agent FrameAgent {
 
 		// I have to run away by finding a path between me and the empty tile
 		
-		// if (resolution par point de vue global)
-		//emit(new FindPathWithAstarAlgo(ID))
-		// else if (resolution distribuee)
-		wake(new PathCalculation(System.currentTimeMillis, occurrence.source.UUID, occurrence.direction, System.currentTimeMillis, PathStatus.GOOD, false, 0, new ArrayList<FrameAgent>))
-		in (TIMEOUT) [emit(new PathCalculationTimeOut(), Scopes.addresses(defaultSpace.getAddress(occurrence.source.UUID)))]
+		if (!StaticVars.isDistributed)
+			emit(new FindPathWithAstarAlgo(ID))
+		
+		else if (StaticVars.isDistributed) {
+			wake(new PathCalculation(System.currentTimeMillis, occurrence.source.UUID, occurrence.direction, System.currentTimeMillis, PathStatus.GOOD, false, 0, new ArrayList<FrameAgent>))
+			in (TIMEOUT) [emit(new PathCalculationTimeOut(), Scopes.addresses(defaultSpace.getAddress(occurrence.source.UUID)))]
+		}
 	}
 	
 	// PathCalculation by spreading message
@@ -739,11 +742,11 @@ agent FrameAgent {
 
 	def setHostedTile(id : UUID) { 
 		hostedTile = id
-	}
+	} 
 	
 	def getHostedTile : UUID {
 		return this.hostedTile
-	}
+	} 
 
 	def setHostedNumTile(num : int) {
 		hostedNumTile = num

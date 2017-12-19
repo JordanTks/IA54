@@ -6,6 +6,7 @@ import fr.utbm.ia54.Agent.FrameAgent;
 import fr.utbm.ia54.Agent.TileAgent;
 import fr.utbm.ia54.Class.CoordPair;
 import fr.utbm.ia54.Class.InfosFrame;
+import fr.utbm.ia54.Class.StaticVars;
 import fr.utbm.ia54.Event.EndAgent;
 import fr.utbm.ia54.Event.FindPathWithAstarAlgo;
 import fr.utbm.ia54.Event.FrameSet;
@@ -99,14 +100,16 @@ public class BoardGameAgent extends Agent {
   
   private boolean isCorner = false;
   
+  private boolean isDistributed = false;
+  
   @SyntheticMember
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.setLoggingName("BoardGameAgent");
-    Object _get = occurrence.parameters[0];
-    this.PROBLEM_SIZE = (((Integer) _get)).intValue();
-    Object _get_1 = occurrence.parameters[1];
-    this.ctrl = ((TaquinFxViewerController) _get_1);
+    this.PROBLEM_SIZE = StaticVars.problemSize;
+    Object _get = occurrence.parameters[1];
+    this.ctrl = ((TaquinFxViewerController) _get);
+    this.isDistributed = StaticVars.isDistributed;
     final List<Integer> numFrameList = new ArrayList<Integer>();
     for (int i = 1; (i <= Math.pow(this.PROBLEM_SIZE, 2)); i++) {
       numFrameList.add(Integer.valueOf(i));
@@ -114,8 +117,8 @@ public class BoardGameAgent extends Agent {
     for (int i = 0; (i <= (Math.pow(this.PROBLEM_SIZE, 2) - 1)); i++) {
       {
         Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
-        Integer _get_2 = numFrameList.get(i);
-        this.frameUUIDList.add(_$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(FrameAgent.class, new Object[] { _get_2, Integer.valueOf((i / this.PROBLEM_SIZE)), Integer.valueOf((i % this.PROBLEM_SIZE)), Integer.valueOf(this.PROBLEM_SIZE) }));
+        Integer _get_1 = numFrameList.get(i);
+        this.frameUUIDList.add(_$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(FrameAgent.class, new Object[] { _get_1, Integer.valueOf((i / this.PROBLEM_SIZE)), Integer.valueOf((i % this.PROBLEM_SIZE)) }));
         CoordPair _coordPair = new CoordPair((i / this.PROBLEM_SIZE), (i % this.PROBLEM_SIZE));
         this.listCoordPairsOfFrames.add(_coordPair);
       }
@@ -178,7 +181,7 @@ public class BoardGameAgent extends Agent {
             Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
             Integer _get = startingTiles.get(i);
             UUID _iD = this.frameList.get(i).getID();
-            UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(TileAgent.class, new Object[] { _get, _iD, Integer.valueOf(i), Integer.valueOf(this.PROBLEM_SIZE) });
+            UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(TileAgent.class, new Object[] { _get, _iD, Integer.valueOf(i) });
             FrameAgent _get_1 = this.frameList.get(i);
             _get_1.setHostedTile(id);
             FrameAgent _get_2 = this.frameList.get(i);
@@ -879,7 +882,7 @@ public class BoardGameAgent extends Agent {
             if (_tripleEquals) {
               listSwap.add(Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
               this.ctrl.setColor("green", Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
-              Thread.sleep(300);
+              Thread.sleep(StaticVars.speed);
               break;
             }
           }
@@ -898,7 +901,7 @@ public class BoardGameAgent extends Agent {
               if (_tripleEquals) {
                 listSwap.add(Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
                 this.ctrl.setColor("blue", Integer.valueOf(this.frameList.get(j).getHostedNumTile()));
-                Thread.sleep(300);
+                Thread.sleep(StaticVars.speed);
                 break;
               }
             }
@@ -910,12 +913,12 @@ public class BoardGameAgent extends Agent {
           }
         }
       }
-      Thread.sleep(500);
+      Thread.sleep(StaticVars.speed);
       Collections.reverse(listSwap);
       for (final Integer number : listSwap) {
         {
           this.ctrl.swap((number).intValue());
-          Thread.sleep(300);
+          Thread.sleep(StaticVars.speed);
         }
       }
       this.ctrl.swap(this.haveTokenFrame.getHostedNumTile());
@@ -1230,7 +1233,7 @@ public class BoardGameAgent extends Agent {
       for (final FrameAgent number : occurrence.frameList) {
         {
           this.ctrl.swap(number.getHostedNumTile());
-          Thread.sleep(100);
+          Thread.sleep(StaticVars.speed);
         }
       }
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
@@ -1416,6 +1419,8 @@ public class BoardGameAgent extends Agent {
     }
     if (other.isCorner != this.isCorner)
       return false;
+    if (other.isDistributed != this.isDistributed)
+      return false;
     return super.equals(obj);
   }
   
@@ -1432,6 +1437,7 @@ public class BoardGameAgent extends Agent {
     result = prime * result + java.util.Objects.hashCode(this.uuidFRAMEwithBlankTile);
     result = prime * result + java.util.Objects.hashCode(this.uuidFRAMEbeginning);
     result = prime * result + (this.isCorner ? 1231 : 1237);
+    result = prime * result + (this.isDistributed ? 1231 : 1237);
     return result;
   }
   

@@ -1,5 +1,6 @@
 package fr.utbm.ia54.gui;
 
+import fr.utbm.ia54.Class.StaticVars;
 import fr.utbm.ia54.Event.ConfigureSimulation;
 import fr.utbm.ia54.gui.fx.FxViewerController;
 import io.sarl.lang.annotation.SarlElementType;
@@ -12,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
@@ -142,6 +144,8 @@ public class TaquinFxViewerController extends FxViewerController {
   
   private boolean mapCreated = false;
   
+  private int intSpeed = 0;
+  
   private TaquinFxViewerController.GridDisplay gridDisplay = new TaquinFxViewerController.GridDisplay(0, 0);
   
   @FXML
@@ -152,6 +156,32 @@ public class TaquinFxViewerController extends FxViewerController {
   
   @FXML
   private CheckBox distribuited;
+  
+  @FXML
+  private Slider idSliderSpeed;
+  
+  @FXML
+  private Text idTextSpeed;
+  
+  @FXML
+  public void RefreshSpeed() {
+    double _value = this.idSliderSpeed.getValue();
+    this.intSpeed = ((int) _value);
+    String textSpeed = null;
+    if ((this.intSpeed == 0)) {
+      textSpeed = "SLOW";
+      StaticVars.speed = 500;
+    } else {
+      if ((this.intSpeed == 1)) {
+        textSpeed = "NORMAL";
+        StaticVars.speed = 250;
+      } else {
+        textSpeed = "FAST";
+        StaticVars.speed = 100;
+      }
+    }
+    this.idTextSpeed.setText(("Speed: " + textSpeed));
+  }
   
   @Pure
   public int getProbSize() {
@@ -174,9 +204,9 @@ public class TaquinFxViewerController extends FxViewerController {
       if (_not) {
         this.pane.getChildren().add(this.gridDisplay.display);
       }
-      int _probSize = this.getProbSize();
-      boolean _distribuitedVal = this.getDistribuitedVal();
-      ConfigureSimulation event = new ConfigureSimulation(_probSize, _distribuitedVal);
+      StaticVars.problemSize = this.getProbSize();
+      StaticVars.isDistributed = this.getDistribuitedVal();
+      ConfigureSimulation event = new ConfigureSimulation();
       boolean _xifexpression = false;
       if ((!this.launched)) {
         boolean _xblockexpression_1 = false;
@@ -336,6 +366,8 @@ public class TaquinFxViewerController extends FxViewerController {
       return false;
     if (other.mapCreated != this.mapCreated)
       return false;
+    if (other.intSpeed != this.intSpeed)
+      return false;
     return super.equals(obj);
   }
   
@@ -347,6 +379,7 @@ public class TaquinFxViewerController extends FxViewerController {
     final int prime = 31;
     result = prime * result + (this.launched ? 1231 : 1237);
     result = prime * result + (this.mapCreated ? 1231 : 1237);
+    result = prime * result + this.intSpeed;
     return result;
   }
   

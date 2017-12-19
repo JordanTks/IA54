@@ -11,11 +11,14 @@ import fr.utbm.ia54.gui.TaquinFxViewerController
 import io.sarl.core.Behaviors
 import io.sarl.core.DefaultContextInteractions
 import fr.utbm.ia54.Event.EndAgent
+import io.sarl.core.Schedules
+import fr.utbm.ia54.Class.StaticVars
 
 agent BootAgent {
-	uses Logging, Behaviors, InnerContextAccess, Lifecycle, DefaultContextInteractions
+	uses Logging, Behaviors, InnerContextAccess, Lifecycle, DefaultContextInteractions, Schedules
 	
 	var probSize : int
+	var isDistributed = false
 
 	var ctrl : TaquinFxViewerController
 
@@ -26,14 +29,15 @@ agent BootAgent {
 		ctrl.UISpace.register(asEventListener)
 		info("Configuration of the environment...")
 
-	}
+	} 
 	
 	on ConfigureSimulation {
-		this.probSize = occurrence.probSize
-		info('PROB SIZE quantity : ' + this.probSize)
+		
+		info('PROB SIZE quantity : ' + StaticVars.problemSize)
 		
 		// START ECO RESOLUTION
-		spawn(BoardGameAgent, #[this.probSize, ctrl])
+		emit(new EndAgent)
+		in(1000)[spawn(BoardGameAgent, #[this.probSize, ctrl, isDistributed])]
 	}
 
 	on EndSimulation [!hasMemberAgent] { 

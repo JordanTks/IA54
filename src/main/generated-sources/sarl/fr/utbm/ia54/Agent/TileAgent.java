@@ -1,5 +1,6 @@
 package fr.utbm.ia54.Agent;
 
+import fr.utbm.ia54.Class.StaticVars;
 import fr.utbm.ia54.Enum.Direction;
 import fr.utbm.ia54.Enum.Satisfaction;
 import fr.utbm.ia54.Event.AskNeighbourSatisfaction;
@@ -79,8 +80,7 @@ public class TileAgent extends Agent {
     this.uuidFrameHost = ((UUID) _get_1);
     Object _get_2 = occurrence.parameters[2];
     this.numFrameHostFromZero = (((Integer) _get_2)).intValue();
-    Object _get_3 = occurrence.parameters[3];
-    this.problemSize = (((Integer) _get_3)).intValue();
+    this.problemSize = StaticVars.problemSize;
     this.numFrameHost = (this.numFrameHostFromZero + 1);
     this.tokenPriority = Math.min(((this.numTile - 1) / this.problemSize), ((this.numTile - 1) % this.problemSize));
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);

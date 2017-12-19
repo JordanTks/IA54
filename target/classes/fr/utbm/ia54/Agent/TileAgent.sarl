@@ -21,6 +21,7 @@ import io.sarl.core.Lifecycle
 import fr.utbm.ia54.Event.UpdateProblemInformations
 import fr.utbm.ia54.Enum.Direction
 import fr.utbm.ia54.Enum.Satisfaction
+import fr.utbm.ia54.Class.StaticVars
 
 agent TileAgent {
 	uses Logging, DefaultContextInteractions, Behaviors, Schedules, Lifecycle 
@@ -50,7 +51,7 @@ agent TileAgent {
   
 		uuidFrameHost = occurrence.parameters.get(1) as UUID
 		numFrameHostFromZero = occurrence.parameters.get(2) as Integer
-		problemSize = occurrence.parameters.get(3) as Integer
+		problemSize = StaticVars.problemSize
 		
 		numFrameHost = numFrameHostFromZero + 1
 

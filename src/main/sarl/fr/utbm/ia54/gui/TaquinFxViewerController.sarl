@@ -16,17 +16,43 @@ import java.util.List
 import javafx.application.Platform
 import javafx.scene.Node
 import javafx.scene.control.CheckBox
+import javafx.scene.control.Slider
+import fr.utbm.ia54.Class.StaticVars
 
 class TaquinFxViewerController extends FxViewerController { 
 
 	var launched = false
 	var mapCreated = false
+	var intSpeed = 0
 	
 	var gridDisplay = new GridDisplay(0,0) 
 
 	@FXML var pane : Pane
 	@FXML var size : TextField
 	@FXML var distribuited : CheckBox
+	@FXML var idSliderSpeed : Slider
+	@FXML var idTextSpeed : Text
+	
+	@FXML def RefreshSpeed {
+		intSpeed = idSliderSpeed.value as int
+		var textSpeed : String
+		if(intSpeed == 0){
+			textSpeed = "SLOW"
+			StaticVars.speed = 500;
+		}
+		else if(intSpeed == 1){
+			textSpeed = "NORMAL"
+			StaticVars.speed = 250;		
+		}
+		else{ 
+			textSpeed = "FAST"
+			StaticVars.speed = 100;
+		} 					
+		
+		idTextSpeed.text = "Speed: " + textSpeed
+		
+		
+	}
 
 
 	def getProbSize : int {
@@ -48,9 +74,12 @@ class TaquinFxViewerController extends FxViewerController {
 		if (!pane.children.contains(gridDisplay.display)) {
 			pane.children.add(gridDisplay.display);
 		}
+		
+		StaticVars.problemSize = probSize
+		StaticVars.isDistributed = distribuitedVal
 
 		// Send event
-		var ^event = new ConfigureSimulation(this.probSize, this.distribuitedVal)
+		var ^event = new ConfigureSimulation()
 		if (!launched) {
 			startAgentApplication() [emitToAgents(^event)]
 			launched = true

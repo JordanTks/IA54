@@ -22,6 +22,7 @@ import fr.utbm.ia54.Class.InfosFrame
 import io.sarl.core.Schedules
 import fr.utbm.ia54.Event.FindPathWithAstarAlgo
 import fr.utbm.ia54.Event.UpdateGUI
+import fr.utbm.ia54.Class.StaticVars
 
 agent BoardGameAgent {
 	uses Logging, Lifecycle, DefaultContextInteractions, Behaviors, Schedules
@@ -62,14 +63,17 @@ agent BoardGameAgent {
 	var ctrl : TaquinFxViewerController
 	
 	var isCorner = false
+	var isDistributed = false
 
 	
 	on Initialize {
 
 		loggingName = 'BoardGameAgent'
 
-		PROBLEM_SIZE = occurrence.parameters.get(0) as Integer
+		
+		PROBLEM_SIZE = StaticVars.problemSize
 		ctrl = occurrence.parameters.get(1) as TaquinFxViewerController
+		isDistributed = StaticVars.isDistributed
 
 		val numFrameList : List<Integer> = new ArrayList
 
@@ -77,7 +81,7 @@ agent BoardGameAgent {
 			numFrameList.add(i)
 
 		for (var i = 0; i <= Math.pow(PROBLEM_SIZE, 2) - 1; i++) { // spawn FrameAgent(num,row,col,size)
-			frameUUIDList.add(spawn(FrameAgent, #[numFrameList.get(i), i / PROBLEM_SIZE, i % PROBLEM_SIZE, PROBLEM_SIZE])) // get UUID of the frameAgent
+			frameUUIDList.add(spawn(FrameAgent, #[numFrameList.get(i), i / PROBLEM_SIZE, i % PROBLEM_SIZE])) // get UUID of the frameAgent
 			listCoordPairsOfFrames.add(new CoordPair((i / PROBLEM_SIZE), (i % PROBLEM_SIZE)))
 		}
 		
@@ -144,7 +148,7 @@ agent BoardGameAgent {
 				// Spawn tile agents (num tile/UUID frame/num frame/ problem size)
 				for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++)
 				{
-					var id = spawn(TileAgent, #[startingTiles.get(i), frameList.get(i).ID, i, PROBLEM_SIZE])
+					var id = spawn(TileAgent, #[startingTiles.get(i), frameList.get(i).ID, i])
 					frameList.get(i).hostedTile = id
 					frameList.get(i).hostedNumTile = startingTiles.get(i)
 					frameList.get(i).isSatisfied = (startingTiles.get(i) === frameList.get(i).numFrame)
@@ -737,7 +741,7 @@ agent BoardGameAgent {
 						ctrl.setColor("green", frameList.get(j).hostedNumTile)
 
 						// YB
-						Thread.sleep(300)
+						Thread.sleep(StaticVars.speed)
 
 						break
 					}
@@ -757,7 +761,7 @@ agent BoardGameAgent {
 						
 						ctrl.setColor("blue", frameList.get(j).hostedNumTile)
 
-						Thread.sleep(300)
+						Thread.sleep(StaticVars.speed)
 						
 						break
 					}
@@ -768,13 +772,13 @@ agent BoardGameAgent {
 			}
 		}
 		
-		Thread.sleep(500)
+		Thread.sleep(StaticVars.speed)
 
 		// YB
 		Collections.reverse(listSwap)
 		for (number : listSwap) {
 			ctrl.swap(number)
-			Thread.sleep(300)
+			Thread.sleep(StaticVars.speed)
 		}
 		
 		ctrl.swap(haveTokenFrame.hostedNumTile)
@@ -1061,7 +1065,7 @@ agent BoardGameAgent {
 		for (number : occurrence.frameList) {
 			//info("UpdateGUI: LIST: "+number.hostedNumTile)
 			ctrl.swap(number.hostedNumTile)
-			Thread.sleep(100)
+			Thread.sleep(StaticVars.speed)
 		}
 		//info("UpdateGUI: SIMPLE: "+occurrence.numFrame)
 

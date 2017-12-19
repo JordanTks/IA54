@@ -2,6 +2,7 @@ package fr.utbm.ia54.Agent;
 
 import com.google.common.base.Objects;
 import fr.utbm.ia54.Class.CoordPair;
+import fr.utbm.ia54.Class.StaticVars;
 import fr.utbm.ia54.Enum.Direction;
 import fr.utbm.ia54.Enum.PathStatus;
 import fr.utbm.ia54.Enum.Satisfaction;
@@ -9,6 +10,7 @@ import fr.utbm.ia54.Event.AcknowledgmentDataUpdated;
 import fr.utbm.ia54.Event.AskNeighbourSatisfaction;
 import fr.utbm.ia54.Event.Assault;
 import fr.utbm.ia54.Event.EndAgent;
+import fr.utbm.ia54.Event.FindPathWithAstarAlgo;
 import fr.utbm.ia54.Event.FrameSet;
 import fr.utbm.ia54.Event.PathCalculation;
 import fr.utbm.ia54.Event.PathCalculationTimeOut;
@@ -131,8 +133,7 @@ public class FrameAgent extends Agent {
     this.yCol = (((Integer) _get_2)).intValue();
     CoordPair _coordPair = new CoordPair(this.xRow, this.yCol);
     this.coordPair = _coordPair;
-    Object _get_3 = occurrence.parameters[3];
-    this.problemSize = (((Integer) _get_3)).intValue();
+    this.problemSize = StaticVars.problemSize;
     this.nbActiveNeighbours = 0;
     this.northNeighbour = null;
     this.eastNeighbour = null;
@@ -270,21 +271,30 @@ public class FrameAgent extends Agent {
   private void $behaviorUnit$Assault$6(final Assault occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("DEBUGG : I GOT ATTACKED !");
-    Behaviors _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER = this.$castSkill(Behaviors.class, (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS == null || this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS = this.$getSkill(Behaviors.class)) : this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS);
-    long _currentTimeMillis = System.currentTimeMillis();
-    UUID _uUID = occurrence.getSource().getUUID();
-    long _currentTimeMillis_1 = System.currentTimeMillis();
-    ArrayList<FrameAgent> _arrayList = new ArrayList<FrameAgent>();
-    PathCalculation _pathCalculation = new PathCalculation(_currentTimeMillis, _uUID, occurrence.direction, _currentTimeMillis_1, PathStatus.GOOD, false, 0, _arrayList);
-    _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER.wake(_pathCalculation);
-    Schedules _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER = this.$castSkill(Schedules.class, (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = this.$getSkill(Schedules.class)) : this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
-    final Procedure1<Agent> _function = (Agent it) -> {
+    if ((!StaticVars.isDistributed)) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      PathCalculationTimeOut _pathCalculationTimeOut = new PathCalculationTimeOut();
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_pathCalculationTimeOut, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.getDefaultSpace().getAddress(occurrence.getSource().getUUID())));
-    };
-    _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER.in(this.TIMEOUT, _function);
+      UUID _iD = this.getID();
+      FindPathWithAstarAlgo _findPathWithAstarAlgo = new FindPathWithAstarAlgo(_iD);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_findPathWithAstarAlgo);
+    } else {
+      if (StaticVars.isDistributed) {
+        Behaviors _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER = this.$castSkill(Behaviors.class, (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS == null || this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS = this.$getSkill(Behaviors.class)) : this.$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS);
+        long _currentTimeMillis = System.currentTimeMillis();
+        UUID _uUID = occurrence.getSource().getUUID();
+        long _currentTimeMillis_1 = System.currentTimeMillis();
+        ArrayList<FrameAgent> _arrayList = new ArrayList<FrameAgent>();
+        PathCalculation _pathCalculation = new PathCalculation(_currentTimeMillis, _uUID, occurrence.direction, _currentTimeMillis_1, PathStatus.GOOD, false, 0, _arrayList);
+        _$CAPACITY_USE$IO_SARL_CORE_BEHAVIORS$CALLER.wake(_pathCalculation);
+        Schedules _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER = this.$castSkill(Schedules.class, (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES == null || this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES = this.$getSkill(Schedules.class)) : this.$CAPACITY_USE$IO_SARL_CORE_SCHEDULES);
+        final Procedure1<Agent> _function = (Agent it) -> {
+          DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+          PathCalculationTimeOut _pathCalculationTimeOut = new PathCalculationTimeOut();
+          DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+          _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_pathCalculationTimeOut, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.getDefaultSpace().getAddress(occurrence.getSource().getUUID())));
+        };
+        _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER.in(this.TIMEOUT, _function);
+      }
+    }
   }
   
   @SyntheticMember
