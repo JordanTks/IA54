@@ -64,4 +64,7 @@ public class ActionUI extends Event {
     result.append("target  = ").append(this.target);
     return result.toString();
   }
+  
+  @SyntheticMember
+  private final static long serialVersionUID = 2797650337L;
 }

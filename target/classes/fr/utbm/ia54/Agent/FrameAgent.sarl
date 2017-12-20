@@ -747,7 +747,7 @@ agent FrameAgent {
 	def getHostedTile : UUID {
 		return this.hostedTile
 	} 
-
+ 
 	def setHostedNumTile(num : int) {
 		hostedNumTile = num
 	}
@@ -762,6 +762,10 @@ agent FrameAgent {
 	
 	def setDidMyTileMateHaveTheToken (b : boolean) {
 		didMyTileMateHaveTheToken = b
+	}
+	
+	def getDidMyTileMateHaveTheToken {
+		return this.didMyTileMateHaveTheToken
 	}
 
 	on EndAgent {

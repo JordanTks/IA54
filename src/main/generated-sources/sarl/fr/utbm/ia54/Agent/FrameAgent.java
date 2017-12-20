@@ -776,6 +776,11 @@ public class FrameAgent extends Agent {
     this.didMyTileMateHaveTheToken = b;
   }
   
+  @Pure
+  protected boolean getDidMyTileMateHaveTheToken() {
+    return this.didMyTileMateHaveTheToken;
+  }
+  
   @SyntheticMember
   private void $behaviorUnit$EndAgent$13(final EndAgent occurrence) {
     Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);

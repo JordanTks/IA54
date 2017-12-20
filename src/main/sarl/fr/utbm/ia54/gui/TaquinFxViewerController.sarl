@@ -38,15 +38,15 @@ class TaquinFxViewerController extends FxViewerController {
 		var textSpeed : String
 		if(intSpeed == 0){
 			textSpeed = "SLOW"
-			StaticVars.speed = 500;
+			StaticVars.speed = 250;
 		}
 		else if(intSpeed == 1){
 			textSpeed = "NORMAL"
-			StaticVars.speed = 250;		
+			StaticVars.speed = 150;		
 		}
-		else{ 
+		else{  
 			textSpeed = "FAST"
-			StaticVars.speed = 100;
+			StaticVars.speed = 50;
 		} 					
 		
 		idTextSpeed.text = "Speed: " + textSpeed

@@ -1,14 +1,30 @@
 package fr.utbm.ia54.Class;
 
 public class CoordPair {
-	final private int x;
-	final private int y;
+	private int x;
+	private int y;
 
 	public CoordPair(int x, int y){this.x=x; this.y=y;}
 
 	public int getX(){return this.x;}
 	public int getY(){return this.y;}
 	
+	public void setYplusOne(){
+		this.y++;
+	}
+	
+	public void setYminusOne(){
+		this.y--;
+	}
+	
+	public void setXplusOne() {
+		this.x++;
+	}
+	
+	public void setXminusOne() {
+		this.x--;
+	}
+
 	/**
 	 * compare a second pair of coordXY with itself
 	 * @param pair: second CoordPair
