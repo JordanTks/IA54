@@ -334,9 +334,9 @@ agent BoardGameAgent {
 		ctrl.setColor(occurrence.prop, occurrence.target)
 	}
 	
-	// calculate the euclidean distance between 2 frames: return int: square euclidean distance
-	def distEuclidian(a : FrameAgent, b : FrameAgent) : int {
-		return ((a.XRow - b.XRow) * (a.XRow - b.XRow) + (a.YCol - b.YCol) * (a.YCol - b.YCol))
+	// calculate the Manhattan distance between 2 frames: return int: abs(xA-xB) + abs(yA-yB)
+	def distManhattan(a : FrameAgent, b : FrameAgent) : int {
+		return (Math.abs(a.XRow - b.XRow) + Math.abs(a.YCol - b.YCol))
 	}
 	
 	// determinate if the frame is in the list: return boolean: true if the CoordPair correspond to coords of an FrameAgent in the list
@@ -368,10 +368,10 @@ agent BoardGameAgent {
 			}
 
 			infosFrame.costG = closedListOfFrames.get(indexForClosedList).costG +
-				distEuclidian(frameList.get(index), currentFrame)
+				distManhattan(frameList.get(index), currentFrame)
 
 			// costH of neighbour: it to arrival
-			infosFrame.costH = distEuclidian(frameList.get(index), arrivalFrame)
+			infosFrame.costH = distManhattan(frameList.get(index), arrivalFrame)
 			infosFrame.costF = infosFrame.costG + infosFrame.costH
 
 			// previousFrame = the previousFrame in the chain of aggression (to build the path in the opposite direction)
@@ -610,8 +610,17 @@ agent BoardGameAgent {
 				nbTriesAstarAlgo ++
 				info("## A-star findPath : destination IS NOT reached! ("+nbTriesAstarAlgo+") ##")
 				
-				if(nbTriesAstarAlgo < 2)
+				if (nbTriesAstarAlgo < 2) {
+					for(ite: frameList){
+						if(ite.ID === currentFrame.uuidCurrentFrame){
+							error("CURRENTtile="+ite.hostedNumTile)
+							ctrl.setColor("turquoise", ite.hostedNumTile)
+							Thread.sleep(StaticVars.speed)
+							break
+						}
+					}
 					emit (new TokenReleased())
+				}
 				else{
 					doSwapsForCorner(currentFrame)
 				}
@@ -958,12 +967,8 @@ agent BoardGameAgent {
 				for (var j = 0; j < frameList.size; j++) {
 					if (frameList.get(j).ID === chainAggression.get(i).uuidCurrentFrame) {
 
-						// YB
 						listSwap.add(frameList.get(j).hostedNumTile)
-
 						ctrl.setColor("green", frameList.get(j).hostedNumTile)
-
-						// YB
 						Thread.sleep(StaticVars.speed)
 
 						break
@@ -979,11 +984,8 @@ agent BoardGameAgent {
 				for(var j=0; j<frameList.size; j++){
 					if (frameList.get(j).ID === chainAggression.get(i).uuidCurrentFrame) {
 
-						// YB
-						listSwap.add(frameList.get(j).hostedNumTile)
-						
+						listSwap.add(frameList.get(j).hostedNumTile)						
 						ctrl.setColor("blue", frameList.get(j).hostedNumTile)
-
 						Thread.sleep(StaticVars.speed)
 						
 						break

@@ -380,22 +380,16 @@ public class BoardGameAgent extends Agent {
   }
   
   @Pure
-  protected int distEuclidian(final FrameAgent a, final FrameAgent b) {
+  protected int distManhattan(final FrameAgent a, final FrameAgent b) {
     int _xRow = a.getXRow();
     int _xRow_1 = b.getXRow();
     int _minus = (_xRow - _xRow_1);
-    int _xRow_2 = a.getXRow();
-    int _xRow_3 = b.getXRow();
-    int _minus_1 = (_xRow_2 - _xRow_3);
-    int _multiply = (_minus * _minus_1);
+    int _abs = Math.abs(_minus);
     int _yCol = a.getYCol();
     int _yCol_1 = b.getYCol();
-    int _minus_2 = (_yCol - _yCol_1);
-    int _yCol_2 = a.getYCol();
-    int _yCol_3 = b.getYCol();
-    int _minus_3 = (_yCol_2 - _yCol_3);
-    int _multiply_1 = (_minus_2 * _minus_3);
-    return (_multiply + _multiply_1);
+    int _minus_1 = (_yCol - _yCol_1);
+    int _abs_1 = Math.abs(_minus_1);
+    return (_abs + _abs_1);
   }
   
   @Pure
@@ -434,10 +428,10 @@ public class BoardGameAgent extends Agent {
             }
           }
           int _costG = this.closedListOfFrames.get(indexForClosedList).getCostG();
-          int _distEuclidian = this.distEuclidian(this.frameList.get(index), currentFrame);
-          int _plus = (_costG + _distEuclidian);
+          int _distManhattan = this.distManhattan(this.frameList.get(index), currentFrame);
+          int _plus = (_costG + _distManhattan);
           infosFrame.setCostG(_plus);
-          infosFrame.setCostH(this.distEuclidian(this.frameList.get(index), this.arrivalFrame));
+          infosFrame.setCostH(this.distManhattan(this.frameList.get(index), this.arrivalFrame));
           int _costG_1 = infosFrame.getCostG();
           int _costH = infosFrame.getCostH();
           int _plus_1 = (_costG_1 + _costH);
@@ -683,73 +677,91 @@ public class BoardGameAgent extends Agent {
   }
   
   protected Object findPath() {
-    AgentTask _xblockexpression = null;
-    {
-      InfosFrame currentFrame = this.beginningInfosFrame;
-      this.openListOfFrames.add(this.beginningInfosFrame);
-      this.addInClosedList(this.beginningInfosFrame.getCoordsCurrentFrame());
-      for (int indexOfFrameList = 0; (indexOfFrameList < this.frameList.size()); indexOfFrameList++) {
-        boolean _equals = this.frameList.get(indexOfFrameList).getCoordPair().equals(this.beginningInfosFrame.getCoordsCurrentFrame());
-        if (_equals) {
-          this.addNeighbourFrames(this.frameList.get(indexOfFrameList));
-          break;
-        }
-      }
-      while (((!currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame())) && (!this.openListOfFrames.isEmpty()))) {
-        {
-          currentFrame = this.getBestFrame(this.openListOfFrames);
-          this.addInClosedList(currentFrame.getCoordsCurrentFrame());
-          for (int indexOfFrameList2 = 0; (indexOfFrameList2 < this.frameList.size()); indexOfFrameList2++) {
-            boolean _equals = this.frameList.get(indexOfFrameList2).getCoordPair().equals(currentFrame.getCoordsCurrentFrame());
-            if (_equals) {
-              this.addNeighbourFrames(this.frameList.get(indexOfFrameList2));
-              break;
-            }
+    try {
+      AgentTask _xblockexpression = null;
+      {
+        InfosFrame currentFrame = this.beginningInfosFrame;
+        this.openListOfFrames.add(this.beginningInfosFrame);
+        this.addInClosedList(this.beginningInfosFrame.getCoordsCurrentFrame());
+        for (int indexOfFrameList = 0; (indexOfFrameList < this.frameList.size()); indexOfFrameList++) {
+          boolean _equals = this.frameList.get(indexOfFrameList).getCoordPair().equals(this.beginningInfosFrame.getCoordsCurrentFrame());
+          if (_equals) {
+            this.addNeighbourFrames(this.frameList.get(indexOfFrameList));
+            break;
           }
         }
-      }
-      AgentTask _xifexpression = null;
-      if (((!this.isCorner) && (this.flagCorner < 2))) {
-        AgentTask _xifexpression_1 = null;
-        boolean _equals = currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame());
-        if (_equals) {
-          this.nbTriesAstarAlgo = 0;
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("## A-star findPath : destination IS reached! ##");
-          this.doSwaps(null);
-          this.flagCorner = 0;
-          DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-          TokenReleased _tokenReleased = new TokenReleased();
-          _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReleased);
-        } else {
-          AgentTask _xblockexpression_1 = null;
+        while (((!currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame())) && (!this.openListOfFrames.isEmpty()))) {
           {
-            this.nbTriesAstarAlgo++;
-            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info((("## A-star findPath : destination IS NOT reached! (" + Integer.valueOf(this.nbTriesAstarAlgo)) + ") ##"));
-            AgentTask _xifexpression_2 = null;
-            if ((this.nbTriesAstarAlgo < 2)) {
-              DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-              TokenReleased _tokenReleased_1 = new TokenReleased();
-              _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_tokenReleased_1);
-            } else {
-              _xifexpression_2 = this.doSwapsForCorner(currentFrame);
+            currentFrame = this.getBestFrame(this.openListOfFrames);
+            this.addInClosedList(currentFrame.getCoordsCurrentFrame());
+            for (int indexOfFrameList2 = 0; (indexOfFrameList2 < this.frameList.size()); indexOfFrameList2++) {
+              boolean _equals = this.frameList.get(indexOfFrameList2).getCoordPair().equals(currentFrame.getCoordsCurrentFrame());
+              if (_equals) {
+                this.addNeighbourFrames(this.frameList.get(indexOfFrameList2));
+                break;
+              }
             }
-            _xblockexpression_1 = _xifexpression_2;
           }
-          _xifexpression_1 = _xblockexpression_1;
         }
-        _xifexpression = _xifexpression_1;
-      } else {
-        if (((!this.isCorner) && (this.flagCorner == 2))) {
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("## A-star findPath : top right corner of 3x3 ##");
-          this.doSwapsForTopRightCornerThreeByThree();
+        AgentTask _xifexpression = null;
+        if (((!this.isCorner) && (this.flagCorner < 2))) {
+          AgentTask _xifexpression_1 = null;
+          boolean _equals = currentFrame.getCoordsCurrentFrame().equals(this.arrivalInfosFrame.getCoordsCurrentFrame());
+          if (_equals) {
+            this.nbTriesAstarAlgo = 0;
+            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("## A-star findPath : destination IS reached! ##");
+            this.doSwaps(null);
+            this.flagCorner = 0;
+            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+            TokenReleased _tokenReleased = new TokenReleased();
+            _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_tokenReleased);
+          } else {
+            AgentTask _xblockexpression_1 = null;
+            {
+              this.nbTriesAstarAlgo++;
+              Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+              _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info((("## A-star findPath : destination IS NOT reached! (" + Integer.valueOf(this.nbTriesAstarAlgo)) + ") ##"));
+              AgentTask _xifexpression_2 = null;
+              if ((this.nbTriesAstarAlgo < 2)) {
+                for (final FrameAgent ite : this.frameList) {
+                  UUID _iD = ite.getID();
+                  UUID _uuidCurrentFrame = currentFrame.getUuidCurrentFrame();
+                  boolean _tripleEquals = (_iD == _uuidCurrentFrame);
+                  if (_tripleEquals) {
+                    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+                    int _hostedNumTile = ite.getHostedNumTile();
+                    String _plus = ("CURRENTtile=" + Integer.valueOf(_hostedNumTile));
+                    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.error(_plus);
+                    this.ctrl.setColor("turquoise", Integer.valueOf(ite.getHostedNumTile()));
+                    Thread.sleep(StaticVars.speed);
+                    break;
+                  }
+                }
+                DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+                TokenReleased _tokenReleased_1 = new TokenReleased();
+                _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_tokenReleased_1);
+              } else {
+                _xifexpression_2 = this.doSwapsForCorner(currentFrame);
+              }
+              _xblockexpression_1 = _xifexpression_2;
+            }
+            _xifexpression_1 = _xblockexpression_1;
+          }
+          _xifexpression = _xifexpression_1;
+        } else {
+          if (((!this.isCorner) && (this.flagCorner == 2))) {
+            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info("## A-star findPath : top right corner of 3x3 ##");
+            this.doSwapsForTopRightCornerThreeByThree();
+          }
         }
+        _xblockexpression = _xifexpression;
       }
-      _xblockexpression = _xifexpression;
+      return _xblockexpression;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
     }
-    return _xblockexpression;
   }
   
   @Pure

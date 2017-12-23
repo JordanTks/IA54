@@ -12,7 +12,7 @@ import javafx.scene.Group
 import javafx.scene.control.TextField
 import javafx.scene.paint.Color
 import javafx.scene.text.Text
-import java.util.List
+import java.util.List 
 import javafx.application.Platform
 import javafx.scene.Node
 import javafx.scene.control.CheckBox
@@ -39,17 +39,27 @@ class TaquinFxViewerController extends FxViewerController {
 		if(intSpeed == 0){
 			textSpeed = "SLOW"
 			StaticVars.speed = 250;
+			idTextSpeed.text = "Speed: " + textSpeed
 		}
 		else if(intSpeed == 1){
 			textSpeed = "NORMAL"
-			StaticVars.speed = 150;		
+			StaticVars.speed = 150;
+			idTextSpeed.text = "Speed: " + textSpeed	
 		}
-		else{  
+		else if (intSpeed == 2) { 
 			textSpeed = "FAST"
 			StaticVars.speed = 50;
-		} 					
+			idTextSpeed.text = "Speed: " + textSpeed
+		} else if (intSpeed == 3) {
+			textSpeed = "FASTER"
+			StaticVars.speed = 30;
+			idTextSpeed.text = "Speed: " + textSpeed
+		} else{  
+			textSpeed = "The FLASH"
+			StaticVars.speed = 0;
+			idTextSpeed.text = "Speed of " + textSpeed
+		} 				
 		
-		idTextSpeed.text = "Speed: " + textSpeed
 		
 		
 	}
@@ -124,6 +134,8 @@ class TaquinFxViewerController extends FxViewerController {
 							rect.fill = Color.PURPLE
 						else if (color.equals("orange"))
 							rect.fill = Color.DARKORANGE
+						else if (color.equals("turquoise"))
+							rect.fill = Color.DARKTURQUOISE
 						return
 					}
 				}

@@ -171,16 +171,30 @@ public class TaquinFxViewerController extends FxViewerController {
     if ((this.intSpeed == 0)) {
       textSpeed = "SLOW";
       StaticVars.speed = 250;
+      this.idTextSpeed.setText(("Speed: " + textSpeed));
     } else {
       if ((this.intSpeed == 1)) {
         textSpeed = "NORMAL";
         StaticVars.speed = 150;
+        this.idTextSpeed.setText(("Speed: " + textSpeed));
       } else {
-        textSpeed = "FAST";
-        StaticVars.speed = 50;
+        if ((this.intSpeed == 2)) {
+          textSpeed = "FAST";
+          StaticVars.speed = 50;
+          this.idTextSpeed.setText(("Speed: " + textSpeed));
+        } else {
+          if ((this.intSpeed == 3)) {
+            textSpeed = "FASTER";
+            StaticVars.speed = 30;
+            this.idTextSpeed.setText(("Speed: " + textSpeed));
+          } else {
+            textSpeed = "The FLASH";
+            StaticVars.speed = 0;
+            this.idTextSpeed.setText(("Speed of " + textSpeed));
+          }
+        }
       }
     }
-    this.idTextSpeed.setText(("Speed: " + textSpeed));
   }
   
   @Pure
@@ -280,6 +294,11 @@ public class TaquinFxViewerController extends FxViewerController {
                       boolean _equals_5 = color.equals("orange");
                       if (_equals_5) {
                         rect.setFill(Color.DARKORANGE);
+                      } else {
+                        boolean _equals_6 = color.equals("turquoise");
+                        if (_equals_6) {
+                          rect.setFill(Color.DARKTURQUOISE);
+                        }
                       }
                     }
                   }
