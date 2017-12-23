@@ -12,7 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -155,13 +155,16 @@ public class TaquinFxViewerController extends FxViewerController {
   private TextField size;
   
   @FXML
-  private CheckBox distribuited;
-  
-  @FXML
   private Slider idSliderSpeed;
   
   @FXML
   private Text idTextSpeed;
+  
+  @FXML
+  private RadioButton idRadioCentralized;
+  
+  @FXML
+  private RadioButton idRadioDistributed;
   
   @FXML
   public void RefreshSpeed() {
@@ -203,8 +206,8 @@ public class TaquinFxViewerController extends FxViewerController {
   }
   
   @Pure
-  public boolean getDistribuitedVal() {
-    return this.distribuited.isSelected();
+  public boolean getDistributedVal() {
+    return this.idRadioDistributed.isSelected();
   }
   
   @FXML
@@ -219,7 +222,7 @@ public class TaquinFxViewerController extends FxViewerController {
         this.pane.getChildren().add(this.gridDisplay.display);
       }
       StaticVars.problemSize = this.getProbSize();
-      StaticVars.isDistributed = this.getDistribuitedVal();
+      StaticVars.isDistributed = this.getDistributedVal();
       ConfigureSimulation event = new ConfigureSimulation();
       boolean _xifexpression = false;
       if ((!this.launched)) {
