@@ -43,8 +43,6 @@ import fr.utbm.ia54.Class.StaticVars
 agent FrameAgent {
 	uses Logging, Lifecycle, Schedules, InnerContextAccess, DefaultContextInteractions, Behaviors
 
-	// PathCalculation
-	val TIMEOUT = 300
 	//var lastInitiatedAssault = 0l
 	var previousPathCalculationId : long
 	var previousPathCalculationJumpValue : int
@@ -222,7 +220,7 @@ agent FrameAgent {
 		
 		else if (StaticVars.isDistributed) {
 			wake(new PathCalculation(System.currentTimeMillis, occurrence.source.UUID, occurrence.direction, System.currentTimeMillis, PathStatus.GOOD, false, 0, new ArrayList<FrameAgent>))
-			in (TIMEOUT) [emit(new PathCalculationTimeOut(), Scopes.addresses(defaultSpace.getAddress(occurrence.source.UUID)))]
+			in (StaticVars.timeout) [emit(new PathCalculationTimeOut(), Scopes.addresses(defaultSpace.getAddress(occurrence.source.UUID)))]
 		}
 	}
 	
@@ -230,7 +228,7 @@ agent FrameAgent {
 	on PathCalculation {
 		
 		// Discard message if timeout
-		if (System.currentTimeMillis - TIMEOUT > occurrence.timeStamp)
+		if (System.currentTimeMillis - StaticVars.timeout > occurrence.timeStamp)
 			return;
 		
 		// Discard message if I am the one who initiated the attack

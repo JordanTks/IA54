@@ -56,8 +56,6 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SarlElementType(17)
 @SuppressWarnings("all")
 public class FrameAgent extends Agent {
-  private final int TIMEOUT = 300;
-  
   private long previousPathCalculationId;
   
   private int previousPathCalculationJumpValue;
@@ -292,7 +290,7 @@ public class FrameAgent extends Agent {
           DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
           _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_pathCalculationTimeOut, Scopes.addresses(_$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.getDefaultSpace().getAddress(occurrence.getSource().getUUID())));
         };
-        _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER.in(this.TIMEOUT, _function);
+        _$CAPACITY_USE$IO_SARL_CORE_SCHEDULES$CALLER.in(StaticVars.timeout, _function);
       }
     }
   }
@@ -306,7 +304,7 @@ public class FrameAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$PathCalculation$7(final PathCalculation occurrence) {
     long _currentTimeMillis = System.currentTimeMillis();
-    long _minus = (_currentTimeMillis - this.TIMEOUT);
+    long _minus = (_currentTimeMillis - StaticVars.timeout);
     boolean _greaterThan = (_minus > occurrence.timeStamp);
     if (_greaterThan) {
       return;
@@ -991,8 +989,6 @@ public class FrameAgent extends Agent {
     if (getClass() != obj.getClass())
       return false;
     FrameAgent other = (FrameAgent) obj;
-    if (other.TIMEOUT != this.TIMEOUT)
-      return false;
     if (other.previousPathCalculationId != this.previousPathCalculationId)
       return false;
     if (other.previousPathCalculationJumpValue != this.previousPathCalculationJumpValue)
@@ -1056,7 +1052,6 @@ public class FrameAgent extends Agent {
   public int hashCode() {
     int result = super.hashCode();
     final int prime = 31;
-    result = prime * result + this.TIMEOUT;
     result = prime * result + (int) (this.previousPathCalculationId ^ (this.previousPathCalculationId >>> 32));
     result = prime * result + this.previousPathCalculationJumpValue;
     result = prime * result + this.nbAck;
