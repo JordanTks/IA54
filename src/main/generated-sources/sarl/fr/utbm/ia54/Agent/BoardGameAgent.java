@@ -288,13 +288,19 @@ public class BoardGameAgent extends Agent {
     if ((!occurrence.success)) {
       int _timeout = StaticVars.timeout;
       StaticVars.timeout = (_timeout * 2);
+      int _consecutiveFailures = StaticVars.consecutiveFailures;
+      StaticVars.consecutiveFailures = (_consecutiveFailures + 1);
     } else {
       StaticVars.timeout = ((int) (0.9 * StaticVars.timeout));
       int _timeout_1 = StaticVars.timeout;
       StaticVars.timeout = (_timeout_1 + 1);
+      StaticVars.consecutiveFailures = 0;
     }
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(("Current timeout : " + Integer.valueOf(StaticVars.timeout)));
+    if ((StaticVars.consecutiveFailures >= 20)) {
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.error("ERROR 04 : TOO MANY CONSECUTIVE FAILURES. STOPPING THE ATTEMTPS");
+      return;
+    }
     ArrayList<TileAgent> _get = this.tokenPriorityList.get(0);
     for (final TileAgent t : _get) {
       boolean _isHappy = t.getIsHappy();

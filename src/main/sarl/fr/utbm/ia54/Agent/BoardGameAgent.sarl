@@ -249,17 +249,29 @@ agent BoardGameAgent {
 
 	on TokenReleased {
 		
-		// Self adapting timeout
+		// Self adapting timeout & fail detection
 		if (!occurrence.success)
 		{
 			StaticVars.timeout *= 2
+			
+			StaticVars.consecutiveFailures += 1
 		}
 		else {
 			StaticVars.timeout =  (0.9 * StaticVars.timeout) as int
 			StaticVars.timeout += 1
+
+			StaticVars.consecutiveFailures = 0
 		}
 		
-		info("Current timeout : " + StaticVars.timeout)
+		// info("Current timeout : " + StaticVars.timeout)
+		
+		// Fail detection
+		if (StaticVars.consecutiveFailures >= 20)
+		{
+			error("ERROR 04 : TOO MANY CONSECUTIVE FAILURES. STOPPING THE ATTEMTPS")
+			return
+		}
+		
 		
 //		Thread.sleep(3000)
 		for (t : tokenPriorityList.get(0))
