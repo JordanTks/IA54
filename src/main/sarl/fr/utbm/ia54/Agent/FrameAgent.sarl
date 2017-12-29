@@ -531,8 +531,8 @@ agent FrameAgent {
 		// We have nothing. We will try releasing the token hopping this solves something
 		else
 		{
-			error("Error 03 : No path found in time at the end of PathCalculation spreading.")
-			emit (new TokenReleased)
+			error("Warning/Error 03 : No path found in time at the end of PathCalculation spreading.")
+			emit (new TokenReleased(false))
 		}
 	}
 	

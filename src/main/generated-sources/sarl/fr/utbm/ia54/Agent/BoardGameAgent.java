@@ -285,6 +285,16 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$TokenReleased$3(final TokenReleased occurrence) {
+    if ((!occurrence.success)) {
+      int _timeout = StaticVars.timeout;
+      StaticVars.timeout = (_timeout * 2);
+    } else {
+      StaticVars.timeout = ((int) (0.9 * StaticVars.timeout));
+      int _timeout_1 = StaticVars.timeout;
+      StaticVars.timeout = (_timeout_1 + 1);
+    }
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(("Current timeout : " + Integer.valueOf(StaticVars.timeout)));
     ArrayList<TileAgent> _get = this.tokenPriorityList.get(0);
     for (final TileAgent t : _get) {
       boolean _isHappy = t.getIsHappy();
@@ -346,8 +356,8 @@ public class BoardGameAgent extends Agent {
         this.tokenPriorityList.remove(0);
         boolean _isEmpty = this.tokenPriorityList.isEmpty();
         if (_isEmpty) {
-          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.error("PUZZLE SEEMS TO BE SOLVED ! Congratulations, you win!");
+          Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+          _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.error("PUZZLE SEEMS TO BE SOLVED ! Congratulations, you win!");
           return;
         }
         int _size = this.tokenPriorityList.get(0).size();

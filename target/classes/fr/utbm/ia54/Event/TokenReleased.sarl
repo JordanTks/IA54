@@ -6,4 +6,15 @@ package fr.utbm.ia54.Event
  * @author Aloïs
  * 
  */
-event TokenReleased
+event TokenReleased {
+	
+	var success = true // true when the previous token was used to successfully find a path
+	
+	new () {
+		
+	}
+	
+	new (s : boolean) {
+		this.success = s
+	}
+}

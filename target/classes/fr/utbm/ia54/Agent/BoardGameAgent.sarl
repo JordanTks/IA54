@@ -248,6 +248,19 @@ agent BoardGameAgent {
 	}
 
 	on TokenReleased {
+		
+		// Self adapting timeout
+		if (!occurrence.success)
+		{
+			StaticVars.timeout *= 2
+		}
+		else {
+			StaticVars.timeout =  (0.9 * StaticVars.timeout) as int
+			StaticVars.timeout += 1
+		}
+		
+		info("Current timeout : " + StaticVars.timeout)
+		
 //		Thread.sleep(3000)
 		for (t : tokenPriorityList.get(0))
 		{
