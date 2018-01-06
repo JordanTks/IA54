@@ -9,9 +9,6 @@ import io.sarl.lang.core.Event;
 import java.util.LinkedHashMap;
 import org.eclipse.xtext.xbase.lib.Pure;
 
-/**
- * @author Norgannon
- */
 @SarlSpecification("0.6")
 @SarlElementType(14)
 @SuppressWarnings("all")

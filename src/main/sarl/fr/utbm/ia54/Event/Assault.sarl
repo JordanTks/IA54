@@ -18,7 +18,7 @@ event Assault {
 	var direction : Direction
 	var isAttacked : boolean
 	
-	new (a : ArrayList, b : Direction) {
+	new (a : ArrayList<TileAgent>, b : Direction) {
 		this.path = a
 		this.direction = b
 	}

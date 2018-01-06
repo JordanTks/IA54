@@ -9,7 +9,6 @@ import io.sarl.core.Logging
 import io.sarl.core.Lifecycle
 import io.sarl.core.Schedules
 import io.sarl.core.DefaultContextInteractions
-import io.sarl.core.InnerContextAccess
 import fr.utbm.ia54.Event.Assault
 import fr.utbm.ia54.Event.FrameSet
 import java.util.UUID
@@ -36,12 +35,8 @@ import fr.utbm.ia54.Enum.Satisfaction
 import fr.utbm.ia54.Enum.PathStatus
 import fr.utbm.ia54.Class.StaticVars
 
-/** 
- * @author Jordan
- * 
- */
 agent FrameAgent {
-	uses Logging, Lifecycle, Schedules, InnerContextAccess, DefaultContextInteractions, Behaviors
+	uses Logging, Lifecycle, Schedules, DefaultContextInteractions, Behaviors
 
 	//var lastInitiatedAssault = 0l
 	var previousPathCalculationId : long
@@ -73,7 +68,6 @@ agent FrameAgent {
 	// Temporary knowledge
 	var neighbourSatisfaction = new LinkedHashMap<Direction, Satisfaction>()
 	
-	var ready = false 
 	var problemSize = -1
 
 	var idNum = -1
@@ -241,7 +235,7 @@ agent FrameAgent {
 		
 		// Check already forwarded path calculations to avoid spreading useless events
 		// This implementation does NOT work if there are multiple different path calculations at once
-		// -> The following would have to be modified
+		// -> The following block would have to be modified
 		
 		// If the previous request was for the same path calculation ...
 		if (previousPathCalculationId === occurrence.requestId)
@@ -314,12 +308,6 @@ agent FrameAgent {
 			}	
 		}
 
-		//info("PathCalculation DEBUGG : status : " + newPathStatus)
-		/*info("PathCalculation DEBUGG : previous status : " + occurrence.pathStatus)
-		for (a : occurrence.path) {
-			info("path : " + a.numFrame)
-		}*/
-		
 		// If we are a corner, we forward the PathCalculation with the info it comes from a corner
 		var isACorner = false
 
@@ -486,33 +474,6 @@ agent FrameAgent {
 
 	// Time is up to find new paths, we now use the best path we found
 	on PathCalculationTimeOut {
-		
-		// DEBUGGING PATHFINDING
-		//info("DEBUGG : PathCalculationTimeOut")
-		
-		/*if (bestGoodPath !== null)
-		{
-			info("DEBUGG : There is a good path (length : " + bestGoodPath.size + ")")
-			for (f : bestGoodPath)
-				info("DEBUGG : GOOD PATH > " + f.numFrame)
-		}
-
-		if (bestBadPath !== null) {
-			info("DEBUGG : There is a bad path (length : " + bestBadPath.size + ")")
-			for (f : bestBadPath)
-				info("DEBUGG : BAD PATH > " + f.numFrame)
-		}
-
-		if (bestTerriblePath !== null) {
-			info("DEBUGG : There is a bad path (length : " + bestTerriblePath.size + ")")
-			for (f : bestTerriblePath)
-				info("DEBUGG : TERRIBLE PATH > " + f.numFrame)
-		}*/
-		
-		// DEBUGG
-		/*emit(new TokenReleased())
-		if (true)
-			return;*/
 		
 		// We have a good clean path
 		if (bestGoodPath !== null)

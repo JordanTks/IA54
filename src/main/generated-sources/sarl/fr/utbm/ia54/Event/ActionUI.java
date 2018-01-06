@@ -1,4 +1,4 @@
-package fr.utbm.taquin.events;
+package fr.utbm.ia54.Event;
 
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
@@ -7,9 +7,6 @@ import io.sarl.lang.core.Event;
 import java.util.Objects;
 import org.eclipse.xtext.xbase.lib.Pure;
 
-/**
- * @author Moi
- */
 @SarlSpecification("0.6")
 @SarlElementType(14)
 @SuppressWarnings("all")

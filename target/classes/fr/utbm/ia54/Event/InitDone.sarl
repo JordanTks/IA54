@@ -1,14 +1,7 @@
-/** 
- * 
- */
-package fr.utbm.taquin.events
+package fr.utbm.ia54.Event
 
 import java.util.List
 
-/** 
- * @author Moi
- * 
- */
 event InitDone {
 	var listPos : List<Integer>
 	

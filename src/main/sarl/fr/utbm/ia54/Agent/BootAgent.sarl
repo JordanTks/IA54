@@ -6,7 +6,6 @@ import fr.utbm.ia54.gui.fx.EndSimulation
 import io.sarl.core.InnerContextAccess
 import io.sarl.core.Lifecycle
 import fr.utbm.ia54.Event.ConfigureSimulation
-import fr.utbm.ia54.Event.CreateMap
 import fr.utbm.ia54.gui.TaquinFxViewerController
 import io.sarl.core.Behaviors
 import io.sarl.core.DefaultContextInteractions

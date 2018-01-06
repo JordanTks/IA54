@@ -7,6 +7,7 @@ import fr.utbm.ia54.Agent.TileAgent;
 import fr.utbm.ia54.Class.CoordPair;
 import fr.utbm.ia54.Class.InfosFrame;
 import fr.utbm.ia54.Class.StaticVars;
+import fr.utbm.ia54.Event.ActionUI;
 import fr.utbm.ia54.Event.EndAgent;
 import fr.utbm.ia54.Event.FindPathWithAstarAlgo;
 import fr.utbm.ia54.Event.FrameSet;
@@ -15,7 +16,6 @@ import fr.utbm.ia54.Event.TokenReceived;
 import fr.utbm.ia54.Event.TokenReleased;
 import fr.utbm.ia54.Event.UpdateGUI;
 import fr.utbm.ia54.gui.TaquinFxViewerController;
-import fr.utbm.taquin.events.ActionUI;
 import io.sarl.core.AgentTask;
 import io.sarl.core.Behaviors;
 import io.sarl.core.DefaultContextInteractions;
@@ -293,7 +293,7 @@ public class BoardGameAgent extends Agent {
     } else {
       StaticVars.timeout = ((int) (0.9 * StaticVars.timeout));
       int _timeout_1 = StaticVars.timeout;
-      StaticVars.timeout = (_timeout_1 + 1);
+      StaticVars.timeout = (_timeout_1 + 3);
       StaticVars.consecutiveFailures = 0;
     }
     this.ctrl.updateTimeoutUi();

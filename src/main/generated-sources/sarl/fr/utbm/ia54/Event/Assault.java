@@ -19,7 +19,7 @@ public class Assault extends Event {
   
   public boolean isAttacked;
   
-  public Assault(final ArrayList a, final Direction b) {
+  public Assault(final ArrayList<TileAgent> a, final Direction b) {
     this.path = a;
     this.direction = b;
   }
@@ -69,5 +69,5 @@ public class Assault extends Event {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = -527135413L;
+  private final static long serialVersionUID = -1563147020L;
 }

@@ -1,7 +1,5 @@
 package fr.utbm.ia54.Event
 
-import java.util.Collection
-
 event ConfigureSimulation 
 
 event CreateMap

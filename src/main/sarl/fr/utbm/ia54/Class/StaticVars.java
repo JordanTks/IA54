@@ -9,5 +9,5 @@ public abstract class StaticVars {
 	public static int consecutiveFailures = 0;
 	
 	// Timeout for distributed version
-	public static int timeout = 20;
+	public static int timeout = 30;
 }

@@ -2,10 +2,7 @@
  * 
  */
 package fr.utbm.ia54.Event
-/** 
- * @author Aloïs
- * 
- */
+
 event TokenReleased {
 	
 	var success = true // true when the previous token was used to successfully find a path

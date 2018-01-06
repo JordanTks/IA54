@@ -15,7 +15,7 @@ import io.sarl.util.Scopes
 import fr.utbm.ia54.Event.TokenReleased
 import io.sarl.core.Behaviors
 import fr.utbm.ia54.gui.TaquinFxViewerController
-import fr.utbm.taquin.events.ActionUI
+import fr.utbm.ia54.Event.ActionUI
 import java.util.UUID
 import fr.utbm.ia54.Class.CoordPair
 import fr.utbm.ia54.Class.InfosFrame
@@ -256,7 +256,7 @@ agent BoardGameAgent {
 		}
 		else {
 			StaticVars.timeout =  (0.9 * StaticVars.timeout) as int
-			StaticVars.timeout += 1
+			StaticVars.timeout += 3 // lower timeout allowed is 30 ms
 
 			StaticVars.consecutiveFailures = 0
 		} 
@@ -270,8 +270,7 @@ agent BoardGameAgent {
 			return
 		}
 		
-		
-//		Thread.sleep(3000)
+		// Setting boolean property 'had the token' & purple colour
 		for (t : tokenPriorityList.get(0))
 		{
 			if (t.isHappy) {
@@ -337,7 +336,7 @@ agent BoardGameAgent {
 			}
 			// Else ... get to the next list by looping
 			
-			// Updating nbActiveNeighbours in new outside arc
+			// Updating nbActiveNeighbours in new outer arc
 			var firstCorner = tokenPriorityList.get(0).get((tokenPriorityList.get(0).size / 2)).numTile
 			var secondCorner = tokenPriorityList.get(0).get(tokenPriorityList.get(0).size - 1).numTile
 			

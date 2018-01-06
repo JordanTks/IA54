@@ -1,11 +1,8 @@
 /** 
  * 
  */
-package fr.utbm.taquin.events
-/** 
- * @author Moi
- * 
- */
+package fr.utbm.ia54.Event
+
 event ActionUI {
 	var prop : String
 	var target : int

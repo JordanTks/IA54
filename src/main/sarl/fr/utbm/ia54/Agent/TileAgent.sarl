@@ -10,7 +10,7 @@ import fr.utbm.ia54.Event.Assault
 import fr.utbm.ia54.Event.TokenReleased
 import io.sarl.util.Scopes
 import java.util.UUID
-import fr.utbm.taquin.events.ActionUI
+import fr.utbm.ia54.Event.ActionUI
 import fr.utbm.ia54.Event.AskNeighbourSatisfaction
 import fr.utbm.ia54.Event.ResponseNeighbourSatisfaction
 import fr.utbm.ia54.Event.EndAgent
@@ -98,18 +98,6 @@ agent TileAgent {
 			var b = chooseTarget
 			
 		}
-		
-   
-   		// old comments : [
-   
-		// si (mon_etat = agressé)
-		// j'agresse un voisin pour fuir
-		
-			// sinon si (mon_humeur = satisfait)
-		// je transmet le token gratuitement à quelqu'un sans l'agresser
-		
-			// sinon si (mon_humeur = non_satisfait)
-		// j'agresse un voisin pour accroitre ma satisfaction]
 		
 	}
 	  

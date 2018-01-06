@@ -4,14 +4,9 @@
 package fr.utbm.ia54.Event
 
 import java.util.LinkedHashMap
-import java.util.UUID
 import fr.utbm.ia54.Enum.Direction
 import fr.utbm.ia54.Enum.Satisfaction
 
-/** 
- * @author Norgannon
- * 
- */
 event ResponseNeighbourSatisfaction {
 
 	// Data to return from asked frame to the frame who asked

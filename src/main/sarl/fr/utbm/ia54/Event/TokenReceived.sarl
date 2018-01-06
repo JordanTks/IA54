@@ -3,15 +3,9 @@
  */
 package fr.utbm.ia54.Event
 
-import java.util.UUID
+// Event sent to a tile to tell it, it can assault one of its neighbours.
+// No information is sent with the token. This is just a signal.
 
-/** 
- * @author Norgannon
- *  
- */
 event TokenReceived {
-	/*var targetFrame : int 
-	new (t : int) {
-		this.targetFrame = t
-	}*/
+
 }

@@ -23,7 +23,6 @@ import fr.utbm.ia54.Event.UpdateProblemInformations;
 import io.sarl.core.Behaviors;
 import io.sarl.core.DefaultContextInteractions;
 import io.sarl.core.Initialize;
-import io.sarl.core.InnerContextAccess;
 import io.sarl.core.Lifecycle;
 import io.sarl.core.Logging;
 import io.sarl.core.Schedules;
@@ -49,9 +48,6 @@ import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.eclipse.xtext.xbase.lib.Pure;
 
-/**
- * @author Jordan
- */
 @SarlSpecification("0.6")
 @SarlElementType(17)
 @SuppressWarnings("all")
@@ -93,8 +89,6 @@ public class FrameAgent extends Agent {
   private int hostedNumTile;
   
   private LinkedHashMap<Direction, Satisfaction> neighbourSatisfaction = new LinkedHashMap<Direction, Satisfaction>();
-  
-  private boolean ready = false;
   
   private int problemSize = (-1);
   
@@ -831,21 +825,6 @@ public class FrameAgent extends Agent {
   }
   
   @Extension
-  @ImportedCapacityFeature(InnerContextAccess.class)
-  @SyntheticMember
-  private transient ClearableReference<Skill> $CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS;
-  
-  @SyntheticMember
-  @Pure
-  @Inline(value = "$castSkill(InnerContextAccess.class, ($0$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS == null || $0$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS.get() == null) ? ($0$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS = $0$getSkill(InnerContextAccess.class)) : $0$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS)", imported = InnerContextAccess.class)
-  private InnerContextAccess $CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS$CALLER() {
-    if (this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS == null || this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS.get() == null) {
-      this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS = $getSkill(InnerContextAccess.class);
-    }
-    return $castSkill(InnerContextAccess.class, this.$CAPACITY_USE$IO_SARL_CORE_INNERCONTEXTACCESS);
-  }
-  
-  @Extension
   @ImportedCapacityFeature(DefaultContextInteractions.class)
   @SyntheticMember
   private transient ClearableReference<Skill> $CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS;
@@ -1020,8 +999,6 @@ public class FrameAgent extends Agent {
     }
     if (other.hostedNumTile != this.hostedNumTile)
       return false;
-    if (other.ready != this.ready)
-      return false;
     if (other.problemSize != this.problemSize)
       return false;
     if (other.idNum != this.idNum)
@@ -1065,7 +1042,6 @@ public class FrameAgent extends Agent {
     result = prime * result + java.util.Objects.hashCode(this.westNeighbour);
     result = prime * result + java.util.Objects.hashCode(this.hostedTile);
     result = prime * result + this.hostedNumTile;
-    result = prime * result + (this.ready ? 1231 : 1237);
     result = prime * result + this.problemSize;
     result = prime * result + this.idNum;
     result = prime * result + this.idNumFromZero;
