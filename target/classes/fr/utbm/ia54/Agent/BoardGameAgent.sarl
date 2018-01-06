@@ -146,7 +146,7 @@ agent BoardGameAgent {
 	
 				// COMMUNICATION AVEC UI
 				// emit(new InitDone(startingTiles))
-				ctrl.monTest(startingTiles);
+				ctrl.constructGrid(startingTiles);
 				
 				// Spawn tile agents (num tile/UUID frame/num frame/ problem size)
 				for (var i = 0; i < Math.pow(PROBLEM_SIZE, 2) - 1; i++)
@@ -248,18 +248,18 @@ agent BoardGameAgent {
 	on TokenReleased {
 		
 		// Self adapting timeout & fail detection
-		if (!occurrence.success)
-		{
-			StaticVars.timeout *= 2
-			
-			StaticVars.consecutiveFailures += 1
-		}
-		else {
-			StaticVars.timeout =  (0.9 * StaticVars.timeout) as int
-			StaticVars.timeout += 3 // lower timeout allowed is 30 ms
+		if (!StaticVars.isTimeFix) {
+			if (!occurrence.success) {
+				StaticVars.timeout *= 2
 
-			StaticVars.consecutiveFailures = 0
-		} 
+				StaticVars.consecutiveFailures += 1
+			} else {
+				StaticVars.timeout = (0.9 * StaticVars.timeout) as int
+				StaticVars.timeout += 3 // lower timeout allowed is 30 ms
+				StaticVars.consecutiveFailures = 0
+			}
+		}
+ 
 		
 		ctrl.updateTimeoutUi()
 		
@@ -1045,7 +1045,6 @@ agent BoardGameAgent {
 	def resetAllObjects {
 		openListOfFrames.clear
 		closedListOfFrames.clear
-		ctrl.reset
 	}
 	
 	// receive the event to execute the algo A*

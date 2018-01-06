@@ -184,7 +184,7 @@ public class BoardGameAgent extends Agent {
         Collections.shuffle(startingTiles);
         Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
         _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(("Starting positions " + startingTiles));
-        this.ctrl.monTest(startingTiles);
+        this.ctrl.constructGrid(startingTiles);
         for (int i = 0; (i < (Math.pow(this.PROBLEM_SIZE, 2) - 1)); i++) {
           {
             Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
@@ -285,16 +285,18 @@ public class BoardGameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$TokenReleased$3(final TokenReleased occurrence) {
-    if ((!occurrence.success)) {
-      int _timeout = StaticVars.timeout;
-      StaticVars.timeout = (_timeout * 2);
-      int _consecutiveFailures = StaticVars.consecutiveFailures;
-      StaticVars.consecutiveFailures = (_consecutiveFailures + 1);
-    } else {
-      StaticVars.timeout = ((int) (0.9 * StaticVars.timeout));
-      int _timeout_1 = StaticVars.timeout;
-      StaticVars.timeout = (_timeout_1 + 3);
-      StaticVars.consecutiveFailures = 0;
+    if ((!StaticVars.isTimeFix)) {
+      if ((!occurrence.success)) {
+        int _timeout = StaticVars.timeout;
+        StaticVars.timeout = (_timeout * 2);
+        int _consecutiveFailures = StaticVars.consecutiveFailures;
+        StaticVars.consecutiveFailures = (_consecutiveFailures + 1);
+      } else {
+        StaticVars.timeout = ((int) (0.9 * StaticVars.timeout));
+        int _timeout_1 = StaticVars.timeout;
+        StaticVars.timeout = (_timeout_1 + 3);
+        StaticVars.consecutiveFailures = 0;
+      }
     }
     this.ctrl.updateTimeoutUi();
     if ((StaticVars.consecutiveFailures >= 20)) {
@@ -1205,7 +1207,6 @@ public class BoardGameAgent extends Agent {
   protected void resetAllObjects() {
     this.openListOfFrames.clear();
     this.closedListOfFrames.clear();
-    this.ctrl.reset();
   }
   
   @SyntheticMember

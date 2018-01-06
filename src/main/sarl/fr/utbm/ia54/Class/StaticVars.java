@@ -10,4 +10,6 @@ public abstract class StaticVars {
 	
 	// Timeout for distributed version
 	public static int timeout = 30;
+	
+	public static boolean isTimeFix = false;
 }

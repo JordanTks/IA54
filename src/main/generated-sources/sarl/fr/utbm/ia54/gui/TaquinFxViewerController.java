@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -146,6 +147,10 @@ public class TaquinFxViewerController extends FxViewerController {
   
   private int intSpeed = 0;
   
+  private boolean istimeFix = false;
+  
+  private int timeout = 30;
+  
   private TaquinFxViewerController.GridDisplay gridDisplay = new TaquinFxViewerController.GridDisplay(0, 0);
   
   @FXML
@@ -168,6 +173,12 @@ public class TaquinFxViewerController extends FxViewerController {
   
   @FXML
   private RadioButton idRadioDistributed;
+  
+  @FXML
+  private CheckBox checkTime;
+  
+  @FXML
+  private TextField time;
   
   @FXML
   public void RefreshSpeed() {
@@ -226,6 +237,12 @@ public class TaquinFxViewerController extends FxViewerController {
       }
       StaticVars.problemSize = this.getProbSize();
       StaticVars.isDistributed = this.getDistributedVal();
+      StaticVars.isTimeFix = this.istimeFix;
+      if (this.istimeFix) {
+        StaticVars.timeout = Integer.parseInt(this.time.getText());
+      } else {
+        StaticVars.timeout = 30;
+      }
       ConfigureSimulation event = new ConfigureSimulation();
       boolean _xifexpression = false;
       if ((!this.launched)) {
@@ -249,14 +266,14 @@ public class TaquinFxViewerController extends FxViewerController {
   
   @FXML
   @Pure
-  public void monTest(final List<Integer> a) {
+  public void constructGrid(final List<Integer> list) {
     abstract class __TaquinFxViewerController_0 implements Runnable {
       public abstract void run();
     }
     
     __TaquinFxViewerController_0 ___TaquinFxViewerController_0 = new __TaquinFxViewerController_0() {
       public void run() {
-        TaquinFxViewerController.this.gridDisplay.construct(a);
+        TaquinFxViewerController.this.gridDisplay.construct(list);
       }
     };
     Platform.runLater(___TaquinFxViewerController_0);
@@ -320,14 +337,25 @@ public class TaquinFxViewerController extends FxViewerController {
   }
   
   @FXML
+  public boolean disabledTime() {
+    boolean _xblockexpression = false;
+    {
+      this.time.setDisable(this.istimeFix);
+      _xblockexpression = this.istimeFix = (!this.istimeFix);
+    }
+    return _xblockexpression;
+  }
+  
+  @FXML
   @Pure
-  public void reset() {
+  public void updateTimeoutUi() {
     abstract class __TaquinFxViewerController_2 implements Runnable {
       public abstract void run();
     }
     
     __TaquinFxViewerController_2 ___TaquinFxViewerController_2 = new __TaquinFxViewerController_2() {
       public void run() {
+        TaquinFxViewerController.this.timeOut.setText(("" + Integer.valueOf(StaticVars.timeout)));
       }
     };
     Platform.runLater(___TaquinFxViewerController_2);
@@ -335,27 +363,12 @@ public class TaquinFxViewerController extends FxViewerController {
   
   @FXML
   @Pure
-  public void updateTimeoutUi() {
+  public void swap(final int number) {
     abstract class __TaquinFxViewerController_3 implements Runnable {
       public abstract void run();
     }
     
     __TaquinFxViewerController_3 ___TaquinFxViewerController_3 = new __TaquinFxViewerController_3() {
-      public void run() {
-        TaquinFxViewerController.this.timeOut.setText(("" + Integer.valueOf(StaticVars.timeout)));
-      }
-    };
-    Platform.runLater(___TaquinFxViewerController_3);
-  }
-  
-  @FXML
-  @Pure
-  public void swap(final int number) {
-    abstract class __TaquinFxViewerController_4 implements Runnable {
-      public abstract void run();
-    }
-    
-    __TaquinFxViewerController_4 ___TaquinFxViewerController_4 = new __TaquinFxViewerController_4() {
       public void run() {
         ObservableList<Node> listTiles = TaquinFxViewerController.this.gridDisplay.tilePane.getChildren();
         Text tile1 = null;
@@ -388,7 +401,7 @@ public class TaquinFxViewerController extends FxViewerController {
         tile2.setText(" ");
       }
     };
-    Platform.runLater(___TaquinFxViewerController_4);
+    Platform.runLater(___TaquinFxViewerController_3);
   }
   
   @Override
@@ -408,6 +421,10 @@ public class TaquinFxViewerController extends FxViewerController {
       return false;
     if (other.intSpeed != this.intSpeed)
       return false;
+    if (other.istimeFix != this.istimeFix)
+      return false;
+    if (other.timeout != this.timeout)
+      return false;
     return super.equals(obj);
   }
   
@@ -420,6 +437,8 @@ public class TaquinFxViewerController extends FxViewerController {
     result = prime * result + (this.launched ? 1231 : 1237);
     result = prime * result + (this.mapCreated ? 1231 : 1237);
     result = prime * result + this.intSpeed;
+    result = prime * result + (this.istimeFix ? 1231 : 1237);
+    result = prime * result + this.timeout;
     return result;
   }
   

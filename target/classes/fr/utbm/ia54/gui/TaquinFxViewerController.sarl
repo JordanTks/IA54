@@ -19,12 +19,15 @@ import javafx.scene.control.CheckBox
 import javafx.scene.control.Slider
 import fr.utbm.ia54.Class.StaticVars
 import javafx.scene.control.RadioButton
+import javafx.scene.input.KeyCode
 
 class TaquinFxViewerController extends FxViewerController { 
 
 	var launched = false
 	var mapCreated = false
 	var intSpeed = 0
+	var istimeFix = false
+	var timeout = 30
 	
 	var gridDisplay = new GridDisplay(0,0) 
 
@@ -35,6 +38,8 @@ class TaquinFxViewerController extends FxViewerController {
 	@FXML var idTextSpeed : Text
 	@FXML var idRadioCentralized : RadioButton
 	@FXML var idRadioDistributed : RadioButton
+	@FXML var checkTime : CheckBox
+	@FXML var time : TextField
 	
 	@FXML def RefreshSpeed {
 		intSpeed = idSliderSpeed.value as int
@@ -90,6 +95,10 @@ class TaquinFxViewerController extends FxViewerController {
 		
 		StaticVars.problemSize = probSize
 		StaticVars.isDistributed = distributedVal
+		StaticVars.isTimeFix = istimeFix
+		
+		if (istimeFix) StaticVars.timeout = Integer.parseInt(time.text)
+		 else StaticVars.timeout = 30
 
 		// Send event
 		var ^event = new ConfigureSimulation()
@@ -102,11 +111,11 @@ class TaquinFxViewerController extends FxViewerController {
 		}
 	}
 
-	@FXML def monTest(a : List<Integer>) {
+	@FXML def constructGrid(list : List<Integer>) {
 		
 		Platform.runLater(new Runnable(){
 		def run {
-			gridDisplay.construct(a)
+			gridDisplay.construct(list)
 		}
 		});
 		
@@ -146,21 +155,11 @@ class TaquinFxViewerController extends FxViewerController {
 		});
 	}
 	
-	@FXML def reset() {
-		Platform.runLater(
-			new Runnable() {
-				def run {
-/*
-					var listTiles = gridDisplay.tilePane.children
-					for (var i = 0; i < listTiles.size; i++) {
-						var t = listTiles.get(i) as Text
-						t.fill = Color.BLACK
-					}
-*/
-				}
-			}
-		)
+	@FXML def disabledTime() {
+		time.disable = istimeFix;
+		istimeFix = !istimeFix
 	}
+	
 	
 	@FXML def updateTimeoutUi() {
 		Platform.runLater( 
@@ -210,7 +209,6 @@ class TaquinFxViewerController extends FxViewerController {
 					
 					tile1.text = tile2.text
 					tile2.text = " "
-					//tile2.fill = Color.WHITE
 					//
 					
 
