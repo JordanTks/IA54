@@ -371,6 +371,7 @@ agent BoardGameAgent {
 		return false
 	}
 
+	// implementation for adding one neighbour (A* algo)
 	def addOneNeighbourFrameImplements(currentFrame : FrameAgent, neighbour : UUID) {
 
 		var index = frameUUIDList.indexOf(neighbour)
@@ -425,6 +426,7 @@ agent BoardGameAgent {
 		}
 	}
 
+	// determinate if there is a corner and which one (A* algo)
 	def addOneNeighbourFrame(currentFrame : FrameAgent, neighbour : UUID) {
 		var index = frameUUIDList.indexOf(neighbour)
 
@@ -456,7 +458,7 @@ agent BoardGameAgent {
 		}
 	}
 	
-	//add the neighbour's frames of the current frame
+	//add the neighbour's frames of the current frame (A* algo)
 	def addNeighbourFrames(currentFrame : FrameAgent) { 
 		if (currentFrame.southNeighbour != null) {
 			addOneNeighbourFrame(currentFrame, currentFrame.southNeighbour)
@@ -472,7 +474,7 @@ agent BoardGameAgent {
 		}
 	}
 	
-	// get the frame with best cost from the frameList
+	// get the frame with best cost from the frameList (A* algo)
 	def getBestFrame(listFrames : ArrayList<InfosFrame>) : InfosFrame {
 		if(!listFrames.empty){ // the list is not empty
 			var costF = listFrames.get(0).costF
@@ -490,7 +492,7 @@ agent BoardGameAgent {
 		return null		
 	}
 	
-	// get the frame with best cost from the frameList : FOR CORNER
+	// get the frame with best cost from the frameList : FOR CORNER (A* algo)
 	def getBestFrameForCorner(listFrames : ArrayList<InfosFrame>) : InfosFrame {
 		if(!listFrames.empty){ // the list is not empty
 			var costF = listFrames.get(0).costF
@@ -515,7 +517,7 @@ agent BoardGameAgent {
 		return null		
 	}
 	
-	//add the InfosFrame in the closedList and remove it from the openList
+	// add the InfosFrame in the closedList and remove it from the openList (A* algo)
 	def addInClosedList(coords : CoordPair){
 		var index = -1
 		for(ite : openListOfFrames){
@@ -528,7 +530,8 @@ agent BoardGameAgent {
 		openListOfFrames.remove(index) // remove it from the openList
 	}
 	
-	//get the chain of aggression in a list of InfosFrame: return ArrayList<InfosFrame>: the list of InfosFrame for the aggression in the right order
+	// get the chain of aggression in a list of InfosFrame (A* algo)
+	// return ArrayList<InfosFrame>: the list of InfosFrame for the aggression in the right order
 	def buildChainAggression(beginningFrame : InfosFrame) : ArrayList<InfosFrame> {
 		var chain = new ArrayList<InfosFrame>
 		var index = closedListOfFrames.size-1
@@ -574,6 +577,7 @@ agent BoardGameAgent {
 		return chain
 	}
 
+	// change the satisfaction of frames/tiles (A* algo)
 	def changeSatisfaction {
 
 		for (var i = 0; i < frameList.size - 1; i++) {
@@ -659,7 +663,7 @@ agent BoardGameAgent {
 
 	def whichCorner(currentFrame : InfosFrame) : int {
 
-		// top corner
+		// top left corner
 		if(topCornersList.contains(currentFrame.numFrame)){
 			return 1
 		}
@@ -675,6 +679,7 @@ agent BoardGameAgent {
 		return 0
 	}
 
+	// build the aggression path FOR CORNER (A* algo)
 	def buildChainAggressionForCorner(currentInfosFrame: InfosFrame, firstNeighbourInfosFrame: InfosFrame,
 		secondNeighbourInfosFrame: InfosFrame, thirdNeighbourInfosFrame: InfosFrame) : ArrayList<InfosFrame> {
 
@@ -702,6 +707,7 @@ agent BoardGameAgent {
 		return chainAggression
 	}
 
+	// swap for top right corner of square 3*3 (A* algo)
 	def doSwapsForTopRightCornerThreeByThree {
 
 		var currentFrame : FrameAgent
@@ -765,6 +771,7 @@ agent BoardGameAgent {
 		emit(new TokenReleased)
 	}
 
+	// select the swap for each corner (A* algo)
 	def doSwapsForCorner(currentInfosFrame : InfosFrame) {
 		
 		var currentFrame : FrameAgent
@@ -781,7 +788,7 @@ agent BoardGameAgent {
 			
 			isCorner = true
 			
-			// top corner
+			// top left corner
 			if(whichCorner == 1){
 				// info("THIS IS THE TOP CORNER")
 				
@@ -819,7 +826,7 @@ agent BoardGameAgent {
 				in(1000)[emit(new TokenReleased)]
 			}
 
-			// bottom corner of 4*4 square (or more)
+			// bottom left corner of 4*4 square (or more)
 			else if(whichCorner == 2){
 				// info("THIS IS THE BOTTOM CORNER")
 
@@ -862,7 +869,7 @@ agent BoardGameAgent {
 				emit(new TokenReleased)
 			}
 
-			// bottom corner of 3*3 square
+			// bottom left corner of 3*3 square
 			else if(whichCorner == 3){
 				// info("THIS IS THE BOTTOM CORNER OF 3*3 SQUARE")
 
@@ -953,7 +960,7 @@ agent BoardGameAgent {
 		}
 	}
 	
-	//================================================================================================================================
+	// each swapping + colorization of the aggression path + token and blank (A* algo)
 	def doSwaps(chain : ArrayList<InfosFrame>) {
 
 		var chainAggression : ArrayList<InfosFrame>
@@ -976,16 +983,12 @@ agent BoardGameAgent {
 			chainAggression = chain
 		}
 		
-		// YB
 		var listSwap : ArrayList<Integer> = new ArrayList()
 		
-		// info("---- Chain of aggression below ----")
 		for(var i=0; i<chainAggression.size; i++){
 			
 			//Frame with the Tile which wants to move 
 			if (chainAggression.get(i).coordsCurrentFrame.equals(beginningFrame.coordPair)) {
-
-				// info("BeginningFrame= " + chainAggression.get(i).coordsCurrentFrame.toString)
 				
 				for (var j = 0; j < frameList.size; j++) {
 					if (frameList.get(j).ID === chainAggression.get(i).uuidCurrentFrame) {
@@ -1019,10 +1022,7 @@ agent BoardGameAgent {
 				// info("ArrivalFrame= " + chainAggression.get(i).coordsCurrentFrame.toString)
 			}
 		}
-		
-//		Thread.sleep(StaticVars.speed)
 
-		// YB
 		Collections.reverse(listSwap)
 		for (number : listSwap) {
 			ctrl.swap(number)
@@ -1041,7 +1041,6 @@ agent BoardGameAgent {
 			isCorner = false
 		}
 	}
-	//================================================================================================================================
 	
 	// reset/clear/remove every objects used previously (TODO: add every others if necessary)
 	def resetAllObjects {
@@ -1084,7 +1083,7 @@ agent BoardGameAgent {
 		}
 	}
 	
-
+	// swapping of tokenTile and blankTile (A* algo)
 	def swapTokenAndBlank {
 		// tiles ----------------------------------------------------------
 		var tmpTOKENtileUuid : UUID
@@ -1122,42 +1121,17 @@ agent BoardGameAgent {
 		haveTokenFrame.hostedNumTile = arrivalFrame.hostedNumTile
 		arrivalFrame.hostedTile = tmpHostedTile
 		arrivalFrame.hostedNumTile = tmpHostedNumTile
-		
-
-		// if you want to LOG
-		/*info(" ")
-		info("=============== swapTokenAndBlank ===============")		
-		info("---------- Infos FRAMES for numTile/uuidTile after the swap ----------")
-		info("haveTokenFrame: idNum=" + haveTokenFrame.idNum + " /numHostedTile=" + haveTokenFrame.hostedNumTile)
-		info("arrivalFrame: idNum=" + arrivalFrame.idNum + " /numHostedTile=" + arrivalFrame.hostedNumTile)
-		for (var n = 0; n < frameList.size; n++) {
-			for (ite : frameList) {
-				if (ite.idNum === n + 1) {
-					info("frame[" + (n + 1) + "]= tile: " + ite.hostedNumTile + " / " + ite.hostedTile)
-				}
-			}
-		}
-		info("---------- Infos TILES for numFrame/uuidFrame after the swap ----------")
-		info("tile[0]= frame: " + blankTile.numFrameHost + " /" + blankTile.uuidFrameHost)
-		for (var n = 0; n < tileList.size; n++) {
-			for (ite : tileList) {
-				if (ite.numTile === n + 1) {
-					info("tile[" + (n + 1) + "]= frame: " + ite.numFrameHost + " / " + ite.uuidFrameHost 
-						+" /framehostfromzero=" + ite.numFrameHostFromZero + " /numTileFromZero=" +
-						ite.numTileFromZero)
-				}
-			}
-		}
-		info("------------------------------------------------------------------")*/ 
 				
 		changeSatisfaction
 	}
 	
+	// change the infos of arrivalFrame (A* algo)
 	def initArrivalInfosFrame(num: int, uuid: UUID, coord: CoordPair){
 		arrivalInfosFrame = new InfosFrame(uuid, coord)
 		arrivalInfosFrame.numFrame = num
 	}
 
+	// change the infos of beginningFrame (A* algo)
 	def initBeginningInfosFrame(num : int, uuid : UUID, coord : CoordPair) {
 		beginningInfosFrame = new InfosFrame(uuid, coord)
 		beginningInfosFrame.numFrame = num
@@ -1247,28 +1221,6 @@ agent BoardGameAgent {
 				}				
 			}
 		}
-		
-		// if you want to LOG
-		/*info("---------- Infos FRAMES for numTile/uuidTile after the swap ----------")
-		info("arrivalFrame= " + arrivalFrame.idNum + " / " + arrivalFrame.ID)
-		for(var n=0; n<frameList.size; n++){
-			for(ite: frameList){
-				if(ite.idNum === n+1){
-					info("frame["+(n+1)+"]= tile: "+ite.hostedNumTile+" / "+ite.hostedTile)
-				}
-			}
-		}
-
-		info("---------- Infos TILES for numFrame/uuidFrame after the swap ----------")
-		info("tile[0]= frame: "+blankTile.numFrameHost + " /" + blankTile.uuidFrameHost)
-		for (var n = 0; n < tileList.size; n++) {
-			for (ite : tileList) {
-				if (ite.numTile === n + 1) {
-					info("tile[" + (n + 1) + "]= frame: " + ite.numFrameHost + " / " + ite.uuidFrameHost)
-				}
-			}
-		}
-		info("------------------------------------------------------------------")*/
 		
 		changeSatisfaction
 	}
