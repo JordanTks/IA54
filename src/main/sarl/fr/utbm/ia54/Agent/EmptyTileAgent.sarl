@@ -28,7 +28,7 @@ agent EmptyTileAgent {
 	var uuidFrameHost : UUID
   
 	on Initialize {
-		loggingName = 'EmptyTileAgent'
+		loggingName = 'EmptyTileAgent' 
 
 		uuidFrameHost = occurrence.parameters.get(0) as UUID
 		numFrameHost = occurrence.parameters.get(1) as Integer

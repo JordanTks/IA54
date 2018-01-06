@@ -296,6 +296,7 @@ public class BoardGameAgent extends Agent {
       StaticVars.timeout = (_timeout_1 + 1);
       StaticVars.consecutiveFailures = 0;
     }
+    this.ctrl.updateTimeoutUi();
     if ((StaticVars.consecutiveFailures >= 20)) {
       Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
       _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.error("ERROR 04 : TOO MANY CONSECUTIVE FAILURES. STOPPING THE ATTEMTPS");
@@ -1400,9 +1401,29 @@ public class BoardGameAgent extends Agent {
   @SyntheticMember
   private void $behaviorUnit$UpdateGUI$6(final UpdateGUI occurrence) {
     try {
+      int cpt = 0;
       for (final FrameAgent number : occurrence.frameList) {
         {
-          this.ctrl.swap(number.getHostedNumTile());
+          int _size = occurrence.frameList.size();
+          int _minus = (_size - 2);
+          boolean _lessThan = (cpt < _minus);
+          if (_lessThan) {
+            this.ctrl.setColor("blue", Integer.valueOf(number.getHostedNumTile()));
+          }
+          cpt++;
+        }
+      }
+      int _size = occurrence.frameList.size();
+      boolean _greaterEqualsThan = (_size >= 2);
+      if (_greaterEqualsThan) {
+        int _size_1 = occurrence.frameList.size();
+        int _minus = (_size_1 - 2);
+        this.ctrl.setColor("green", 
+          Integer.valueOf(occurrence.frameList.get(_minus).getHostedNumTile()));
+      }
+      for (final FrameAgent number_1 : occurrence.frameList) {
+        {
+          this.ctrl.swap(number_1.getHostedNumTile());
           Thread.sleep(StaticVars.speed);
         }
       }

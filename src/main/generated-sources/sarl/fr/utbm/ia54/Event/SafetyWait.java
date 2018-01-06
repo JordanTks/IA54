@@ -22,7 +22,4 @@ public class SafetyWait extends Event {
   public SafetyWait(final Address source) {
     super(source);
   }
-  
-  @SyntheticMember
-  private final static long serialVersionUID = 588368462L;
 }

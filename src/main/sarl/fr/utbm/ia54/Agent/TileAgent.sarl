@@ -6,7 +6,7 @@ import io.sarl.core.Logging
 import fr.utbm.ia54.Event.TileSet
 import io.sarl.core.DefaultContextInteractions
 import fr.utbm.ia54.Event.TokenReceived
-import fr.utbm.ia54.Event.Assault
+import fr.utbm.ia54.Event.Assault 
 import fr.utbm.ia54.Event.TokenReleased
 import io.sarl.util.Scopes
 import java.util.UUID

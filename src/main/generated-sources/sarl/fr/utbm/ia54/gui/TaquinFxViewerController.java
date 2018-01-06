@@ -155,6 +155,9 @@ public class TaquinFxViewerController extends FxViewerController {
   private TextField size;
   
   @FXML
+  private Text timeOut;
+  
+  @FXML
   private Slider idSliderSpeed;
   
   @FXML
@@ -332,12 +335,27 @@ public class TaquinFxViewerController extends FxViewerController {
   
   @FXML
   @Pure
-  public void swap(final int number) {
+  public void updateTimeoutUi() {
     abstract class __TaquinFxViewerController_3 implements Runnable {
       public abstract void run();
     }
     
     __TaquinFxViewerController_3 ___TaquinFxViewerController_3 = new __TaquinFxViewerController_3() {
+      public void run() {
+        TaquinFxViewerController.this.timeOut.setText(("" + Integer.valueOf(StaticVars.timeout)));
+      }
+    };
+    Platform.runLater(___TaquinFxViewerController_3);
+  }
+  
+  @FXML
+  @Pure
+  public void swap(final int number) {
+    abstract class __TaquinFxViewerController_4 implements Runnable {
+      public abstract void run();
+    }
+    
+    __TaquinFxViewerController_4 ___TaquinFxViewerController_4 = new __TaquinFxViewerController_4() {
       public void run() {
         ObservableList<Node> listTiles = TaquinFxViewerController.this.gridDisplay.tilePane.getChildren();
         Text tile1 = null;
@@ -370,7 +388,7 @@ public class TaquinFxViewerController extends FxViewerController {
         tile2.setText(" ");
       }
     };
-    Platform.runLater(___TaquinFxViewerController_3);
+    Platform.runLater(___TaquinFxViewerController_4);
   }
   
   @Override

@@ -30,6 +30,7 @@ class TaquinFxViewerController extends FxViewerController {
 
 	@FXML var pane : Pane
 	@FXML var size : TextField
+	@FXML var timeOut : Text
 	@FXML var idSliderSpeed : Slider
 	@FXML var idTextSpeed : Text
 	@FXML var idRadioCentralized : RadioButton
@@ -156,6 +157,16 @@ class TaquinFxViewerController extends FxViewerController {
 						t.fill = Color.BLACK
 					}
 */
+				}
+			}
+		)
+	}
+	
+	@FXML def updateTimeoutUi() {
+		Platform.runLater( 
+			new Runnable() {
+				def run {
+					timeOut.text = ""+StaticVars.timeout
 				}
 			}
 		)

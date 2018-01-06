@@ -597,7 +597,7 @@ agent FrameAgent {
 		emit(new AcknowledgmentDataUpdated(), Scopes.addresses(defaultSpace.getAddress(occurrence.sendAckTo)))
 	}
 	
-	on AcknowledgmentDataUpdated {
+	on AcknowledgmentDataUpdated { 
 		
 		synchronized(nbAck) {
 			nbAck--
