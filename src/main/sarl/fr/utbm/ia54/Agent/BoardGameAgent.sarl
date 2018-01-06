@@ -62,7 +62,7 @@ agent BoardGameAgent {
 
 	var ctrl : TaquinFxViewerController
 	
-	var flagCorner = 0
+	var flagCorner = 0 // not a corner (A* algo)
 	var isCorner = false
 	var isDistributed = false
 	var nbTriesAstarAlgo = 0
@@ -431,7 +431,7 @@ agent BoardGameAgent {
 		var index = frameUUIDList.indexOf(neighbour)
 
 		// not satisfied AND not blocked AND not the FRAMEwithTokenTile
-		if ((flagCorner == 0) &&
+		if ((flagCorner == 0) && // not a corner
 			(!frameList.get(index).didMyTileMateHaveTheToken ||
 			!frameList.get(index).isSatisfied) && 
 			!frameList.get(index).isBlocked &&
@@ -439,7 +439,7 @@ agent BoardGameAgent {
 
 			addOneNeighbourFrameImplements(currentFrame, neighbour)
 		}
-
+		// the top left corner
 		else if ((flagCorner == 1) &&
 			!frameList.get(index).isSatisfied &&
 			!frameList.get(index).isBlocked &&
@@ -447,7 +447,7 @@ agent BoardGameAgent {
 			
 			addOneNeighbourFrameImplements(currentFrame, neighbour)
 		}
-
+		// the bottom left corner
 		else if ((flagCorner == 2) &&
 			!frameList.get(index).didMyTileMateHaveTheToken &&
 			// !frameList.get(index).isSatisfied &&
