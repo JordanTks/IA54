@@ -27,12 +27,12 @@
                   <Label layoutX="97.0" layoutY="12.0" prefHeight="18.0" prefWidth="42.0" text="Size :" />
                   <Slider fx:id="idSliderSpeed" blockIncrement="1.0" layoutX="12.0" layoutY="156.0" majorTickUnit="1.0" max="4.0" minorTickCount="0" onMouseReleased="#RefreshSpeed" prefHeight="24.0" prefWidth="176.0" showTickMarks="true" snapToTicks="true" value="2.0" />
                   <Text fx:id="idTextSpeed" layoutX="31.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Speed: FAST" />
-                  <RadioButton id="idRadioCentralized" fx:id="idRadioCentralized" layoutX="26.0" layoutY="77.0" mnemonicParsing="false" selected="true" text="Centralized">
+                  <RadioButton id="idRadioCentralized" fx:id="idRadioCentralized" layoutX="26.0" layoutY="77.0" mnemonicParsing="false" onAction="#changeMethod" selected="true" text="Centralized">
                      <toggleGroup>
                         <ToggleGroup fx:id="resolutionMethod" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton id="idRadioDistributed" fx:id="idRadioDistributed" layoutX="26.0" layoutY="100.0" mnemonicParsing="false" text="Distributed" toggleGroup="$resolutionMethod" />
+                  <RadioButton id="idRadioDistributed" fx:id="idRadioDistributed" layoutX="26.0" layoutY="100.0" mnemonicParsing="false" onAction="#changeMethod" selected="true" text="Distributed" toggleGroup="$resolutionMethod" />
                   <Label layoutX="26.0" layoutY="54.0" text="Resolution method :" />
                   <Separator layoutX="-1.0" layoutY="46.0" prefHeight="3.0" prefWidth="202.0" />
                   <Separator layoutX="-1.0" layoutY="129.0" prefHeight="3.0" prefWidth="202.0" />

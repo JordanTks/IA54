@@ -1403,24 +1403,25 @@ public class BoardGameAgent extends Agent {
   private void $behaviorUnit$UpdateGUI$6(final UpdateGUI occurrence) {
     try {
       int cpt = 0;
-      for (final FrameAgent number : occurrence.frameList) {
-        {
-          int _size = occurrence.frameList.size();
-          int _minus = (_size - 2);
-          boolean _lessThan = (cpt < _minus);
-          if (_lessThan) {
-            this.ctrl.setColor("blue", Integer.valueOf(number.getHostedNumTile()));
-          }
-          cpt++;
-        }
-      }
       int _size = occurrence.frameList.size();
       boolean _greaterEqualsThan = (_size >= 2);
       if (_greaterEqualsThan) {
         int _size_1 = occurrence.frameList.size();
         int _minus = (_size_1 - 2);
-        this.ctrl.setColor("green", 
-          Integer.valueOf(occurrence.frameList.get(_minus).getHostedNumTile()));
+        this.ctrl.setColor("green", Integer.valueOf(occurrence.frameList.get(_minus).getHostedNumTile()));
+      }
+      Thread.sleep(StaticVars.speed);
+      for (final FrameAgent number : occurrence.frameList) {
+        {
+          int _size_2 = occurrence.frameList.size();
+          int _minus_1 = (_size_2 - 2);
+          boolean _lessThan = (cpt < _minus_1);
+          if (_lessThan) {
+            this.ctrl.setColor("blue", Integer.valueOf(number.getHostedNumTile()));
+          }
+          cpt++;
+          Thread.sleep(StaticVars.speed);
+        }
       }
       for (final FrameAgent number_1 : occurrence.frameList) {
         {

@@ -1226,21 +1226,24 @@ agent BoardGameAgent {
 	on UpdateGUI {
 		
 		var cpt : int = 0
+		if (occurrence.frameList.size() >= 2)
+			ctrl.setColor("green", occurrence.frameList.get(occurrence.frameList.size() - 2).hostedNumTile);
+
+		Thread.sleep(StaticVars.speed)
 
 		for (number : occurrence.frameList) {
-			 if (cpt < occurrence.frameList.size() -2 ) ctrl.setColor("blue", number.hostedNumTile)
-			 cpt++
-		}
+			if(cpt < occurrence.frameList.size() - 2) ctrl.setColor("blue", number.hostedNumTile)
+			cpt++
 
-		if(occurrence.frameList.size() >= 2) ctrl.setColor("green",
-				occurrence.frameList.get(occurrence.frameList.size() - 2).hostedNumTile);
+			Thread.sleep(StaticVars.speed)
+		}
 		
 		for (number : occurrence.frameList) {
-			//info("UpdateGUI: LIST: "+number.hostedNumTile)
+
 			ctrl.swap(number.hostedNumTile)
 			Thread.sleep(StaticVars.speed)
 		}
-		//info("UpdateGUI: SIMPLE: "+occurrence.numFrame)
+
 
 		// Graphical update is done, releasing token
 		emit (new TokenReleased())

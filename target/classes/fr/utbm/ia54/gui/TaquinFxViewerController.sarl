@@ -98,16 +98,6 @@ class TaquinFxViewerController extends FxViewerController {
 		if(istimeFix && time.text != "") StaticVars.timeout = Integer.parseInt(time.text)
 		else StaticVars.timeout = 30
 
-		// Hide some options 
-		if(!distributedVal) {
-			checkTime.visible = false
-			timeLabel.visible = false
-			timeOut.visible = false
-			idRadioDistributed.disable = true
-		} else {
-			idRadioCentralized.disable = true
-		}
-
 		// Send event
 		var ^event = new ConfigureSimulation()
 		if (!launched) {
@@ -127,6 +117,19 @@ class TaquinFxViewerController extends FxViewerController {
 		}
 		});
 		
+	}
+
+	@FXML def changeMethod() {
+		// Hide some options
+		if (idRadioCentralized.selected) {
+			checkTime.visible = false
+			timeLabel.visible = false
+			timeOut.visible = false
+		} else {
+			checkTime.visible = true
+			timeLabel.visible = true
+			timeOut.visible = true
+		}
 	}
 	
 	@FXML def setColor(color : String, numTile : Integer) {

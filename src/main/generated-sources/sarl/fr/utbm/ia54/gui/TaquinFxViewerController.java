@@ -248,16 +248,6 @@ public class TaquinFxViewerController extends FxViewerController {
       } else {
         StaticVars.timeout = 30;
       }
-      boolean _distributedVal = this.getDistributedVal();
-      boolean _not_1 = (!_distributedVal);
-      if (_not_1) {
-        this.checkTime.setVisible(false);
-        this.timeLabel.setVisible(false);
-        this.timeOut.setVisible(false);
-        this.idRadioDistributed.setDisable(true);
-      } else {
-        this.idRadioCentralized.setDisable(true);
-      }
       ConfigureSimulation event = new ConfigureSimulation();
       boolean _xifexpression = false;
       if ((!this.launched)) {
@@ -292,6 +282,20 @@ public class TaquinFxViewerController extends FxViewerController {
       }
     };
     Platform.runLater(___TaquinFxViewerController_0);
+  }
+  
+  @FXML
+  public void changeMethod() {
+    boolean _isSelected = this.idRadioCentralized.isSelected();
+    if (_isSelected) {
+      this.checkTime.setVisible(false);
+      this.timeLabel.setVisible(false);
+      this.timeOut.setVisible(false);
+    } else {
+      this.checkTime.setVisible(true);
+      this.timeLabel.setVisible(true);
+      this.timeOut.setVisible(true);
+    }
   }
   
   @FXML
