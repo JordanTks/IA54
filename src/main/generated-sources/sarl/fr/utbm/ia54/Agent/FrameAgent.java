@@ -384,8 +384,9 @@ public class FrameAgent extends Agent {
       if (((this.idNumFromZero / this.problemSize) == (this.problemSize - 3))) {
         if (((this.idNumFromZero % this.problemSize) == (this.problemSize - 2))) {
           if (this.didMyTileMateHaveTheToken) {
-            this.nbTimesBothered++;
-            if (((this.nbTimesBothered % 2) == 0)) {
+            double _random = Math.random();
+            boolean _lessThan = (_random < 0.5);
+            if (_lessThan) {
               DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_6 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
               PathCalculation _pathCalculation_2 = new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.EAST, 
                 occurrence.timeStamp, newPathStatus, isACorner, (occurrence.jumpCount + 1), p);

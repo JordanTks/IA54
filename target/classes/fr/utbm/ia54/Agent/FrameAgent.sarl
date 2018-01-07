@@ -358,9 +358,11 @@ agent FrameAgent {
 					if (didMyTileMateHaveTheToken)
 					{
 						// Helps to avoid getting stuck on a routine
-						nbTimesBothered++
+						//nbTimesBothered++
 						
-						if (nbTimesBothered % 2 === 0)
+						//if (nbTimesBothered % 2 === 0)
+						// Pure random seems to be safer
+						if (Math.random < 0.5)
 						{
 							// Forward only to opposite direction (west)
 							emit(new PathCalculation(occurrence.requestId, occurrence.requestOrigin, Direction.EAST,
