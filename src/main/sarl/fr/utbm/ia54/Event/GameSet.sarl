@@ -2,8 +2,5 @@
  * 
  */
 package fr.utbm.ia54.Event
-/** 
- * @author Jordan
- * 
- */
+
 event GameSet

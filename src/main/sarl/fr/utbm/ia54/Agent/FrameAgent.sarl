@@ -82,7 +82,7 @@ agent FrameAgent {
 	var uuidPreviousFrame : UUID
 	var coordsXYPreviousFrame : CoordPair
 
-	var nbTimesBothered : int
+	//var nbTimesBothered : int
 
 	on Initialize { 
 		
@@ -204,8 +204,7 @@ agent FrameAgent {
 	// The frame is being assaulted
 	on Assault [isAttacked] {
 
-		//error("=========================================== DEBUGG : I GOT ATTACKED ! emit FINDPATH! /hostedNumTile=" + hostedNumTile)
-		info("DEBUGG : I GOT ATTACKED !")
+		//info("DEBUGG : I GOT ATTACKED !")
 
 		// I have to run away by finding a path between me and the empty tile
 		

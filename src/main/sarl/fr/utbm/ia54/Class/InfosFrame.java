@@ -2,6 +2,8 @@ package fr.utbm.ia54.Class;
 
 import java.util.UUID;
 
+// Class used in A* version of the problem
+
 public class InfosFrame {
 
 	private UUID uuidCurrentFrame;

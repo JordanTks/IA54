@@ -8,9 +8,6 @@ import java.util.Objects;
 import java.util.UUID;
 import org.eclipse.xtext.xbase.lib.Pure;
 
-/**
- * @author Norgannon
- */
 @SarlSpecification("0.6")
 @SarlElementType(14)
 @SuppressWarnings("all")
@@ -85,7 +82,4 @@ public class UpdateProblemInformations extends Event {
     result.append("sendAckTo  = ").append(this.sendAckTo);
     return result.toString();
   }
-  
-  @SyntheticMember
-  private final static long serialVersionUID = -490672836L;
 }

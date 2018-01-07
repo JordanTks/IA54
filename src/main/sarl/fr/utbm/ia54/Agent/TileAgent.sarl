@@ -26,8 +26,8 @@ import fr.utbm.ia54.Class.StaticVars
 agent TileAgent {
 	uses Logging, DefaultContextInteractions, Behaviors, Schedules, Lifecycle 
 
-	var isHappy = false // at right place or no (though kind of redundant with bool pleasant on frameAgent (could be useless)) 
-	var angry = false // currently assaulting someone or not
+	var isHappy = false // at right place or no
+	//var angry = false // currently assaulting someone or not
 	var numTile : int
 	var numTileFromZero : int
 	var numFrameHost : int //from 1
@@ -80,7 +80,7 @@ agent TileAgent {
 	
 	on TokenReceived {
 		
-		info("INFO : I received the token.")
+		//info("INFO : I received the token.")
 
 		/*// Information useful to avoid getting stuck on corners
 		didHaveTheToken = true;*/

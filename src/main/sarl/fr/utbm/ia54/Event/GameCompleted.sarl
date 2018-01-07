@@ -1,9 +1,0 @@
-/** 
- * 
- */
-package fr.utbm.ia54.Event
-/** 
- * @author Norgannon
- * 
- */
-event GameCompleted

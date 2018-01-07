@@ -1,5 +1,7 @@
 package fr.utbm.ia54.Class;
 
+// Class used in A* version of the problem
+
 public class CoordPair {
 	private int x;
 	private int y;

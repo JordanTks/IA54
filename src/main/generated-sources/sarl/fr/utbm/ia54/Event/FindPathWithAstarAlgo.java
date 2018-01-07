@@ -8,9 +8,6 @@ import java.util.Objects;
 import java.util.UUID;
 import org.eclipse.xtext.xbase.lib.Pure;
 
-/**
- * @author Jordan
- */
 @SarlSpecification("0.6")
 @SarlElementType(14)
 @SuppressWarnings("all")

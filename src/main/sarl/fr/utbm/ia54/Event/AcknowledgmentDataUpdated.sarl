@@ -2,8 +2,7 @@
  * 
  */
 package fr.utbm.ia54.Event
-/** 
- * @author Norgannon
- * 
- */
+
+// Simple signal to acknowledge update
+
 event AcknowledgmentDataUpdated

@@ -3,8 +3,7 @@ package fr.utbm.ia54.Event
 event ConfigureSimulation 
 
 event CreateMap
-/* event pour prévenir l'environnement que le Boids est lancé
- */
+
 event IsStarted
 
 event MakeTheFiestaBegin

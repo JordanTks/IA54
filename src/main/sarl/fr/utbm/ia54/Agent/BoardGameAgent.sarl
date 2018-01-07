@@ -1222,7 +1222,8 @@ agent BoardGameAgent {
 		
 		changeSatisfaction
 	}
-	
+
+	// Update display for distributed version
 	on UpdateGUI {
 		
 		var cpt : int = 0

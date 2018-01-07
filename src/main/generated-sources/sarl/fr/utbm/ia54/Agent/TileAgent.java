@@ -47,8 +47,6 @@ import org.eclipse.xtext.xbase.lib.Pure;
 public class TileAgent extends Agent {
   private boolean isHappy = false;
   
-  private boolean angry = false;
-  
   private int numTile;
   
   private int numTileFromZero;
@@ -106,8 +104,6 @@ public class TileAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$TokenReceived$2(final TokenReceived occurrence) {
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("INFO : I received the token.");
     if (this.isHappy) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       TokenReleased _tokenReleased = new TokenReleased();
@@ -406,8 +402,6 @@ public class TileAgent extends Agent {
     TileAgent other = (TileAgent) obj;
     if (other.isHappy != this.isHappy)
       return false;
-    if (other.angry != this.angry)
-      return false;
     if (other.numTile != this.numTile)
       return false;
     if (other.numTileFromZero != this.numTileFromZero)
@@ -436,7 +430,6 @@ public class TileAgent extends Agent {
     int result = super.hashCode();
     final int prime = 31;
     result = prime * result + (this.isHappy ? 1231 : 1237);
-    result = prime * result + (this.angry ? 1231 : 1237);
     result = prime * result + this.numTile;
     result = prime * result + this.numTileFromZero;
     result = prime * result + this.numFrameHost;

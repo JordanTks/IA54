@@ -3,6 +3,8 @@
  */
 package fr.utbm.ia54.Event
 
+// Event broadcast to tell the scheduler the token is not being used anymore
+
 event TokenReleased {
 	
 	var success = true // true when the previous token was used to successfully find a path

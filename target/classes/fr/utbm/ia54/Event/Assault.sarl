@@ -6,13 +6,9 @@ package fr.utbm.ia54.Event
 import java.util.ArrayList
 import fr.utbm.ia54.Agent.TileAgent
 import fr.utbm.ia54.Enum.Direction
- 
-// La première ligne de commentaire est fausse :
 
-// Probablement obsolete. (La Tile recherche l'état de ses voisins et en cas d'état en agression, on connaît donc l'agresseur
- // ET on supprime le risque de boucler sur des boucles plus longues (ce qui n'est pas le cas avec cet evenement).)
- 
- 
+// Event used in order to aggress neighbours
+
 event Assault {
 	var path = new ArrayList<TileAgent>()
 	var direction : Direction

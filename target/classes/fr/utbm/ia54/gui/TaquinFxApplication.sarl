@@ -7,7 +7,6 @@ import java.util.ResourceBundle
 import javafx.fxml.JavaFXBuilderFactory
 import javafx.scene.Parent
 import javafx.scene.Scene
-import java.beans.EventHandler
 
 class TaquinFxApplication extends FxApplication {
 	

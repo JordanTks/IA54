@@ -27,9 +27,6 @@ import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Pure;
 
-/**
- * @author Norgannon
- */
 @SarlSpecification("0.6")
 @SarlElementType(17)
 @SuppressWarnings("all")

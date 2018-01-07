@@ -2,8 +2,7 @@
  * 
  */
 package fr.utbm.ia54.Event
-/** 
- * @author Norgannon
- * 
- */
+
+// Signal to tell a frame timeout occured and the results can now be used
+
 event PathCalculationTimeOut

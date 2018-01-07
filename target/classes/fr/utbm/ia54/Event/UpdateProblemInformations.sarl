@@ -5,10 +5,8 @@ package fr.utbm.ia54.Event
 
 import java.util.UUID
 
-/** 
- * @author Norgannon
- * 
- */
+// Update data of puzzle agents
+
 event UpdateProblemInformations {
 	
 	var start : Boolean

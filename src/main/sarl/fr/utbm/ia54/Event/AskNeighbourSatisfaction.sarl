@@ -5,10 +5,6 @@ package fr.utbm.ia54.Event
 
 import fr.utbm.ia54.Enum.Direction
 
-/** 
- * 
- * 
- */
 event AskNeighbourSatisfaction {
 
 	var west : boolean

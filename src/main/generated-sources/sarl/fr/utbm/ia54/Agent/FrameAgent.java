@@ -112,8 +112,6 @@ public class FrameAgent extends Agent {
   
   private CoordPair coordsXYPreviousFrame;
   
-  private int nbTimesBothered;
-  
   @SyntheticMember
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     Object _get = occurrence.parameters[0];
@@ -261,8 +259,6 @@ public class FrameAgent extends Agent {
   
   @SyntheticMember
   private void $behaviorUnit$Assault$6(final Assault occurrence) {
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("DEBUGG : I GOT ATTACKED !");
     if ((!StaticVars.isDistributed)) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       UUID _iD = this.getID();
@@ -1019,8 +1015,6 @@ public class FrameAgent extends Agent {
     if (!java.util.Objects.equals(this.uuidPreviousFrame, other.uuidPreviousFrame)) {
       return false;
     }
-    if (other.nbTimesBothered != this.nbTimesBothered)
-      return false;
     return super.equals(obj);
   }
   
@@ -1052,7 +1046,6 @@ public class FrameAgent extends Agent {
     result = prime * result + this.costH;
     result = prime * result + this.costF;
     result = prime * result + java.util.Objects.hashCode(this.uuidPreviousFrame);
-    result = prime * result + this.nbTimesBothered;
     return result;
   }
   

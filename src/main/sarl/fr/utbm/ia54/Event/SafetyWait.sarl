@@ -2,8 +2,7 @@
  * 
  */
 package fr.utbm.ia54.Event
-/** 
- * @author Norgannon
- * 
- */
+
+// Signal to send event after a pause (attempt at avoiding issues at initialisation)
+
 event SafetyWait

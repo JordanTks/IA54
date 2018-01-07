@@ -12,6 +12,7 @@ import fr.utbm.ia54.Enum.PathStatus
  * Sent directly to the agent that assaulted the first tile
  * 
  */
+ 
 event PathFound
 {
 	var requestId : long

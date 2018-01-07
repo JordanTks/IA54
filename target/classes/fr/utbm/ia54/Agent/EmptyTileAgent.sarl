@@ -14,10 +14,6 @@ import io.sarl.core.Lifecycle
 import fr.utbm.ia54.Event.UpdateProblemInformations
 import io.sarl.util.Scopes
 
-/** 
- * @author Norgannon
- * 
- */
 agent EmptyTileAgent {
 	
 	uses Logging, DefaultContextInteractions, Lifecycle
@@ -72,10 +68,7 @@ agent EmptyTileAgent {
 	}
 
 	on TokenReceived {
-		// tant que (voisin en état agression)
-		//		échange ma place avec voisin en état agression
-		
-		// rend le token 
+
 	}
 
 	on EndAgent {
