@@ -1,5 +1,6 @@
 package fr.utbm.ia54.gui;
 
+import com.google.common.base.Objects;
 import fr.utbm.ia54.Class.StaticVars;
 import fr.utbm.ia54.Event.ConfigureSimulation;
 import fr.utbm.ia54.gui.fx.FxViewerController;
@@ -13,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -181,6 +183,9 @@ public class TaquinFxViewerController extends FxViewerController {
   private TextField time;
   
   @FXML
+  private Label timeLabel;
+  
+  @FXML
   public void RefreshSpeed() {
     double _value = this.idSliderSpeed.getValue();
     this.intSpeed = ((int) _value);
@@ -238,10 +243,20 @@ public class TaquinFxViewerController extends FxViewerController {
       StaticVars.problemSize = this.getProbSize();
       StaticVars.isDistributed = this.getDistributedVal();
       StaticVars.isTimeFix = this.istimeFix;
-      if (this.istimeFix) {
+      if ((this.istimeFix && (!Objects.equal(this.time.getText(), "")))) {
         StaticVars.timeout = Integer.parseInt(this.time.getText());
       } else {
         StaticVars.timeout = 30;
+      }
+      boolean _distributedVal = this.getDistributedVal();
+      boolean _not_1 = (!_distributedVal);
+      if (_not_1) {
+        this.checkTime.setVisible(false);
+        this.timeLabel.setVisible(false);
+        this.timeOut.setVisible(false);
+        this.idRadioDistributed.setDisable(true);
+      } else {
+        this.idRadioCentralized.setDisable(true);
       }
       ConfigureSimulation event = new ConfigureSimulation();
       boolean _xifexpression = false;
@@ -337,13 +352,32 @@ public class TaquinFxViewerController extends FxViewerController {
   }
   
   @FXML
-  public boolean disabledTime() {
-    boolean _xblockexpression = false;
+  public int disabledTime() {
+    int _xblockexpression = (int) 0;
     {
       this.time.setDisable(this.istimeFix);
-      _xblockexpression = this.istimeFix = (!this.istimeFix);
+      this.istimeFix = (!this.istimeFix);
+      StaticVars.isTimeFix = this.istimeFix;
+      int _xifexpression = (int) 0;
+      if (this.istimeFix) {
+        _xifexpression = this.changeTime();
+      }
+      _xblockexpression = _xifexpression;
     }
     return _xblockexpression;
+  }
+  
+  @FXML
+  public int changeTime() {
+    int _xifexpression = (int) 0;
+    String _text = this.time.getText();
+    boolean _notEquals = (!Objects.equal(_text, ""));
+    if (_notEquals) {
+      _xifexpression = StaticVars.timeout = Integer.parseInt(this.time.getText());
+    } else {
+      _xifexpression = StaticVars.timeout = 30;
+    }
+    return _xifexpression;
   }
   
   @FXML

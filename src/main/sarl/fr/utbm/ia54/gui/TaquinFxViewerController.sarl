@@ -3,7 +3,6 @@ package fr.utbm.ia54.gui
 import fr.utbm.ia54.gui.fx.FxViewerController
 import javafx.fxml.FXML
 import fr.utbm.ia54.Event.ConfigureSimulation
-import javafx.scene.control.ScrollBar
 import javafx.scene.control.Label
 import javafx.scene.layout.Pane
 import javafx.scene.shape.Rectangle
@@ -14,12 +13,10 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Text
 import java.util.List 
 import javafx.application.Platform
-import javafx.scene.Node
 import javafx.scene.control.CheckBox
 import javafx.scene.control.Slider
 import fr.utbm.ia54.Class.StaticVars
 import javafx.scene.control.RadioButton
-import javafx.scene.input.KeyCode
 
 class TaquinFxViewerController extends FxViewerController { 
 
@@ -40,6 +37,7 @@ class TaquinFxViewerController extends FxViewerController {
 	@FXML var idRadioDistributed : RadioButton
 	@FXML var checkTime : CheckBox
 	@FXML var time : TextField
+	@FXML var timeLabel : Label
 	
 	@FXML def RefreshSpeed {
 		intSpeed = idSliderSpeed.value as int
@@ -97,8 +95,18 @@ class TaquinFxViewerController extends FxViewerController {
 		StaticVars.isDistributed = distributedVal
 		StaticVars.isTimeFix = istimeFix
 		
-		if (istimeFix) StaticVars.timeout = Integer.parseInt(time.text)
-		 else StaticVars.timeout = 30
+		if(istimeFix && time.text != "") StaticVars.timeout = Integer.parseInt(time.text)
+		else StaticVars.timeout = 30
+
+		// Hide some options 
+		if(!distributedVal) {
+			checkTime.visible = false
+			timeLabel.visible = false
+			timeOut.visible = false
+			idRadioDistributed.disable = true
+		} else {
+			idRadioCentralized.disable = true
+		}
 
 		// Send event
 		var ^event = new ConfigureSimulation()
@@ -156,10 +164,19 @@ class TaquinFxViewerController extends FxViewerController {
 	}
 	
 	@FXML def disabledTime() {
+		// disabled field in UI
 		time.disable = istimeFix;
+		// change state
 		istimeFix = !istimeFix
+		StaticVars.isTimeFix = istimeFix
+		
+		if(istimeFix) changeTime
 	}
 	
+	@FXML def changeTime() {
+		if( time.text != "" ) StaticVars.timeout = Integer.parseInt(time.text)
+		else StaticVars.timeout = 30
+	}	
 	
 	@FXML def updateTimeoutUi() {
 		Platform.runLater( 
