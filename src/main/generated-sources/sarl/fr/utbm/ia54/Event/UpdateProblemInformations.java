@@ -82,4 +82,7 @@ public class UpdateProblemInformations extends Event {
     result.append("sendAckTo  = ").append(this.sendAckTo);
     return result.toString();
   }
+  
+  @SyntheticMember
+  private final static long serialVersionUID = -490672836L;
 }
